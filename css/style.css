@@ -1,0 +1,606 @@
+/*file			style.css
+author			Karl Vincent Pierre Bertin `kvpb`
+date			2012.10.01
+description		The CSS of Karl's website.
+version			0.1
+version date	2017.06.15
+license			MIT*/
+
+/* Elements */
+
+body{
+	color: rgb(0, 0, 0);
+	background-color: rgb(255, 255, 255);
+	font-family: 'Times New Roman';
+	font-size: 12pt;
+	margin: 0 auto 0 auto;
+	padding: 0;
+	width: 90%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	-webkit-animation: fade_in .1s linear 0 1 normal forwards running;
+}
+
+a{
+	text-decoration: none;
+}
+a:link{
+	color: rgb(84, 84, 84); /* default values are `color: rgb(0, 0, 93);` */
+}
+a:visited{
+	color: rgb(84, 84, 84); /* default values are `color: rgb(85, 26, 139);` */
+}
+a:hover{
+	color: rgb(0, 0, 0);
+	/*text-shadow: 0pt 1pt 0pt rgba(0, 0, 0, 0.5);*/
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
+	-moz-animation-name: blink;
+	-moz-animation-duration: 1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-play-state: running;
+	animation-name: blink;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: running;
+}
+a:active{
+/*	color: rgba(0, 0, 0, 0);
+	text-shadow: 0pt 1pt 0pt rgb(0, 0, 0);*/
+	color: rgb(0, 0, 0);
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 0.1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
+	-moz-animation-name: blink;
+	-moz-animation-duration: 0.1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-play-state: running;
+	animation-name: blink;
+	animation-duration: 0.1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: running;
+}
+a:link[rel~=help], a:visited[rel~=help], area:link[rel~=help], area:visited[rel~=help]{
+	cursor: help;
+}
+
+span.highlight{
+	background-color: rgb(255, 255, 0);
+}
+span.black{
+	color: rgb(0, 0, 0);
+}
+
+/* At-rules */
+
+@-webkit-keyframes fade_in{
+	0%{
+		opacity: 0;
+	}
+
+	100%{
+		opacity: 1;
+	}
+}
+
+@-webkit-keyframes fade_in_and_bounce_from_left{
+	0%, 60%, 75%, 90%, 100%{
+		-webkit-transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+	}
+
+	0%{
+		opacity:  0;
+		-webkit-transform:  translate3d(-1000%, 0, 0);
+	}
+
+	60%{
+		opacity:  1;
+		-webkit-transform:  translate3d(5%, 0, 0);
+	}
+
+	75%{
+		-webkit-transform:  translate3d(-5%, 0, 0);
+	}
+
+	90%{
+		-webkit-transform: translate3d(1%, 0, 0);
+	}
+
+	100%{
+		opacity: 1;
+	}
+}
+
+@keyframes blink{
+	0%{
+		opacity: 1.0;
+	}
+
+	50%{
+		opacity: 0.0;
+	}
+
+	100%{
+		opacity: 1.0;
+	}
+}
+@-webkit-keyframes blink{
+	0%{
+		opacity: 1.0;
+	}
+
+	50%{
+		opacity: 0.0;
+	}
+
+	100%{
+		opacity: 1.0;
+	}
+}
+@-moz-keyframes blink{
+	0%{
+		opacity: 1.0;
+	}
+
+	50%{
+		opacity: 0.0;
+	}
+
+	100%{
+		opacity: 1.0;
+	}
+}
+
+@font-face{
+	font-family: 'Helvetica Neue';
+	src: url('../fonts/HelveticaNeueLTStd-Roman.otf') format('opentype');
+}
+/* Helvetica Neue Regular (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+@font-face{
+	font-family: 'Helvetica Neue';
+	src: url('../fonts/HelveticaNeueLTStd-It.otf') format('opentype');
+	font-style: italic;
+}
+/* Helvetica Neue Italic (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+@font-face{
+	font-family: 'Helvetica Neue';
+	src: url('../fonts/HelveticaNeueLTStd-Bd.otf') format('opentype');
+	font-weight: 700;
+}
+/* Helvetica Neue Bold (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+@font-face{
+	font-family: 'Helvetica Neue';
+	src: url('../fonts/HelveticaNeueLTStd-BdIt.otf') format('opentype');
+	font-style: italic;
+	font-weight: 700;
+}
+/* Helvetica Neue Bold Italic (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+@font-face{
+	font-family: 'Helvetica Neue';
+	src: url('../fonts/HelveticaNeueLTStd-Cn.otf') format('opentype');
+	font-stretch: condensed;
+}
+/* Helvetica Neue Condensed (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+/*@font-face{
+	font-family: 'Helvetica Neue';
+	src: url() format();
+	font-stretch: condensed;
+	font-style: italic;
+}*/
+/* Helvetica Neue Italic Condensed */
+
+@font-face{
+	font-family: 'Helvetica Neue';
+	src: url('../fonts/HelveticaNeueLTStd-BdCn.otf') format('opentype');
+	font-stretch: condensed;
+	font-weight: 700;
+}
+/* Helvetica Neue Bold Condensed (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+/*@font-face{
+	font-family: 'Helvetica Neue';
+	src: url() format();
+	font-stretch: condensed;
+	font-style: italic;
+	font-weight: 700;
+}*/
+/* Helvetica Neue Bold Italic Condensed */
+
+@font-face{
+	font-family: 'Times New Roman';
+	src: url('../fonts/TimesNewRomanMTStd.otf') format('opentype');
+	font-stretch: normal;
+	font-style: normal;
+	font-weight: 400;
+}
+/* Times New Roman Regular (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+@font-face{
+	font-family: 'Times New Roman';
+	src: url('../fonts/TimesNewRomanMTStd-Italic.otf') format('opentype');
+	font-stretch: normal;
+	font-style: italic;
+	font-weight: 400;
+}
+/* Times New Roman Italic (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+@font-face{
+	font-family: 'Times New Roman';
+	src: url('../fonts/TimesNewRomanMTStd-Bold.otf') format('opentype');
+	font-stretch: normal;
+	font-style: normal;
+	font-weight: 700;
+}
+/* Times New Roman Bold (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+@font-face{
+	font-family: 'Times New Roman';
+	src: url('../fonts/TimesNewRomanMTStd-BoldIt.otf') format('opentype');
+	font-stretch: normal;
+	font-style: italic;
+	font-weight: 700;
+}
+/* Times New Roman Bold Italic (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+@font-face{
+	font-family: 'Times New Roman';
+	src: url('../fonts/TimesNewRomanMTStd-Cond.otf') format('opentype');
+	font-stretch: condensed;
+	font-style: normal;
+	font-weight: 400;
+}
+/* Times New Roman Condensed (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+@font-face{
+	font-family: 'Times New Roman';
+	src: url('../fonts/TimesNewRomanMTStd-CondIt.otf') format('opentype');
+	font-stretch: condensed;
+	font-style: italic;
+	font-weight: 400;
+}
+/* Times New Roman Condensed Italic (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+@font-face{
+	font-family: 'Times New Roman';
+	src: url('../fonts/TimesNewRomanMTStd-BoldCond.otf') format('opentype');
+	font-stretch: condensed;
+	font-style: normal;
+	font-weight: 700;
+}
+/* Times New Roman Bold Condensed (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
+
+/*@font-face{
+	font-family: 'Times New Roman';
+	src: url() format();
+	font-stretch: condensed;
+	font-style: italic;
+	font-weight: 700;
+}
+*/
+/* Times New Roman Condensed Italic Bold */
+
+/* Classes */
+
+.article{
+	margin: 0;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+
+/*.motto{
+	font-family: 'Times New Roman';
+	font-size: 24px;
+	font-variant: small-caps;
+}*/
+
+.menuitem{
+	color: rgb(84, 84, 84);
+	text-transform: uppercase;
+	font-family: 'Helvetica Neue';
+	font-size: 12pt;
+	font-weight: bold;
+	/*text-align: left;*/
+	text-align: right;
+	/*vertical-align: middle;*/
+	/*margin: 0 0 50% 0;*/
+	/*transform: translate(0, 50%);*/ /* Cf https://css-tricks.com/centering-percentage-widthheight-elements/, and with this, I can make the logotype a menu item. */
+	display: inline-flex;
+}
+.menuitem:hover{
+	color: rgb(0, 0, 0) !important;
+}
+
+/*
+.latest_article_preview{
+	background-color: rgb(255, 255, 255);
+	margin: 0 1% 0 1%;
+	width: 18.75%;
+	height: 25%;
+	box-shadow: 0 4px 16px rgba(54, 69, 79, 0.1);
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	transition: all .5s ease-in-out;
+	justify-content: center;
+	align-items: center;
+}
+.latest_article_preview:hover .latest_article_lede::before{
+	opacity: 1;
+	pointer-events: all;
+}
+.latest_article_preview:hover .latest_article_lede::after{
+	opacity: 1;
+}
+*/
+
+/*.latest_article_thumbnail{
+	background-image: url(16x9px.jpg);
+	background-position: 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
+	max-width: 100%;
+	height: 100% !important;
+}*/
+
+/*.latest_article_headline{
+	text-align: left;
+	font-family: 'Times New Roman';
+	font-weight: bold;
+	padding: 5%;
+	flex: 1;
+	display: flex;
+}*/
+
+/*
+.latest_article_lede::before{
+	content: "";
+	background: rgb(54, 69, 79);
+	text-align: center;
+	vertical-align: middle;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: flex;
+	flex: 1;
+	opacity: 0;
+	transition: all .5s ease-in-out;
+	pointer-events: none;
+}
+.latest_article_lede:hover{
+	background: rgb(54, 69, 79);
+}
+.latest_article_lede{
+	text-align: justify;
+	padding: 5%;
+	position: relative;
+	display: flex;
+	flex: 1;
+	align-self: flex-end;
+}
+.latest_article_lede::after{
+	content: "Lire la suite…";
+	color: rgb(255, 255, 255);
+	text-align: center;
+	font-weight: bold;
+	margin: -.5em 0 0 0;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	flex: 1;
+	opacity: 0;
+	transition: all .5s ease-in-out;
+}
+*/
+
+/*.info{
+	border-style: solid none solid none;
+	border-color: rgb(54, 69, 79);
+	border-width: 1px 0 1px 0;
+	margin: 5% 0 0 0;
+	padding: 1%;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}*/
+
+/*.information{
+	text-align: left;
+	margin: 0 1% 0 1%;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	transition: color .5s ease-in-out;
+	-webkit-animation: fade_in .5s 1;
+}*/
+
+/*.information_subject{
+	text-align: left;
+	font-weight: bold;
+	margin: 1%;
+	flex: 1;
+	display: flex;
+}*/
+
+/*.information_content{
+	text-align: justify;
+	margin: 1%;
+	flex: 1;
+	display: flex;
+}*/
+
+/*.copyright_notice{
+	color: rgb(54, 69, 79);
+	text-align: center;
+	margin: 5% 0 0 0;
+	transition: color .5s ease-in-out;
+	-webkit-animation: fade_in .5s 1;
+}*/
+
+/*
+.animation{
+	display:inline;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+.animation:before{
+	content: 'Karl Bertin';
+	animation-name: animation;
+	animation-duration: 10s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: running;
+	-webkit-animation-name: animation;
+	-webkit-animation-duration: 10s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
+}
+@keyframes animation{
+	0%{
+		content: 'Karl Bertin';
+	}
+
+	10%{
+		content: 'Karl Бertin';
+	}
+
+	20%{
+		content: 'Кarl Бertin';
+	}
+
+	30%{
+		content: 'Кaрl Бertin';
+	}
+
+	40%{
+		content: 'Карl Бertin';
+	}
+
+	50%{
+		content: 'Карл Бertin';
+	}
+
+	60%{
+		content: 'Карл Бerтin';
+	}
+
+	70%{
+		content: 'Карл Бeртin';
+	}
+
+	80%{
+		content: 'Карл Бeртiн';
+	}
+
+	90%{
+		content: 'Карл Бeртин';
+	}
+
+	100%{
+		content: 'Карл Бэртин';
+	}
+}
+*/
+
+/* ID */
+
+#wordmark{ /* (or #logotype) */
+	color: rgb(0, 0, 0);
+	/*text-transform: uppercase;*/
+	font-family: 'Helvetica Neue';
+	font-weight: bold;
+	text-align: center;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	transition: color .5s ease-in-out;
+	-webkit-animation: fade_in .5s 1;
+}
+#logo_pt_1{
+	color: rgb(168, 168, 168);
+	text-transform: uppercase;
+	font-size: 6pt;
+	/*font-variant: small-caps;*/
+	letter-spacing: 3.67pt;
+}
+#logo_pt_2{
+	text-transform: uppercase;
+	font-size: 16pt;
+}
+#logo_pt_3{
+	color: rgb(168, 168, 168);
+	text-transform: uppercase;
+	font-size: 6pt;
+	/*font-variant: small-caps;*/
+	letter-spacing: 5.33pt;
+}
+
+#header{
+	padding: 1%;
+	display: flex;
+	flex-direction: row;
+}
+
+#nav{
+	margin: auto 0 auto auto;
+	display: inline-flex !important;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: start;
+	align-self: stretch !important;
+}
+
+#jnami_pt_2{
+	text-align: right;
+	font-size: 8pt !important;
+}
+
+#cnami_pt_2{
+	text-align: right;
+	font-size: 8pt !important;
+}
+
+/*#footer{
+	margin: 5% 0 5% 0;
+	display: flex;
+	flex-direction: column;
+}*/
+
+/*#leftmost_preview{
+	-webkit-animation: fade_in_and_bounce_from_left .25s 1;
+}*/
+
+/*#left_preview{
+	-webkit-animation: fade_in_and_bounce_from_left .5s 1;
+}*/
+
+/*#right_preview{
+	-webkit-animation: fade_in_and_bounce_from_left .75s 1;
+}*/
+
+/*#rightmost_preview{
+	-webkit-animation: fade_in_and_bounce_from_left 1s 1;
+}*/
