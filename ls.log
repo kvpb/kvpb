@@ -1,0 +1,21 @@
+-rw-r--r--   1 kvpb  staff   2419239 Apr 17  2021 archive.tgz
+drwxr-xr-x   3 kvpb  staff        96 Jun 15  2017 css
+drwxr-xr-x   3 kvpb  staff        96 Jun 14  2018 fonts
+-rw-r--r--   1 kvpb  staff      2352 Apr 17  2021 gfind.log
+drwxr-xr-x   6 kvpb  staff       192 Aug  5  2018 images
+drwxr-xr-x   3 kvpb  staff        96 Jun 14  2018 js
+
+./css:
+-rw-r--r--   1 kvpb  staff     12339 Jun 15  2017 style.css
+
+./fonts:
+-rw-r--r--   1 kvpb  staff         1 Jun 14  2018 0
+
+./images:
+-rw-r--r--@  1 kvpb  staff    449359 Jun 14  2018 Desktop Journal T1.png
+-rw-r--r--@  1 kvpb  staff    446212 Jun 14  2018 Desktop Journal T2.png
+-rw-r--r--@  1 kvpb  staff  27221972 Jun 14  2018 article.tif
+-rw-r--r--@  1 kvpb  staff  27378856 Jun 14  2018 contactandabout.tif
+
+./js:
+-rw-r--r--   1 kvpb  staff         1 Jun 14  2018 0
