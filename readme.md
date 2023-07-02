@@ -1,22 +1,20 @@
-<!--I wished to help mankind, become someone.
-I always have wanted to immigrate to the United States, move to Honolulu, HI and Los Angeles, CA.
-I have done a lot of stuff.
-I mostly taught myself.
-I trained in software engineering at 42.
-I had to study psychology at Paris Descartes University.
-But I really wanted to be an engineer or a doctor.
-And I still want to be a US citizen.
-So I educate myself again in software engineering at Qwasar Silicon Valley.
-I am working on my startup.
-I must keep bettering myself, I need challenging positions.-->
-<!--My official username is and has always been kvpb, i.e. my initials, downcased, with or without one of these numbers: 0, 1, 4, 7, 13, 21, 42, 69, 137 or 777; or if it cannot be the original, or if someone hijacked it, it may be my initials with one of these strings: x, 00, 0000, 100 or 1000, and I also went by yougotkarld in the past.
-I always have been planning on renaming myself in North America by the way, finally came to pick my new full name in july 2022, and I will go by Karl Thomas George West, so you may call me by any of these new three, if you struggle to say my first name too much, :) and so I may take ktgw, ktguu, ktgvv, ktg2u, ktg2v, ktgwkvpb or kvpbktgw with or without of the aforementioned numbers from now on. ;)-->
+<!--I wished to help mankind, be someone for everyone.
+I've done a lot of stuff, mostly taught myself, also still was taught a lot.
+I originally was to become a surgeon or an engineer, was prevented from pursuing either due to a civil servant's catastrophic blunder.
+I studied software engineering at 42, didn't enjoy it, dropped out.
+I had to study psychology at Paris-V, graduated from there with a bachelor of science degree in psychology.
+I then started teaching myself computer science and software engineering again, quickly got fed up with that and the whole milieu, fought back against the consequences of the aforementioned governmental mistake, finally got admitted into a first year of health studies at Paris-VI after 10 years minus 7 days.
+I now am studying physics, mechanics, chemistry, mathematics and medicine at Paris-VI; I'll get admitted into the second year of medical studies---I'll become a surgeon.-->
+<!--My official username is and has always been kvpb, i.e. my initials, downcased, with or without one of these numbers: 0, 1, 4, 7, 13, 21, 42, 69, 137 or 777; or if it can't be the original, or if someone hijacked it,* it may be my initials with one of these strings: x, 00, 0000, 100 or 1000; and I also went by yougotkarld, or Blastfighter in days gone by.
+I always had been planning on renaming myself by the way, finally came to pick my new full name in July 2022, and I'll go by Karl Thomas George West, so you may call me by any of these, if you struggle to say my first name, and so I may take ktgw, ktguu, ktgvv, ktg2u, ktg2v, ktgwkvpb or kvpbktgw with or without of the aforementioned numbers from now on.
+Any of these names isn't necessarily mine; all other names necessarily aren't.*-->
+<!--* A certain Bryan Patrick Michel Frimin `gearnode` had impersonated me as in 'identity theft' a long time ago. I've had to deal with the consequences for a while after that. And the same person also owes me quite a couple hundred bucks, but that's another story.-->
 <p align="center"><a href="https://kvpb.co"><img src="https://gistcdn.githack.com/kvpb/c80594e9079e857c55c36dec49a1a2d7/raw/eec54d5821dc092ad910635141c4e4feebf07565/kvpbssymbol.svg"></a><br>
 <b>Karl V. P. B. `<code>kvpb</code>`</b><br>
 <b>AKA&nbsp;&nbsp;Karl Thomas George West `<code>ktgw</code>`</b><br>
-software engineer<br>
+future surgeon<br>
 <br>
-<span style="display:block;text-align:center"><a href="https://www.linkedin.com/in/karlbertin"><img src="https://gistcdn.githack.com/kvpb/6934ca4100436428368c4d2418633755/raw/2faac08dba4920c280aa337bac2f40c1fb991673/linkedin.svg" alt="LinkedIn"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://twitter.com/ktgwkvpb"><img src="https://gistcdn.githack.com/kvpb/20db04ea32721c7a968f198dbbdf688d/raw/1b2126ef7f572709f8cca49216e0021f324a2639/twitter.svg" alt="Twitter"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://vm.tiktok.com/ZSwAmcFh/"><img src="https://gistcdn.githack.com/kvpb/bc289a1af9975c9603159dbdf77778d3/raw/6ffe1058cd7e87b0c6239352b01691615a4f74c2/tiktok.svg" alt="TikTok"></a></span></p>
+<span style="display:block;text-align:center"><a href="https://www.linkedin.com/in/karlbertin"><img src="https://gistcdn.githack.com/kvpb/6934ca4100436428368c4d2418633755/raw/2faac08dba4920c280aa337bac2f40c1fb991673/linkedin.svg" alt="LinkedIn"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://twitter.com/ktgwkvpb"><img src="https://gistcdn.githack.com/kvpb/20db04ea32721c7a968f198dbbdf688d/raw/1b2126ef7f572709f8cca49216e0021f324a2639/twitter.svg" alt="Twitter"></a></span></p>
 
 ## Languages
 
@@ -47,58 +45,3 @@ software engineer<br>
 ![Android](https://img.shields.io/badge/-Android-FFFFFF?style=flat&logo=android&logoColor=3DDC84) <!-- https://developer.android.com/distribute/marketing-tools/brand-guidelines -->
 ![Linux](https://img.shields.io/badge/-Linux-0094FF?style=flat&logo=linux&logoColor=003778) <!-- https://www.linuxfoundation.org/brand-guidelines -->
 ![macOS](https://img.shields.io/badge/-macOS-FFFFFF?style=flat&logo=apple&logoColor=A7A9AC) <!-- https://www.apple.com/legal/sales-support/certification/docs/logo_guidelines.pdf -->
-
-<!--## Projects
-
-### [C](https://github.com/kvpb?tab=repositories&q=&type=&language=c&sort=)
-
-[My PRINTF](https://github.com/kvpb/my_printf)<br>
-A PRINTF clone.
-
-[My Mastermind](https://github.com/kvpb/my_mastermind)<br>
-A CLI version of [the classic code cracking game](https://bit.ly/3qrGakv).
-
-[My n-gram](https://github.com/kvpb/)<br>
-An n-gram generator.
-
-[My Robot Simulator](https://github.com/kvpb/)<br>
-A C version of the basic robot simulator.
-
-[KVPB's LIBC](https://github.com/kvpb/libc)<br>
-A C standard library clone.
-
-### [Python](https://github.com/kvpb?tab=repositories&q=&type=&language=python&sort=)
-
-[RPwG](https://github.com/kvpb/RPwG)<br>
-A franco-US-american random password generator.
-
-[LIBPY](https://github.com/kvpb/libpy)<br>
-A C standard library Python translation.
-
-### [JavaScript](https://github.com/kvpb?tab=repositories&q=&type=&language=javascript&sort=)
-
-[Piano Tiles](https://github.com/kvpb/piano-tiles)<br>
-A Guitar Hero-like made with Vue for a 48-hour-long hackathon.
-
-[My First Back End](https://github.com/kvpb/my-first-backend)<br>
-A web app back-end built with Express.
-
-[My Robot Simulator](https://github.com/kvpb/my_robot_simulator)<br>
-A robot simulator.
-
-[My Bouncing Box](https://github.com/kvpb/my_bouncing_box)<br>
-A replica of the famous Windows screen saver Bounce.
-
-### [MATLAB](https://github.com/kvpb?tab=repositories&q=&type=&language=matlab&sort=)
-
-[Machine Learning](https://github.com/kvpb/machine-learning)<br>
-My submission for Stanford University's Andrew Ng's Machine Learning Coursera course.
-
-### [\*SH Script](https://github.com/kvpb?tab=repositories&q=&type=&language=shell&sort=)
-
-[Dotfiles](https://github.com/kvpb/.files)<br>
-Runcoms, configuration files, setups, scripts, templates and hacks.
-
-[LIBBASH](https://github.com/kvpb/libbash)<br>
-A C standard library BASH script translation.
--->
