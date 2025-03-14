@@ -1,121 +1,132 @@
-/*file			style.css
-author			Karl Vincent Pierre Bertin `kvpb`
-date			2012.10.01
-description		The CSS of Karl's website.
-version			0.1
-version date	2017.06.15
-license			MIT*/
+/*
+	file			style.css
+	author			Karl Vincent Pierre Bertin `kvpb`
+					AKA Karl Thomas George West `ktgw`
+	date			2012.10.01
+	description		The CSS of Karl's website.
+	version			1.00
+	version date	2025.07.02
+	license			MIT
+                                                                */
 
-/* Elements */
+/*   e l e m e n t s   */
+
+html{
+	color: rgb( 0, 0, 0 )/*rgb( 26, 26, 26 )*/;
+	background-color: rgb( 255, 255, 255 );
+	background: url(/Users/kvpb/Desktop/kvpb/images/kvpbsnewsymbol.svg) no-repeat fixed center;
+}
 
 body{
-	color: rgb(0, 0, 0);
-	background-color: rgb(255, 255, 255);
-	font-family: 'Times New Roman';
+	/*color: rgb( 0, 0, 0 )*//*rgb( 26, 26, 26 )*/;
+	/*background-color: rgb( 255, 255, 255 );*/
+	/*background: url(https://camo.githubusercontent.com/c30ec0405c5e8bb19e19cf20836b2d036130f6b55598843f66c50365d50e0d09/68747470733a2f2f6769737463646e2e6769746861636b2e636f6d2f6b7670622f63383035393465393037396538353763353563333664656334396131613264372f7261772f656563353464353832316463303932616439313036333531343163346534666565626630373536352f6b7670627373796d626f6c2e737667) no-repeat fixed center;*/
+    width: 100%;
+    height: 100%;
+    float: left;
+	font-family: 'Times New Roman',/* 'Times',*/ serif;
 	font-size: 12pt;
 	margin: 0 auto 0 auto;
 	padding: 0;
-	width: 90%;
+	width: 100%/*90%*/;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	-webkit-animation: fade_in .1s linear 0 1 normal forwards running;
+	/*-webkit-animation: fadein .1s linear 0 1 normal forwards running;*/
 }
 
 a{
 	text-decoration: none;
 }
 a:link{
-	color: rgb(84, 84, 84); /* default values are `color: rgb(0, 0, 93);` */
+	color: rgb( 85, 85, 85 ); /* default values: `color: rgb( 0, 0, 93 );`; */
 }
 a:visited{
-	color: rgb(84, 84, 84); /* default values are `color: rgb(85, 26, 139);` */
+	color: rgb( 85, 85, 85 ); /* default values: `color: rgb( 85, 26, 139 );`; */
 }
 a:hover{
-	color: rgb(0, 0, 0);
-	/*text-shadow: 0pt 1pt 0pt rgba(0, 0, 0, 0.5);*/
-	-webkit-animation-name: blink;
-	-webkit-animation-duration: 1s;
-	-webkit-animation-timing-function: linear;
-	-webkit-animation-iteration-count: infinite;
-	-webkit-animation-play-state: running;
-	-moz-animation-name: blink;
-	-moz-animation-duration: 1s;
-	-moz-animation-timing-function: linear;
-	-moz-animation-iteration-count: infinite;
-	-moz-animation-play-state: running;
+	color: rgba( 0, 0, 0, 0.9 )/*rgb( 0, 0, 0 )*/;
+	/*text-shadow: 0pt 1pt 0pt rgba( 0, 0, 0, 0.5 );*/
 	animation-name: blink;
 	animation-duration: 1s;
 	animation-timing-function: linear;
 	animation-iteration-count: infinite;
 	animation-play-state: running;
-}
-a:active{
-/*	color: rgba(0, 0, 0, 0);
-	text-shadow: 0pt 1pt 0pt rgb(0, 0, 0);*/
-	color: rgb(0, 0, 0);
-	-webkit-animation-name: blink;
-	-webkit-animation-duration: 0.1s;
-	-webkit-animation-timing-function: linear;
-	-webkit-animation-iteration-count: infinite;
-	-webkit-animation-play-state: running;
 	-moz-animation-name: blink;
-	-moz-animation-duration: 0.1s;
+	-moz-animation-duration: 1s;
 	-moz-animation-timing-function: linear;
 	-moz-animation-iteration-count: infinite;
 	-moz-animation-play-state: running;
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
+}
+a:active{
+	/*color: rgba( 0, 0, 0, 0 );*/
+	/*text-shadow: 0pt 1pt 0pt rgb( 0, 0, 0 );*/
+	color: rgba( 0, 0, 0, 0.9 )/*rgb( 0, 0, 0 )*/;
 	animation-name: blink;
 	animation-duration: 0.1s;
 	animation-timing-function: linear;
 	animation-iteration-count: infinite;
 	animation-play-state: running;
+	-moz-animation-name: blink;
+	-moz-animation-duration: 0.1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-play-state: running;
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 0.1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
 }
 a:link[rel~=help], a:visited[rel~=help], area:link[rel~=help], area:visited[rel~=help]{
 	cursor: help;
 }
 
+hr{
+	border: none;
+}
+
 span.highlight{
-	background-color: rgb(255, 255, 0);
+	background-color: rgb( 255, 255, 0 );
 }
 span.black{
-	color: rgb(0, 0, 0);
+	color: rgb( 0, 0, 0 )/*rgb( 26, 26, 26 )*/;
 }
 
-/* At-rules */
+/*   a t - r u l e s   */
 
-@-webkit-keyframes fade_in{
+@-webkit-keyframes fadein{
 	0%{
 		opacity: 0;
 	}
-
 	100%{
 		opacity: 1;
 	}
 }
 
-@-webkit-keyframes fade_in_and_bounce_from_left{
+@-webkit-keyframes fadeinandbouncefromleft{
 	0%, 60%, 75%, 90%, 100%{
-		-webkit-transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+		-webkit-transition-timing-function: cubic-bezier( 0.215, 0.610, 0.355, 1.000 );
 	}
-
 	0%{
-		opacity:  0;
-		-webkit-transform:  translate3d(-1000%, 0, 0);
+		opacity: 0;
+		-webkit-transform: translate3d( -1000%, 0, 0 );
 	}
-
 	60%{
 		opacity:  1;
-		-webkit-transform:  translate3d(5%, 0, 0);
+		-webkit-transform: translate3d( 5%, 0, 0 );
 	}
-
 	75%{
-		-webkit-transform:  translate3d(-5%, 0, 0);
+		-webkit-transform: translate3d( -5%, 0, 0 );
 	}
-
 	90%{
-		-webkit-transform: translate3d(1%, 0, 0);
+		-webkit-transform: translate3d( 1%, 0, 0 );
 	}
-
 	100%{
 		opacity: 1;
 	}
@@ -125,24 +136,9 @@ span.black{
 	0%{
 		opacity: 1.0;
 	}
-
 	50%{
 		opacity: 0.0;
 	}
-
-	100%{
-		opacity: 1.0;
-	}
-}
-@-webkit-keyframes blink{
-	0%{
-		opacity: 1.0;
-	}
-
-	50%{
-		opacity: 0.0;
-	}
-
 	100%{
 		opacity: 1.0;
 	}
@@ -151,150 +147,180 @@ span.black{
 	0%{
 		opacity: 1.0;
 	}
-
 	50%{
 		opacity: 0.0;
 	}
-
+	100%{
+		opacity: 1.0;
+	}
+}
+@-webkit-keyframes blink{
+	0%{
+		opacity: 1.0;
+	}
+	50%{
+		opacity: 0.0;
+	}
 	100%{
 		opacity: 1.0;
 	}
 }
 
-@font-face{
+@keyframes stretchrightward{
+  0%, 100%{
+    transform: scaleX( 1 );
+  }
+    50%{
+    transform: scaleX( 2 );
+  }
+}
+
+@keyframes scrollwestward{
+    0%{
+        transform: translateX( 100% );
+    }
+    100%{
+        transform: translateX( -100% );
+    }
+}
+
+/*@font-face{
 	font-family: 'Helvetica Neue';
 	src: url('../fonts/HelveticaNeueLTStd-Roman.otf') format('opentype');
-}
-/* Helvetica Neue Regular (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
-@font-face{
+}*/ /* Helvetica Neue Regular */
+/*@font-face{
 	font-family: 'Helvetica Neue';
 	src: url('../fonts/HelveticaNeueLTStd-It.otf') format('opentype');
 	font-style: italic;
-}
-/* Helvetica Neue Italic (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
-@font-face{
+}*/ /* Helvetica Neue Italic */
+/*@font-face{
 	font-family: 'Helvetica Neue';
 	src: url('../fonts/HelveticaNeueLTStd-Bd.otf') format('opentype');
 	font-weight: 700;
-}
-/* Helvetica Neue Bold (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
-@font-face{
+}*/ /* Helvetica Neue Bold */
+/*@font-face{
 	font-family: 'Helvetica Neue';
 	src: url('../fonts/HelveticaNeueLTStd-BdIt.otf') format('opentype');
 	font-style: italic;
 	font-weight: 700;
-}
-/* Helvetica Neue Bold Italic (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
-@font-face{
+}*/ /* Helvetica Neue Bold Italic */
+/*@font-face{
 	font-family: 'Helvetica Neue';
 	src: url('../fonts/HelveticaNeueLTStd-Cn.otf') format('opentype');
 	font-stretch: condensed;
-}
-/* Helvetica Neue Condensed (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
+}*/ /* Helvetica Neue Condensed */
 /*@font-face{
 	font-family: 'Helvetica Neue';
 	src: url() format();
 	font-stretch: condensed;
 	font-style: italic;
-}*/
-/* Helvetica Neue Italic Condensed */
-
-@font-face{
+}*/ /* Helvetica Neue Italic Condensed  */
+/*@font-face{
 	font-family: 'Helvetica Neue';
 	src: url('../fonts/HelveticaNeueLTStd-BdCn.otf') format('opentype');
 	font-stretch: condensed;
 	font-weight: 700;
-}
-/* Helvetica Neue Bold Condensed (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
+}*/ /* Helvetica Neue Bold Condensed */
 /*@font-face{
 	font-family: 'Helvetica Neue';
 	src: url() format();
 	font-stretch: condensed;
 	font-style: italic;
 	font-weight: 700;
-}*/
-/* Helvetica Neue Bold Italic Condensed */
+}*/ /* Helvetica Neue Bold Italic Condensed */
 
-@font-face{
+/*@font-face{
 	font-family: 'Times New Roman';
 	src: url('../fonts/TimesNewRomanMTStd.otf') format('opentype');
 	font-stretch: normal;
 	font-style: normal;
 	font-weight: 400;
-}
-/* Times New Roman Regular (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
-@font-face{
+}*/ /* Times New Roman Regular */
+/*@font-face{
 	font-family: 'Times New Roman';
 	src: url('../fonts/TimesNewRomanMTStd-Italic.otf') format('opentype');
 	font-stretch: normal;
 	font-style: italic;
 	font-weight: 400;
-}
-/* Times New Roman Italic (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
-@font-face{
+}*/ /* Times New Roman Italic */
+/*@font-face{
 	font-family: 'Times New Roman';
 	src: url('../fonts/TimesNewRomanMTStd-Bold.otf') format('opentype');
 	font-stretch: normal;
 	font-style: normal;
 	font-weight: 700;
-}
-/* Times New Roman Bold (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
-@font-face{
+}*/ /* Times New Roman Bold */
+/*@font-face{
 	font-family: 'Times New Roman';
 	src: url('../fonts/TimesNewRomanMTStd-BoldIt.otf') format('opentype');
 	font-stretch: normal;
 	font-style: italic;
 	font-weight: 700;
-}
-/* Times New Roman Bold Italic (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
-@font-face{
+}*/ /* Times New Roman Bold Italic */
+/*@font-face{
 	font-family: 'Times New Roman';
 	src: url('../fonts/TimesNewRomanMTStd-Cond.otf') format('opentype');
 	font-stretch: condensed;
 	font-style: normal;
 	font-weight: 400;
-}
-/* Times New Roman Condensed (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
-@font-face{
+}*/ /* Times New Roman Condensed */
+/*@font-face{
 	font-family: 'Times New Roman';
 	src: url('../fonts/TimesNewRomanMTStd-CondIt.otf') format('opentype');
 	font-stretch: condensed;
 	font-style: italic;
 	font-weight: 400;
-}
-/* Times New Roman Condensed Italic (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
-@font-face{
+}*/ /* Times New Roman Condensed Italic */
+/*@font-face{
 	font-family: 'Times New Roman';
 	src: url('../fonts/TimesNewRomanMTStd-BoldCond.otf') format('opentype');
 	font-stretch: condensed;
 	font-style: normal;
 	font-weight: 700;
-}
-/* Times New Roman Bold Condensed (https://my.scuhs.edu/ICS/Departments/Marketing/Approved_Fonts.jnz) */
-
+}*/ /* Times New Roman Bold Condensed */
 /*@font-face{
 	font-family: 'Times New Roman';
 	src: url() format();
 	font-stretch: condensed;
 	font-style: italic;
 	font-weight: 700;
-}
-*/
-/* Times New Roman Condensed Italic Bold */
+}*/ /* Times New Roman Condensed Italic Bold */
 
-/* Classes */
+/*   c l a s s e s   */
+
+.stretched
+{
+	display: inline-block;
+	font-size: 48px;
+	transform-origin: left;
+	animation: stretchrightward 2s infinite alternate ease-in-out;
+} /* Though this stretches the whole page too, and only the DIV with this class has to be stretched, so if other elements follow the stretched one on a flex-display page, they must be pushed to the edge, and if they can't go any further, they gotta be pushed under, but they musn't go out of bounds, and the webpage itself mustn't be stretched. */
+.marquee {
+/*	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	box-sizing: border-box;*/
+	display: inline-block;
+	white-space: nowrap;
+	animation: scrollwestward 10s linear infinite;
+}
+.tape/*.banner*/{
+	padding: 10px 0;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+}
+/*.banner_1{
+}
+.banner_2{
+}
+.banner_3{
+}*/
+/*.motto{
+	font-family: 'Times New Roman', 'Times', serif;
+	font-size: 24px;
+	font-variant: small-caps;
+}*/
 
 .article{
 	margin: 0;
@@ -304,36 +330,29 @@ span.black{
 	align-items: flex-start;
 }
 
-/*.motto{
-	font-family: 'Times New Roman';
-	font-size: 24px;
-	font-variant: small-caps;
-}*/
-
-.menuitem{
-	color: rgb(84, 84, 84);
+.item_menu{
+	color: rgb( 85, 85, 85 );
 	text-transform: uppercase;
-	font-family: 'Helvetica Neue';
+	font-family: /*'Helvetica Neue', 'Helvetica', */'Arial' sans-serif;
 	font-size: 12pt;
 	font-weight: bold;
 	/*text-align: left;*/
 	text-align: right;
 	/*vertical-align: middle;*/
 	/*margin: 0 0 50% 0;*/
-	/*transform: translate(0, 50%);*/ /* Cf https://css-tricks.com/centering-percentage-widthheight-elements/, and with this, I can make the logotype a menu item. */
+	/*transform: translate( 0, 50% );*/ /* See https://css-tricks.com/centering-percentage-widthheight-elements/. With this, I can make the logotype a menu item. */
 	display: inline-flex;
 }
-.menuitem:hover{
-	color: rgb(0, 0, 0) !important;
+.item_menu:hover{
+	color: rgb( 0, 0, 0 ) !important;
 }
 
-/*
-.latest_article_preview{
-	background-color: rgb(255, 255, 255);
+/*.preview_article_latest{
+	background-color: rgb( 255, 255, 255 );
 	margin: 0 1% 0 1%;
 	width: 18.75%;
 	height: 25%;
-	box-shadow: 0 4px 16px rgba(54, 69, 79, 0.1);
+	box-shadow: 0 4px 16px rgba( 54, 69, 79, 0.1 );
 	display: flex;
 	flex: 1;
 	flex-direction: column;
@@ -341,16 +360,15 @@ span.black{
 	justify-content: center;
 	align-items: center;
 }
-.latest_article_preview:hover .latest_article_lede::before{
+.preview_article_latest:hover .lede_article_latest::before{
 	opacity: 1;
 	pointer-events: all;
 }
-.latest_article_preview:hover .latest_article_lede::after{
+.preview_article_latest:hover .lede_article_latest::after{
 	opacity: 1;
-}
-*/
+}*/
 
-/*.latest_article_thumbnail{
+/*.thumbnail_article_latest{
 	background-image: url(16x9px.jpg);
 	background-position: 50%;
 	background-repeat: no-repeat;
@@ -359,19 +377,18 @@ span.black{
 	height: 100% !important;
 }*/
 
-/*.latest_article_headline{
+/*.headline_article_latest{
 	text-align: left;
-	font-family: 'Times New Roman';
+	font-family: 'Times New Roman', 'Times', serif;
 	font-weight: bold;
 	padding: 5%;
 	flex: 1;
 	display: flex;
 }*/
 
-/*
-.latest_article_lede::before{
+/*.lede_article_latest::before{
 	content: "";
-	background: rgb(54, 69, 79);
+	background: rgb( 54, 69, 79 );
 	text-align: center;
 	vertical-align: middle;
 	height: 100%;
@@ -385,10 +402,10 @@ span.black{
 	transition: all .5s ease-in-out;
 	pointer-events: none;
 }
-.latest_article_lede:hover{
-	background: rgb(54, 69, 79);
+.lede_article_latest:hover{
+	background: rgb( 54, 69, 79 );
 }
-.latest_article_lede{
+.lede_article_latest{
 	text-align: justify;
 	padding: 5%;
 	position: relative;
@@ -396,9 +413,9 @@ span.black{
 	flex: 1;
 	align-self: flex-end;
 }
-.latest_article_lede::after{
-	content: "Lire la suite…";
-	color: rgb(255, 255, 255);
+.lede_article_latest::after{
+	content: "lire";
+	color: rgb( 255, 255, 255 );
 	text-align: center;
 	font-weight: bold;
 	margin: -.5em 0 0 0;
@@ -409,12 +426,11 @@ span.black{
 	flex: 1;
 	opacity: 0;
 	transition: all .5s ease-in-out;
-}
-*/
+}*/
 
 /*.info{
 	border-style: solid none solid none;
-	border-color: rgb(54, 69, 79);
+	border-color: rgb( 54, 69, 79 );
 	border-width: 1px 0 1px 0;
 	margin: 5% 0 0 0;
 	padding: 1%;
@@ -431,7 +447,7 @@ span.black{
 	display: flex;
 	flex-direction: column;
 	transition: color .5s ease-in-out;
-	-webkit-animation: fade_in .5s 1;
+	-webkit-animation: fadein .5s 1;
 }*/
 
 /*.information_subject{
@@ -450,21 +466,20 @@ span.black{
 }*/
 
 /*.copyright_notice{
-	color: rgb(54, 69, 79);
+	color: rgb( 54, 69, 79 );
 	text-align: center;
 	margin: 5% 0 0 0;
 	transition: color .5s ease-in-out;
-	-webkit-animation: fade_in .5s 1;
+	-webkit-animation: fadein .5s 1;
 }*/
 
-/*
-.animation{
+/*.animate{
 	display:inline;
 	margin: 0;
 	padding: 0;
 	border: 0;
 }
-.animation:before{
+.animate:before{
 	content: 'Karl Bertin';
 	animation-name: animation;
 	animation-duration: 10s;
@@ -477,110 +492,247 @@ span.black{
 	-webkit-animation-iteration-count: infinite;
 	-webkit-animation-play-state: running;
 }
-@keyframes animation{
+@keyframes animate{
 	0%{
 		content: 'Karl Bertin';
 	}
-
 	10%{
 		content: 'Karl Бertin';
 	}
-
 	20%{
 		content: 'Кarl Бertin';
 	}
-
 	30%{
 		content: 'Кaрl Бertin';
 	}
-
 	40%{
 		content: 'Карl Бertin';
 	}
-
 	50%{
 		content: 'Карл Бertin';
 	}
-
 	60%{
 		content: 'Карл Бerтin';
 	}
-
 	70%{
 		content: 'Карл Бeртin';
 	}
-
 	80%{
 		content: 'Карл Бeртiн';
 	}
-
 	90%{
 		content: 'Карл Бeртин';
 	}
-
 	100%{
 		content: 'Карл Бэртин';
 	}
 }
-*/
+@keyframes animate{
+	0%{
+		content: 'Karl Bertin';
+	}
+	10%{
+		content: 'カrl Bertin';
+	}
+	20%{
+		content: 'カrl ベrtin';
+	}
+	30%{
+		content: 'カrル ベrtin';
+	}
+	40%{
+		content: 'カrル ベルtin';
+	}
+	50%{
+		content: 'カrル・ベルtin';
+	}
+	60%{
+		content: 'カrル・ベルtiン';
+	}
+	70%{
+		content: 'カrル・ベルtィン';
+	}
+	80%{
+		content: 'カール・ベルtィン';
+	}
+	90%{
+		content: 'カール・ベルティン';
+	}
+	100%{
+		content: 'カール・ベルティン';
+	}
+}*/
 
-/* ID */
+/*   I D s   */
 
-#wordmark{ /* (or #logotype) */
-	color: rgb(0, 0, 0);
+#wordmark/*#logotype*/{
+	color: rgb( 0, 0, 0 )/*rgb( 0, 0, 0 )*/;
 	/*text-transform: uppercase;*/
-	font-family: 'Helvetica Neue';
-	font-weight: bold;
-	text-align: center;
-	margin: 0;
+	font-family: /*'Helvetica Neue', 'Helvetica', */'Arial', sans-serif;
+	font-weight: 900;
+	/*font-variant: small-caps;*/
+	text-align: left !important;
+	/*margin: .1cm;*/
+	padding: 0;
 	display: flex;
 	flex-direction: column;
-	transition: color .5s ease-in-out;
-	-webkit-animation: fade_in .5s 1;
+	transition: color .1s/*.5s*/ ease-in-out;
+	/*-webkit-animation: fadein .5s 1;*/
 }
-#logo_pt_1{
-	color: rgb(168, 168, 168);
+#line_1_logotype{
+	color: rgb( 230, 230, 230 )/*rgb( 191, 191, 191 )*//*rgb( 168, 168, 168 )*/;
+	text-transform: uppercase;
+	font-size: 12pt;
+	/*font-variant: small-caps;*/
+	letter-spacing: 10pt/*3.67pt*/;
+	padding-left: 3.33pt;
+}
+#line_2_logotype{
+	text-transform: uppercase;
+	font-size: 48pt;
+	/*font-variant: small-caps;*/
+	letter-spacing: -5.5pt;
+	line-height: 0.75em;
+}
+#line_3_logotype{
+	font-family: /*'ヒラギノ角ゴ Pro W3', */'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', 'ＭＳ ゴシック' , 'MS Gothic', 'Noto Sans CJK JP', 'TakaoPGothic', sans-serif !important;
+	font-size: 24pt;
+	/*font-variant: small-caps;*/
+	letter-spacing: 21.34pt;
+	line-height: 0.9em;
+}
+#line_4_logotype{
+	color: rgb( 230, 230, 230 )/*rgb( 191, 191, 191 )*//*rgb( 168, 168, 168 )*/;
 	text-transform: uppercase;
 	font-size: 6pt;
 	/*font-variant: small-caps;*/
-	letter-spacing: 3.67pt;
-}
-#logo_pt_2{
-	text-transform: uppercase;
-	font-size: 16pt;
-}
-#logo_pt_3{
-	color: rgb(168, 168, 168);
-	text-transform: uppercase;
-	font-size: 6pt;
-	/*font-variant: small-caps;*/
-	letter-spacing: 5.33pt;
+	letter-spacing: 6.50pt;
+	padding-left: 3.33pt;
 }
 
-#header{
+/*#header{
 	padding: 1%;
 	display: flex;
 	flex-direction: row;
-}
+}*/
 
-#nav{
-	margin: auto 0 auto auto;
-	display: inline-flex !important;
-	flex-direction: row;
+/*#*/nav{
+	color: rgb( 0, 0, 0 );
+	text-shadow: .1px 0 rgb( 255, 255, 255 ), -.1px 0 rgb( 255, 255, 255 ), 0 .1px rgb( 255, 255, 255 ), 0 -.1px rgb( 255, 255, 255 ), .1px .1px rgb( 255, 255, 255 ), -.1px -.1px rgb( 255, 255, 255 ), .1px -.1px rgb( 255, 255, 255 ), -.1px .1px rgb( 255, 255, 255 ); /*-webkit-text-stroke: .1pt rgb( 255, 255, 255 );*/
+	font-size: 16px !important;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	display: /*inline-*/flex !important;
+	flex-direction: column/*row*/;
 	flex-wrap: wrap;
-	justify-content: space-between;
-	align-items: start;
-	align-self: stretch !important;
+	/*justify-content: space-between;*/
+	align-items: right/*center*/;
+	/*align-self: stretch !important;*/
+	/*width: 100%;*/
+	padding: .1cm /*.4cm*/ /*.23cm 0 .23cm .23cm*/ /*0*/;
+	border: .1cm;
+	margin: .1cm auto auto .1cm /*0 auto auto 0*/ /*auto 0 auto auto*/;
+	/*background-color: rgba( 255, 255, 255, 0.1 );
+	backdrop-filter: blur( 10px );
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba( 0, 0, 0, .1 );*/
 }
-
-#jnami_pt_2{
-	text-align: right;
-	font-size: 8pt !important;
+nav > ul{
+	list-style-type: none;
 }
-
-#cnami_pt_2{
+nav > ul > li{
+	font-size: 16pt;
+	line-height: 1.5;
+	display: block;
+}
+nav.item_menu:hover{
+	transform: scale( 1.5 );
+}
+#watch/*#videos*/{
+	color: rgb( 0, 0, 0 ) !important;
+	text-align: left/*right*/;
+	font-size: 16pt/*24pt*/ !important;
+	font-variant: small-caps;
+	/*margin: 0 1em 0 0;*/ /* Sucks. */
+}
+#see/*#photos*/{
+	color: rgb( 0, 0, 0 ) !important;
+	text-align: left/*right*/;
+	font-size: 16pt/*24pt*/ !important;
+	font-variant: small-caps;
+	/*margin: 0 1em 0 0;*/ /* Sucks. */
+}
+#read/*#journalandarchives_2*//*#jnami_2*/{
+	color: rgb( 0, 0, 0 ) !important;
+	text-align: left/*right*/;
+	font-size: 16pt/*24pt*/ !important;
+	font-variant: small-caps;
+	/*margin: 0 1em 0 0;*/
+}
+#listen{
+	color: rgb( 0, 0, 0 ) !important;
+	text-align: left/*right*/;
+	font-size: 16pt/*24pt*/ !important;
+	font-variant: small-caps;
+	/*margin: 0 1em 0 0;*/
+}
+#gettoknowandcontact{
+	color: rgb( 0, 0, 0 ) !important;
+	/*margin: 0 1em 0 0;*/ /* Sucks. */
+}
+#gettoknowandcontact_0{
 	text-align: right;
-	font-size: 8pt !important;
+	font-size: 16pt !important;
+} /* Sucks. Gotta find how to achieve that cleanly. */
+#gettoknowandcontact_1/*#contactandabout_2*//*#cnami_2*/{
+	text-align: left/*right*/;
+	font-size: 16pt/*24pt*/ !important;
+	font-variant: small-caps;
+}
+#gettoknowandcontact_2/*#contactandabout_2*//*#cnami_2*/{
+	font-size: 12pt/*16pt*/ !important;
+	font-variant: small-caps;
+	text-align: left/*right*/;
+}
+#search{
+	color: rgb( 0, 0, 0 ) !important;
+	text-align: left/*right*/;
+	font-size: 16pt/*24pt*/ !important;
+	font-variant: small-caps;
+	/*margin: 0 1em 0 0;*/ /* Sucks. */
+}
+#checkout_TwitterX{
+	color: rgb( 0, 0, 0 ) !important;
+}
+#checkout_TwitterX_1{
+	font-size: 16pt !important;
+	text-align: left;
+}
+#checkout_TwitterX_2{
+	font-size: 12pt !important;
+	font-variant: small-caps;
+	text-align: right;
+}
+#checkout_GitHub{
+	color: rgb( 0, 0, 0 ) !important;
+}
+#checkout_GitHub_1{
+	font-size: 16pt !important;
+	text-align: left;
+}
+#checkout_GitHub_2{
+	font-size: 12pt !important;
+	font-variant: small-caps;
+	text-align: right;
+}
+#search:hover, #gettoknowandcontact:hover, #read:hover, #see:hover, #watch:hover, #listen:hover, #checkout_TwitterX:hover, #checkout_GitHub:hover{
+	/*color: rgb( 255, 255, 255 );*/
+	/*background-color: rgb( 0, 0, 0 );*/
+	/*backdrop-filter: invert( 100% );*/
+	transform-origin: top left;
+	margin: -4pt 0 16pt 0;
+	transform: scale( 1.5 );
+	animation: none !important;
 }
 
 /*#footer{
@@ -589,18 +741,18 @@ span.black{
 	flex-direction: column;
 }*/
 
-/*#leftmost_preview{
-	-webkit-animation: fade_in_and_bounce_from_left .25s 1;
+/*#preview_1st{
+	-webkit-animation: fadeinandbouncefromleft .25s 1;
 }*/
 
-/*#left_preview{
-	-webkit-animation: fade_in_and_bounce_from_left .5s 1;
+/*#preview_2nd{
+	-webkit-animation: fadeinandbouncefromleft .5s 1;
 }*/
 
-/*#right_preview{
-	-webkit-animation: fade_in_and_bounce_from_left .75s 1;
+/*#preview_3rd{
+	-webkit-animation: fadeinandbouncefromleft .75s 1;
 }*/
 
-/*#rightmost_preview{
-	-webkit-animation: fade_in_and_bounce_from_left 1s 1;
+/*#preview_4th{
+	-webkit-animation: fadeinandbouncefromleft 1s 1;
 }*/
