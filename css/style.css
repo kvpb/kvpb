@@ -149,6 +149,24 @@ span.black{
 	}
 }
 
+@keyframes stretch{
+  0%, 100%{
+    transform: scaleX( 1 );
+  }
+    50%{
+    transform: scaleX( 2 );
+  }
+}
+
+@keyframes scrollwestward{
+    0%{
+        transform: translateX( 100% );
+    }
+    100%{
+        transform: translateX( -100% );
+    }
+}
+
 /*@font-face{
 	font-family: 'Helvetica Neue';
 	src: url('../fonts/HelveticaNeueLTStd-Roman.otf') format('opentype');
@@ -253,6 +271,40 @@ span.black{
 
 /*   c l a s s e s   */
 
+.stretched
+{
+	display: inline-block;
+	font-size: 48px;
+	transform-origin: left;
+	animation: stretch 2s infinite alternate ease-in-out;
+} /* Though this stretches the whole page too, and only the DIV with this class has to be stretched, so if other elements follow the stretched one on a flex-display page, they must be pushed to the edge, and if they can't go any further, they gotta be pushed under, but they musn't go out of bounds, and the webpage itself mustn't be stretched. */
+.marquee {
+/*	width: 100%;
+	white-space: nowrap;
+	overflow: hidden;
+	box-sizing: border-box;*/
+	display: inline-block;
+	white-space: nowrap;
+	animation: scrollwestward 10s linear infinite;
+}
+.tape/*.banner*/{
+	padding: 10px 0;
+	text-align: center;
+	position: relative;
+	overflow: hidden;
+}
+/*.banner_1{
+}
+.banner_2{
+}
+.banner_3{
+}*/
+/*.motto{
+	font-family: 'Times New Roman', 'Times', serif;
+	font-size: 24px;
+	font-variant: small-caps;
+}*/
+
 .article{
 	margin: 0;
 	display: flex;
@@ -260,12 +312,6 @@ span.black{
 	flex-wrap: wrap;
 	align-items: flex-start;
 }
-
-/*.motto{
-	font-family: 'Times New Roman', 'Times', serif;
-	font-size: 24px;
-	font-variant: small-caps;
-}*/
 
 .item_menu{
 	color: rgb( 85, 85, 85 );
@@ -410,13 +456,13 @@ span.black{
 	-webkit-animation: fadein .5s 1;
 }*/
 
-/*.animation{
+/*.animate{
 	display:inline;
 	margin: 0;
 	padding: 0;
 	border: 0;
 }
-.animation:before{
+.animate:before{
 	content: 'Karl Bertin';
 	animation-name: animation;
 	animation-duration: 10s;
@@ -429,7 +475,7 @@ span.black{
 	-webkit-animation-iteration-count: infinite;
 	-webkit-animation-play-state: running;
 }
-@keyframes animation{
+@keyframes animate{
 	0%{
 		content: 'Karl Bertin';
 	}
@@ -496,7 +542,7 @@ span.black{
 	line-height: 0.75em;
 }
 #line_3_logotype{
-	font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', 'ＭＳ ゴシック' , 'MS Gothic', 'Noto Sans CJK JP', 'TakaoPGothic', sans-serif;
+	font-family: /*'ヒラギノ角ゴ Pro W3', */'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', 'ＭＳ ゴシック' , 'MS Gothic', 'Noto Sans CJK JP', 'TakaoPGothic', sans-serif;
 	font-size: 24pt;
 	letter-spacing: 21.34pt;
 	line-height: 0.9em;
@@ -525,13 +571,19 @@ span.black{
 	align-items: start;
 	align-self: stretch !important;
 }
-
-#jnami_pt_2{
+#watch/*#videos*/{
 	text-align: right;
 	font-size: 8pt !important;
 }
-
-#cnami_pt_2{
+#lookat/*#photos*//*#gallery*/{
+	text-align: right;
+	font-size: 8pt !important;
+}
+#read/*#journalandarchives_2*//*#jnami_2*/{
+	text-align: right;
+	font-size: 8pt !important;
+}
+#gettoknowandcontact/*#contactandabout_2*//*#cnami_2*/{
 	text-align: right;
 	font-size: 8pt !important;
 }
