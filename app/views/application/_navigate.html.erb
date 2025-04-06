@@ -1,31 +1,29 @@
-		<nav id="nav">
-			<a href=""><div id='wordmark'>
-				<span id='line_1_logotype' class="stretche">KVPB.fr</span>
-				<span id='line_2_logotype' class="stretchd">Karl</span>
-				<span id='line_3_logotype' class="stretchd">カール</span>
-				<span id='line_4_logotype' class="stretced">version 1.00</span>
-			</div></a>
-			<hr>
-			<a href=""><div id="read"><span id="">read</span></div></a>
-			<a href=""><div id="see"><span id="">see</span></div></a>
-			<a href=""><div id="watch"><span id="">watch</span></div></a>
-			<a href=""><div id="listen"><span id="">listen</span></div></a>
-			<a href=""><div id="gettoknowandcontact">
-				<!--<span id="gettoknowandcontact_0">&nbsp;</span><br>-->
-				<span id="gettoknowandcontact_1">get to know</span><br>
-				<span id="gettoknowandcontact_2">& contact</span>
-			</div></a>
-			<a href=""><div id="search">
-				<span id="">find</span><br>
-			</div></a>
-			<hr>
-			<a href="https://x.com/ktgwkvpb"><div id="checkout_TwitterX">
-				<span id="checkout_TwitterX_1">@ktgwkvpb</span><br>
-				<span id="checkout_TwitterX_2">Twitter\X</span>
-			</div></a>
-			<a href="https://github.com/kvpb"><div id="checkout_GitHub">
-				<span id="checkout_GitHub_1">kvpb</span><br>
-				<span id="checkout_GitHub_2">GitHub</span>
-			</div></a>
-		</nav>
-		<!--<span class="marquee">'z avez vu ? C'est moi qu'a fait ça !</span>-->
+<nav><!--<nav id="nav">-->
+	<%= link_to root_path do %><div id='wordmark'>
+		<span id='line_1_logotype'>kvpb.fr</span>
+		<span id='line_2_logotype'>Karl</span>
+		<span id='line_3_logotype'>カール</span>
+		<span id='line_4_logotype'>version 1.00</span>
+	</div><% end %>
+	<hr>
+	<%= link_to read_path, id: "read" do %><span id="read">read</span><% end %>
+	<%= link_to see_path, id: "see" do %><span id="see">see</span><% end %>
+	<%= link_to listen_path, id: "listen" do %><span id="listen">listen</span><% end %>
+	<%= link_to watch_path, id: "watch" do %><span id="watch">watch</span><% end %>
+	<%= link_to gettoknowandcontact_path, id: "gettoknowandcontact" do %><div><!--<div id="gettoknowandcontact">-->
+		<!--<span id="gettoknowandcontact_0">&nbsp;</span><br>-->
+		<span id="gettoknowandcontact_1">get to know</span><br>
+		<span id="gettoknowandcontact_2">& contact</span>
+	</div><% end %>
+	<%= link_to search_path, id: "search" do %><span id="search">find</span><% end %>
+	<hr>
+	<%= link_to "https://x.com/ktgwkvpb", id: "checkout_TwitterX", target: "_blank", rel: "noopener" do %><div><!--<div id="checkout_TwitterX">-->
+		<span id="checkout_TwitterX_1">@ktgwkvpb</span><br>
+		<span id="checkout_TwitterX_2">Twitter\X</span>
+	</div><% end %>
+		<%= link_to "https://github.com/kvpb", id: "checkout_GitHub", target: "_blank", rel: "noopener" do %><div><!--<div id="checkout_GitHub">-->
+		<span id="checkout_GitHub_1">kvpb</span><br>
+		<span id="checkout_GitHub_2">GitHub</span>
+	</div><% end %>
+</nav>
+<!--<span class="marquee">'z avez vu ? C'est moi qu'a fait ça !</span>-->
