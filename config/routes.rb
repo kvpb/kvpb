@@ -13,4 +13,11 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   root "application#index"
+
+  get "/read",                to: "pages#read",                 as: "read"
+  get "/see",                 to: "pages#see",                  as: "see"
+  get "/listen",              to: "pages#listen",               as: "listen"
+  get "/watch",               to: "pages#watch",                as: "watch"
+  get "/gettoknowandcontact", to: "pages#gettoknowandcontact",  as: "gettoknowandcontact"
+  get "/search",              to: "pages#search",               as: "search"
 end
