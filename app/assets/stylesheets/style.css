@@ -103,6 +103,11 @@ span.black{
 	color: rgb( 0, 0, 0 );
 }
 
+::selection{
+	background-color: black;
+	color: white;
+}
+
 /*   a t - r u l e s   */
 
 /*@charset "utf-8";*/
@@ -255,7 +260,7 @@ span.black{
 
 /*#*/nav{
 	color: rgb( 0, 0, 0 );
-	text-shadow: .1px 0 rgb( 255, 255, 255 ), -.1px 0 rgb( 255, 255, 255 ), 0 .1px rgb( 255, 255, 255 ), 0 -.1px rgb( 255, 255, 255 ), .1px .1px rgb( 255, 255, 255 ), -.1px -.1px rgb( 255, 255, 255 ), .1px -.1px rgb( 255, 255, 255 ), -.1px .1px rgb( 255, 255, 255 ); /*-webkit-text-stroke: .1pt rgb( 255, 255, 255 );*/
+	text-shadow: .3px 0 rgb( 255, 255, 255 ), -.3px 0 rgb( 255, 255, 255 ), 0 .3px rgb( 255, 255, 255 ), 0 -.3px rgb( 255, 255, 255 ), .3px .3px rgb( 255, 255, 255 ), -.3px -.3px rgb( 255, 255, 255 ), .3px -.3px rgb( 255, 255, 255 ), -3px .3px rgb( 255, 255, 255 ); /*-webkit-text-stroke: .1pt rgb( 255, 255, 255 );*/
 	font-size: 16px !important;
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
@@ -318,6 +323,7 @@ span.black{
 	color: rgb( 0, 0, 0 ) !important;
 }
 #checkout_TwitterX_1{
+	color: rgb( 29, 155, 240 ) !important;
 	font-size: 16pt !important;
 	text-align: left;
 }
@@ -330,6 +336,7 @@ span.black{
 	color: rgb( 0, 0, 0 ) !important;
 }
 #checkout_GitHub_1{
+	color: rgb( 37, 41, 46 ) !important;
 	font-size: 16pt !important;
 	text-align: left;
 }
@@ -338,7 +345,7 @@ span.black{
 	font-variant: small-caps;
 	text-align: right;
 }
-#search:hover, #gettoknowandcontact:hover, #read:hover, #see:hover, #watch:hover, #listen:hover, #checkout_TwitterX:hover, #checkout_GitHub:hover{
+#search:hover, #gettoknowandcontact:hover, #watch:hover, #listen:hover, #see:hover, #read:hover, #checkout_TwitterX:hover, #checkout_GitHub:hover{
 	transform-origin: top left;
 	margin: -4pt 0 16pt 0;
 	transform: scale( 1.5 );
