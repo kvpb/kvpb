@@ -3,7 +3,7 @@
 html{
 	color: rgb( 0, 0, 0 );
 	background-color: rgb( 255, 255, 255 );
-	background: url(/Users/kvpb/Desktop/kvpb/images/kvpbsnewsymbol.svg) no-repeat fixed center;
+	background: url(karlsemblem.svg) no-repeat fixed center; /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
 }
 
 body{
@@ -105,7 +105,7 @@ span.black{
 
 /*   a t - r u l e s   */
 
-@charset "utf-8";
+/*@charset "utf-8";*/
 
 @keyframes blink{
 	0%{
@@ -128,7 +128,7 @@ span.black{
 	}
 }
 
-@-webkit-keyframes fadein{
+@keyframes fadein{
 	0%{
 		opacity: 0;
 	}
@@ -137,7 +137,7 @@ span.black{
 	}
 }
 
-@-webkit-keyframes fadeinandbouncefromleft{
+@keyframes fadeinandbouncefromleft{
 	0%, 60%, 75%, 90%, 100%{
 		-webkit-transition-timing-function: cubic-bezier( 0.215, 0.610, 0.355, 1.000 );
 	}
