@@ -14,9 +14,9 @@ Any of these names isn't necessarily mine; all other names necessarily aren't.*-
 カール・ビンセント・ピエール・ベルティン</b><br>
 <b>AKA&nbsp;&nbsp;Karl Thomas George West `<code>ktgw</code>`<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;カール・トーマス・ジョージ・ウェスト</b><br>
-medical student<br>
+medical student<br><!--
 <br>
-<span style="display:block;text-align:center"><a href="https://x.com/ktgwkvpb"><img src="https://gistcdn.githack.com/kvpb/20db04ea32721c7a968f198dbbdf688d/raw/bc26ab114c45d50a9eae2db11823901407fd27c5/x.svg" alt="X"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://bsky.app/profile/kvpb.bsky.social"><img src="https://gistcdn.githack.com/kvpb/ed4aa99010c8aaca99c44fd85f0941ad/raw/c8427ae95b8b6b614444f76d77739a12c099d807/bluesky.svg" alt="Bluesky"></a></span></p>
+<span style="display:block;text-align:center"><a href="https://x.com/ktgwkvpb"><img src="https://gistcdn.githack.com/kvpb/20db04ea32721c7a968f198dbbdf688d/raw/bc26ab114c45d50a9eae2db11823901407fd27c5/x.svg" alt="X"></span></p>-->
 
 ## languages
 
@@ -38,9 +38,11 @@ medical student<br>
 &nbsp;&nbsp;
 ![MATLAB](https://img.shields.io/badge/-MATLAB-49C3C3?logo=octave&logoColor=E86E05) <!-- https://www.mathworks.com/brand.html -->
 ![Wolfram Language](https://img.shields.io/badge/-Wolfram%20Language-000?logo=wolframlanguage&logoColor=D10) <!-- https://content.wolfram.com/sites/10/2016/06/wolfram-language-text-logo.pdf -->
+![R](https://img.shields.io/badge/-R-ACADB2?logo=r&logoColor=1F65B8) <!-- https://www.r-project.org/logo/Rlogo.svg: rgb( 39, 109, 195 ) #276DC3, rgb( 22, 92, 170 ) #165CAA, rgb( 31, 101, 184 ) #1F65B8, rgb( 203, 206, 208 ) #CBCED0, rgb( 132, 131, 139 ) #84838B, rgb( 172, 173, 178 ) #ACADB2; -->
 
-![English](https://img.shields.io/badge/-US%20English-000?logo=americanexpress&logoColor=006FCF) <!-- https://www.aexp-static.com/cdaas/one/statics/axp-static-assets/1.8.0/package/dist/img/logos/dls-logo-stack.svg 006FCF -->
-![French](https://img.shields.io/badge/-FR%20French-FFF?logo=dassaultsystemes&logoColor=005386) <!-- https://branding.3ds.com/user/login 005386 -->
+![English](https://img.shields.io/badge/-US%20English-000?logo=mcdonalds&logoColor=FFBB0E) <!-- https://www.mcdonalds.com/content/dam/sites/usa/nfl/icons/arches-logo_108x108.jpg FFBB0E, https://www.aexp-static.com/cdaas/one/statics/axp-static-assets/1.8.0/package/dist/img/logos/dls-logo-stack.svg 006FCF -->
+![French](https://img.shields.io/badge/-FR%20French-FFF?logo=carrefour&logoColor=254F9B) <!-- https://www.carrefour.com/themes/custom/c4com/img/logo_dark.svg 254F9B, https://branding.3ds.com/user/login 005386 -->
+![German](https://img.shields.io/badge/-DE%20German-7F7F7F?logo=volkswagen&logoColor=293043) <!-- https://www.volkswagen.de/de.html: rgb(41, 48, 67) #293043 [inverse: ( 41, 48, 67 ) 293043;]; -->
 <!--![Japanese](https://img.shields.io/badge/-Japanese-FFF?logo=mitsubishi&logoColor=ED0000) <!-- https://www.mitsubishi-motors.co.jp/assets/img/logo_01.svg ED0000 -->
 
 ## frameworks
@@ -59,21 +61,4 @@ medical student<br>
 
 ![macOS](https://img.shields.io/badge/-macOS-FFFFFF?style=flat&logo=apple&logoColor=A7A9AC) <!-- https://www.apple.com/legal/sales-support/certification/docs/logo_guidelines.pdf -->
 ![Linux](https://img.shields.io/badge/-Linux-0094FF?style=flat&logo=linux&logoColor=003778) <!-- https://www.linuxfoundation.org/brand-guidelines -->
-&nbsp;&nbsp;
-![iOS](https://img.shields.io/badge/-iOS-000?style=flat&logo=apple&logoColor=FFF)
-![Android](https://img.shields.io/badge/-Android-FFFFFF?style=flat&logo=android&logoColor=3DDC84) <!-- https://developer.android.com/distribute/marketing-tools/brand-guidelines -->
-
-## activities
-
-- medicine, studying
-- boxing
-- photography
-- motorcycling
-- walking, running, swimming
-- cooking
-- going out, partying
-- playing
-- studying
-- programming
-- music
-- living
+&nbsp;&nbsp;<!--![iOS](https://img.shields.io/badge/-iOS-000?style=flat&logo=apple&logoColor=FFF)-->![Android](https://img.shields.io/badge/-Android-FFFFFF?style=flat&logo=android&logoColor=3DDC84) <!-- https://developer.android.com/distribute/marketing-tools/brand-guidelines -->
