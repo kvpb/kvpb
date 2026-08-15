@@ -1,0 +1,31 @@
+<%= form_with model: article, url: (article.persisted? ? article_path(article) : read_path), scope: :article do |form| %>
+	<% if article.errors.any? %>
+		<ul class="errors">
+			<% article.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+		</ul>
+	<% end %>
+
+	<%= form.label :kicker, "Kicker" %>
+	<%= form.text_field :kicker %>
+
+	<%= form.label :headline, "Headline" %>
+	<%= form.text_field :headline, required: true %>
+
+	<%= form.label :subheadline, "Subheadline" %>
+	<%= form.text_field :subheadline %>
+
+	<%= form.label :lede, "Lede" %>
+	<%= form.text_area :lede %>
+
+	<%= form.label :body, "Body" %>
+	<%= form.text_area :body, required: true, rows: 20 %>
+
+	<%= form.label :cover_image, "Cover image" %>
+	<%= form.file_field :cover_image, accept: "image/*" %>
+
+	<%= form.label :comments_locked do %>
+		<%= form.check_box :comments_locked %> Lock comments
+	<% end %>
+
+	<%= form.submit article.persisted? ? "Save changes" : "Create article" %>
+<% end %>
