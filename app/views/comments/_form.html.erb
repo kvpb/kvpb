@@ -1,0 +1,25 @@
+<%= form_with model: comment, url: article_comments_path(article), scope: :comment do |form| %>
+	<% if comment.errors.any? %>
+		<ul class="errors">
+			<% comment.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+		</ul>
+	<% end %>
+
+	<% unless authenticated? %>
+		<%= form.label :author_name, "Name" %>
+		<%= form.text_field :author_name, required: true %>
+		<%= form.label :author_email, "Email address" %>
+		<%= form.email_field :author_email, required: true %>
+	<% end %>
+
+	<div class="website_field" aria-hidden="true">
+		<%= form.label :website, "Leave blank" %>
+		<%= form.text_field :website, tabindex: -1, autocomplete: "off" %>
+	</div>
+
+	<%= form.label :body, "Comment" %>
+	<%= form.text_area :body, required: true %>
+
+	<%= form.submit authenticated? ? "Post comment" : "Submit comment" %>
+	<% unless authenticated? %><p class="comment_moderation_notice">Comments from visitors are reviewed before they appear.</p><% end %>
+<% end %>
