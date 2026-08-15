@@ -1,0 +1,7 @@
+<section id="home">
+	<% if @latest_article %>
+		<p class="kicker"><%= @latest_article.kicker %></p>
+		<h1><%= link_to @latest_article.headline, article_path(@latest_article) %></h1>
+		<% if @latest_article.subheadline.present? %><p class="subheadline"><%= @latest_article.subheadline %></p><% end %>
+	<% end %>
+</section>
