@@ -1,0 +1,6 @@
+<% content_for :title, "Edit #{@article.headline}" %>
+
+<section id="edit_article">
+	<h1>Edit article</h1>
+	<%= render "form", article: @article %>
+</section>
