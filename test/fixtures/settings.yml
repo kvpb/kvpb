@@ -2,3 +2,4 @@
 
 current:
   registration_enabled: false
+  login_token: test_fixture_login_token_1234567890
