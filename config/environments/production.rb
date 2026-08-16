@@ -1,3 +1,15 @@
+#	Copyright 2026 by Karl Vincent Pierre Bertin
+#
+#	Permission to use, copy, modify, and distribute this software and its
+#	documentation for any purpose and without fee is hereby granted, provided that
+#	the above copyright notice appear in all copies and that both that copyright
+#	notice and this permission notice appear in supporting documentation, and that
+#	the name of Karl Vincent Pierre Bertin not be used in advertising or publicity
+#	pertaining to distribution of the software without specific, written prior
+#	permission. Karl Vincent Pierre Bertin makes no representations about the
+#	suitability of this software for any purpose.  It is provided "as is" without
+#	express or implied warranty.
+
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
@@ -35,10 +47,10 @@ Rails.application.configure do
 
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]
-  config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
+  config.logger   = ActiveSupport::TaggedLogging.logger( STDOUT )
 
   # Change to "debug" to log everything (including potentially personally-identifiable information!)
-  config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+  config.log_level = ENV.fetch( "RAILS_LOG_LEVEL", "info" )
 
   # Prevent health checks from clogging up the logs.
   config.silence_healthcheck_path = "/up"
@@ -62,9 +74,9 @@ Rails.application.configure do
 
   # Specify outgoing SMTP server. Add smtp/* credentials via `bin/rails credentials:edit`.
   config.action_mailer.smtp_settings = {
-    user_name: Rails.application.credentials.dig(:smtp, :user_name),
-    password: Rails.application.credentials.dig(:smtp, :password),
-    address: Rails.application.credentials.dig(:smtp, :address),
+    user_name: Rails.application.credentials.dig( :smtp, :user_name ),
+    password: Rails.application.credentials.dig( :smtp, :password ),
+    address: Rails.application.credentials.dig( :smtp, :address ),
     port: 587,
     authentication: :plain
   }
@@ -88,3 +100,10 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
+
+#	production.rb
+#	kvpb.fr
+#
+#	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+#	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+#	local-part@domain
