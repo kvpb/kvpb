@@ -1,5 +1,6 @@
 class Setting < ApplicationRecord
   has_secure_token :login_token
+  has_one_attached :profile_photo
 
   def self.current
     first_or_create!
