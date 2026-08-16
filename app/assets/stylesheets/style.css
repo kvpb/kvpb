@@ -289,25 +289,59 @@ form input[type="submit"]{
 	}
 }
 
+/* Dark tokens live twice: once for the OS preference (media query, can be overridden by
+   an explicit data-theme), once for data-theme="dark" forced by the sunset controller
+   regardless of OS preference. Plain CSS has no shared mixin, so the values are repeated. */
+:root[data-theme="dark"]{
+	/* exact inverse (v -> 255-v) of the day theme's grays */
+	--color-fg: rgb( 255, 255, 255 );
+	--color-bg: rgb( 0, 0, 0 );
+	--color-muted: rgb( 170, 170, 170 );
+	--color-hover: rgba( 255, 255, 255, 0.9 );
+	--color-faint: rgb( 64, 64, 64 ); /* 25% of the way from the background to the text — a straight numeric mirror of the day theme's 10% reads as near-invisible against black, since dark grays compress perceptually */
+	--color-mid: rgb( 105, 105, 105 );
+	--color-border: rgb( 55, 55, 55 );
+
+	/* same hue as the day theme, lightness adjusted for a dark background */
+	--color-twitter: rgb( 29, 155, 240 );
+	--color-github: rgb( 216, 219, 222 );
+	--color-danger: rgb( 248, 113, 113 );
+	--color-success: rgb( 110, 220, 110 );
+	--color-pending-bg: rgb( 45, 40, 10 );
+
+	/* Karl's Hall of Fame — black marble by night */
+	--stone-bg: rgb( 24, 24, 26 );
+	--stone-grain-dark: rgba( 0, 0, 0, 0.3 );
+	--stone-grain-light: rgba( 255, 255, 255, 0.035 );
+	--engrave-shadow: rgba( 0, 0, 0, 0.65 );
+	--engrave-highlight: rgba( 255, 255, 255, 0.4 );
+	--medallion-highlight: rgba( 255, 255, 255, 0.22 );
+	--medallion-shadow: rgba( 0, 0, 0, 0.7 );
+	--stone-text-blend: screen; /* pale text absorbed into black marble */
+}
+
+/* the symbol is a monochrome SVG: invert it wholesale rather than dimming it, so it stays exactly as bold relative to the (now-inverted) page as it is by day */
+:root[data-theme="dark"] #backdrop{
+	filter: invert( 1 );
+}
+
 @media ( prefers-color-scheme: dark ){
-	:root{
-		/* exact inverse (v -> 255-v) of the day theme's grays */
+	/* :not([data-theme="light"]) lets the sunset controller force day colors even when the OS is set to dark */
+	:root:not([data-theme="light"]){
 		--color-fg: rgb( 255, 255, 255 );
 		--color-bg: rgb( 0, 0, 0 );
 		--color-muted: rgb( 170, 170, 170 );
 		--color-hover: rgba( 255, 255, 255, 0.9 );
-		--color-faint: rgb( 64, 64, 64 ); /* 25% of the way from the background to the text — a straight numeric mirror of the day theme's 10% reads as near-invisible against black, since dark grays compress perceptually */
+		--color-faint: rgb( 64, 64, 64 );
 		--color-mid: rgb( 105, 105, 105 );
 		--color-border: rgb( 55, 55, 55 );
 
-		/* same hue as the day theme, lightness adjusted for a dark background */
 		--color-twitter: rgb( 29, 155, 240 );
 		--color-github: rgb( 216, 219, 222 );
 		--color-danger: rgb( 248, 113, 113 );
 		--color-success: rgb( 110, 220, 110 );
 		--color-pending-bg: rgb( 45, 40, 10 );
 
-		/* Karl's Hall of Fame — black marble by night */
 		--stone-bg: rgb( 24, 24, 26 );
 		--stone-grain-dark: rgba( 0, 0, 0, 0.3 );
 		--stone-grain-light: rgba( 255, 255, 255, 0.035 );
@@ -315,11 +349,10 @@ form input[type="submit"]{
 		--engrave-highlight: rgba( 255, 255, 255, 0.4 );
 		--medallion-highlight: rgba( 255, 255, 255, 0.22 );
 		--medallion-shadow: rgba( 0, 0, 0, 0.7 );
-		--stone-text-blend: screen; /* pale text absorbed into black marble */
+		--stone-text-blend: screen;
 	}
 
-	/* the symbol is a monochrome SVG: invert it wholesale rather than dimming it, so it stays exactly as bold relative to the (now-inverted) page as it is by day */
-	#backdrop{
+	:root:not([data-theme="light"]) #backdrop{
 		filter: invert( 1 );
 	}
 }
