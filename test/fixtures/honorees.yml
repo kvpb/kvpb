@@ -1,0 +1,22 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+published_human:
+  name: A Published Honoree
+  kind: human
+  birth_date: 1950-01-01
+  known_from: 2000-01-01
+  helped_from: 2005-01-01
+  helped_until: 2010-01-01
+  honor_inscription: Helped without asking anything in return.
+  body: The story of how this person helped, in their own crossed history with mine.
+  identifier: a-published-honoree
+  published_at: 2026-08-01 12:00:00
+
+draft_animal:
+  name: A Draft Honoree
+  kind: animal
+  known_from: 2015-01-01
+  honor_inscription: Always there.
+  body: The story of how this animal mattered.
+  identifier: a-draft-honoree
+  published_at:
