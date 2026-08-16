@@ -14,7 +14,22 @@ Rails.application.routes.draw do
 
   root "application#index"
 
-  get "/read",                to: "pages#read",                 as: "read"
+  resource :session,      only: %i[new create destroy]
+  get "/session/end", to: "sessions#destroy", as: "end_session"
+  resource :registration, only: %i[new create]
+
+  get    "/read",                             to: "articles#index",  as: "read"
+  post   "/read",                             to: "articles#create"
+  get    "/read/new",                         to: "articles#new",    as: "new_article"
+  get    "/read/:identifier",                 to: "articles#show",   as: "article"
+  get    "/read/:identifier/edit",            to: "articles#edit",   as: "edit_article"
+  patch  "/read/:identifier",                 to: "articles#update"
+  delete "/read/:identifier",                 to: "articles#destroy"
+
+  post   "/read/:article_identifier/comments",             to: "comments#create",  as: "article_comments"
+  patch  "/read/:article_identifier/comments/:id/approve", to: "comments#approve", as: "approve_article_comment"
+  delete "/read/:article_identifier/comments/:id/reject",  to: "comments#reject",  as: "reject_article_comment"
+
   get "/see",                 to: "pages#see",                  as: "see"
   get "/listen",              to: "pages#listen",               as: "listen"
   get "/watch",               to: "pages#watch",                as: "watch"
