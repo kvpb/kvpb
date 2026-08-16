@@ -1,3 +1,15 @@
+#	Copyright 2026 by Karl Vincent Pierre Bertin
+#
+#	Permission to use, copy, modify, and distribute this software and its
+#	documentation for any purpose and without fee is hereby granted, provided that
+#	the above copyright notice appear in all copies and that both that copyright
+#	notice and this permission notice appear in supporting documentation, and that
+#	the name of Karl Vincent Pierre Bertin not be used in advertising or publicity
+#	pertaining to distribution of the software without specific, written prior
+#	permission. Karl Vincent Pierre Bertin makes no representations about the
+#	suitability of this software for any purpose.  It is provided "as is" without
+#	express or implied warranty.
+
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -14,8 +26,6 @@ Rails.application.routes.draw do
 
   root "application#index"
 
-  resource :session,      only: %i[new create destroy]
-  get "/session/end", to: "sessions#destroy", as: "end_session"
   resource :registration, only: %i[new create]
 
   get    "/read",                             to: "articles#index",  as: "read"
@@ -30,9 +40,35 @@ Rails.application.routes.draw do
   patch  "/read/:article_identifier/comments/:id/approve", to: "comments#approve", as: "approve_article_comment"
   delete "/read/:article_identifier/comments/:id/reject",  to: "comments#reject",  as: "reject_article_comment"
 
+  get    "/hall-of-fame",                     to: "honorees#index",  as: "hall_of_fame"
+  post   "/hall-of-fame",                     to: "honorees#create"
+  get    "/hall-of-fame/new",                 to: "honorees#new",    as: "new_honoree"
+  get    "/hall-of-fame/:identifier",         to: "honorees#show",   as: "honoree"
+  get    "/hall-of-fame/:identifier/edit",    to: "honorees#edit",   as: "edit_honoree"
+  patch  "/hall-of-fame/:identifier",         to: "honorees#update"
+  delete "/hall-of-fame/:identifier",         to: "honorees#destroy"
+
   get "/see",                 to: "pages#see",                  as: "see"
   get "/listen",              to: "pages#listen",               as: "listen"
   get "/watch",               to: "pages#watch",                as: "watch"
   get "/gettoknowandcontact", to: "pages#gettoknowandcontact",  as: "gettoknowandcontact"
   get "/search",              to: "pages#search",               as: "search"
+
+  # The sign-in path is not a fixed word ("session"/"login") but today's rotating token, checked
+  # against the database on every request by LoginTokenConstraint — so it is neither a guessable
+  # target for credential-stuffing bots nor a static secret baked into the deployed code. Kept last
+  # so every more specific route above gets first refusal at matching.
+  constraints( LoginTokenConstraint ) do
+    get    "/:token/new", to: "sessions#new",     as: "new_session"
+    post   "/:token",     to: "sessions#create",  as: "session"
+    delete "/:token",     to: "sessions#destroy"
+    get    "/:token/end", to: "sessions#destroy", as: "end_session"
+  end
 end
+
+#	routes.rb
+#	kvpb.fr
+#
+#	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+#	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+#	local-part@domain
