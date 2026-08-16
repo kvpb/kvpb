@@ -277,7 +277,7 @@ form input[type="submit"]{
 		--color-bg: rgb( 0, 0, 0 );
 		--color-muted: rgb( 170, 170, 170 );
 		--color-hover: rgba( 255, 255, 255, 0.9 );
-		--color-faint: rgb( 25, 25, 25 );
+		--color-faint: rgb( 64, 64, 64 ); /* 25% of the way from the background to the text — a straight numeric mirror of the day theme's 10% reads as near-invisible against black, since dark grays compress perceptually */
 		--color-mid: rgb( 105, 105, 105 );
 		--color-border: rgb( 55, 55, 55 );
 
@@ -291,7 +291,7 @@ form input[type="submit"]{
 
 	/* temporary, until the symbol itself gets a proper dark variant: dim it to ~5% by painting a near-opaque black layer over it */
 	html{
-		background-image: linear-gradient( rgba( 0, 0, 0, 0.95 ), rgba( 0, 0, 0, 0.95 ) ), url(karlsemblem.svg);
+		background-image: linear-gradient( rgba( 0, 0, 0, 0.75 ), rgba( 0, 0, 0, 0.75 ) ), url(karlsemblem.svg);
 	}
 }
 
@@ -443,7 +443,8 @@ form input[type="submit"]{
 
 /*#*/nav{
 	color: var( --color-fg );
-	text-shadow: .3px 0 var( --color-bg ), -.3px 0 var( --color-bg ), 0 .3px var( --color-bg ), 0 -.3px var( --color-bg ), .3px .3px var( --color-bg ), -.3px -.3px var( --color-bg ), .3px -.3px var( --color-bg ), -3px .3px var( --color-bg ); /*-webkit-text-stroke: .1pt rgb( 255, 255, 255 );*/
+	-webkit-text-stroke: 1px var( --color-bg );
+	paint-order: stroke fill;
 	font-size: 16px !important;
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
