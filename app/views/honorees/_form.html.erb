@@ -1,0 +1,77 @@
+<%#
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its
+	documentation for any purpose and without fee is hereby granted, provided that
+	the above copyright notice appear in all copies and that both that copyright
+	notice and this permission notice appear in supporting documentation, and that
+	the name of Karl Vincent Pierre Bertin not be used in advertising or publicity
+	pertaining to distribution of the software without specific, written prior
+	permission. Karl Vincent Pierre Bertin makes no representations about the
+	suitability of this software for any purpose.  It is provided "as is" without
+	express or implied warranty.
+%>
+
+<%= form_with model: honoree, url: ( honoree.persisted? ? honoree_path( honoree ) : hall_of_fame_path ), scope: :honoree,
+	data: {
+		controller: "autosave",
+		action: "input->autosave#scheduleSave",
+		autosave_url_value: ( honoree.persisted? ? honoree_path( honoree, format: :json ) : hall_of_fame_path( format: :json ) ),
+		autosave_method_value: ( honoree.persisted? ? "patch" : "post" )
+	} do |form| %>
+	<% if honoree.errors.any? %>
+		<ul class="errors">
+			<% honoree.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+		</ul>
+	<% end %>
+
+	<span class="autosave_status" data-autosave-target="status"></span>
+
+	<%= form.label :name, "Name" %>
+	<%= form.text_field :name, required: true %>
+
+	<%= form.label :kind, "Kind" %>
+	<%= form.select :kind, Honoree.kinds.keys.map { |k| [ k.capitalize, k ] } %>
+
+	<%= form.label :birth_date, "Birth date" %>
+	<%= form.date_field :birth_date %>
+
+	<%= form.label :death_date, "Death date" %>
+	<%= form.date_field :death_date %>
+
+	<%= form.label :known_from, "Known from" %>
+	<%= form.date_field :known_from %>
+
+	<%= form.label :known_until, "Known until" %>
+	<%= form.date_field :known_until %>
+
+	<%= form.label :helped_from, "Helped from" %>
+	<%= form.date_field :helped_from %>
+
+	<%= form.label :helped_until, "Helped until" %>
+	<%= form.date_field :helped_until %>
+
+	<%= form.label :honor_inscription, "Honor inscription" %>
+	<%= form.text_area :honor_inscription %>
+
+	<%= form.label :body, "Crossed portrait" %>
+	<%= form.text_area :body, rows: 20 %>
+
+	<%= form.label :hero_image, "Hero image" %>
+	<%= form.file_field :hero_image, accept: "image/*" %>
+
+	<%= form.label :published_at, "Publish at" %>
+	<%= form.datetime_field :published_at, value: honoree.published_at&.strftime( "%Y-%m-%dT%H:%M" ) %>
+	<p class="field_hint">Blank stays a draft. A future date schedules it. Now or the past publishes it immediately.</p>
+
+	<%= form.submit honoree.persisted? ? "Save changes" : "Create honoree" %>
+<% end %>
+
+<%#
+	_form.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+%>
