@@ -29,6 +29,38 @@ user.password = superuser_credentials[ :password ] if user.new_record?
 user.superuser = true
 user.save!
 
+profile_photo_path = Rails.root.join( "db", "seed_assets", "profile_photo.jpg" )
+if profile_photo_path.exist? && !setting.profile_photo.attached?
+  setting.profile_photo.attach( io: File.open( profile_photo_path ), filename: "profile_photo.jpg", content_type: "image/jpeg" )
+end
+
+milestones = [
+  { kind: :work, title: "Web developer stagiaire", organization: "subOceana", starts_on: "2014-02-01", ends_on: "2014-02-28" },
+  { kind: :education, title: "Baccalauréat général, série S spécialité physique-chimie", organization: "Ministère de l'Éducation nationale", location: "France", starts_on: "2014-01-01", ends_on: "2015-07-31" },
+  { kind: :work, title: "Serveur", organization: "RIE Energy Park", starts_on: "2014-07-01", ends_on: "2014-07-31" },
+  { kind: :work, title: "Secrétaire assistant", organization: "Armor Décor SARL", starts_on: "2012-07-01", ends_on: "2014-08-31" },
+  { kind: :education, title: "Piscine", organization: "42", location: "France", starts_on: "2014-09-01", ends_on: "2014-09-30" },
+  { kind: :education, title: "Certificat d'architecte en technologies numériques", organization: "42", location: "France & Internet", starts_on: "2014-11-01", ends_on: "2016-07-31" },
+  { kind: :work, title: "Web designer", organization: "Les ailes d'Horus", starts_on: "2015-08-01", ends_on: "2016-01-31" },
+  { kind: :education, title: "Licence de sciences humaines et sociales, mention psychologie", organization: "Université Paris Descartes (Paris-V)", location: "France", starts_on: "2015-09-01", ends_on: "2018-11-30" },
+  { kind: :work, title: "Stagiaire-psychologue", organization: "Clinique gérontopsychiatrique de Rochebrune", starts_on: "2018-02-01", ends_on: "2018-04-30" },
+  { kind: :education, title: "2nd baccalauréat général, série S spécialité mathématiques (avec hors-programme de MP*)", organization: "Ministère de l'Éducation nationale", location: "France", starts_on: "2018-09-01", ends_on: "2019-07-31" },
+  { kind: :education, title: "Machine Learning", organization: "Stanford University", location: "Internet", starts_on: "2019-09-01", ends_on: "2019-12-31" },
+  { kind: :work, title: "Équipier polyvalent", organization: "Biscuiteries de la Côte d'Émeraude", starts_on: "2020-08-01", ends_on: "2020-08-31" },
+  { kind: :work, title: "Secrétaire assistant", organization: "Armor Décor SARL", starts_on: "2020-03-01", ends_on: "2021-02-28" },
+  { kind: :work, title: "Self-started software engineer", organization: "freelance", starts_on: "2021-01-01", ends_on: "2021-01-31" },
+  { kind: :education, title: "Elite software engineering program", organization: "Qwasar Silicon Valley", location: "Internet", starts_on: "2021-01-01", ends_on: "2022-06-30" },
+  { kind: :work, title: "Self-started software engineer", organization: "freelance", starts_on: "2022-12-01", ends_on: "2022-12-31" },
+  { kind: :work, title: "Équipier polyvalent", organization: "Ép!c", starts_on: "2023-07-01", ends_on: "2023-08-31" },
+  { kind: :education, title: "Licence \"accès santé\" (LAS)", organization: "Sorbonne Université (Paris-VI)", location: "France", starts_on: "2023-09-01", ends_on: nil }
+]
+
+milestones.each do |attributes|
+  Milestone.find_or_create_by!( title: attributes[ :title ], organization: attributes[ :organization ], starts_on: attributes[ :starts_on ] ) do |milestone|
+    milestone.assign_attributes( attributes )
+  end
+end
+
 #	seeds.rb
 #	kvpb.fr
 #
