@@ -1,0 +1,44 @@
+<%= form_with model: milestone, url: ( milestone.persisted? ? milestone_path( milestone ) : milestones_path ), scope: :milestone do |form| %>
+	<% if milestone.errors.any? %>
+		<ul class="errors">
+			<% milestone.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+		</ul>
+	<% end %>
+
+	<%= form.label :kind, "Kind" %>
+	<%= form.select :kind, Milestone.kinds.keys.map { |k| [ k.capitalize, k ] } %>
+
+	<%= form.label :title, "Title" %>
+	<%= form.text_field :title, required: true %>
+
+	<%= form.label :organization, "Organization" %>
+	<%= form.text_field :organization, required: true %>
+
+	<%= form.label :location, "Location" %>
+	<%= form.text_field :location %>
+
+	<%= form.label :starts_on, "Starts on" %>
+	<%= form.date_field :starts_on, required: true %>
+
+	<%= form.label :ends_on, "Ends on" %>
+	<%= form.date_field :ends_on %>
+	<p class="field_hint">Blank means ongoing.</p>
+
+	<%= form.label :description, "Description" %>
+	<%= form.text_area :description %>
+
+	<%= form.submit milestone.persisted? ? "Save changes" : "Create milestone" %>
+<% end %>
+
+<%#
+	_form.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
