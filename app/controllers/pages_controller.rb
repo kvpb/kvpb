@@ -9,6 +9,9 @@ class PagesController < ApplicationController
   end
 
   def gettoknowandcontact
+    @milestones = Milestone.chronological
+    @contact = Contact.new
+    @profile_photo = Setting.current.profile_photo
   end
 
   def search
