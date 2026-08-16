@@ -24,6 +24,9 @@
 
   <body>
 		<%= render 'navigate' %>
-    <%= yield %>
+		<main>
+			<%= render 'flash' %>
+			<%= yield %>
+		</main>
   </body>
 </html>
