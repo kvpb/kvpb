@@ -1,3 +1,15 @@
+/*//	Copyright 2026 by Karl Vincent Pierre Bertin
+////
+////	Permission to use, copy, modify, and distribute this software and its
+////	documentation for any purpose and without fee is hereby granted, provided that
+////	the above copyright notice appear in all copies and that both that copyright
+////	notice and this permission notice appear in supporting documentation, and that
+////	the name of Karl Vincent Pierre Bertin not be used in advertising or publicity
+////	pertaining to distribution of the software without specific, written prior
+////	permission. Karl Vincent Pierre Bertin makes no representations about the
+////	suitability of this software for any purpose.  It is provided "as is" without
+*///	express or implied warranty.
+
 /*   t y p e s   */
 
 :root{
@@ -16,6 +28,16 @@
 	--color-danger: rgb( 178, 34, 34 );
 	--color-success: rgb( 0, 100, 0 );
 	--color-pending-bg: rgb( 255, 255, 224 );
+
+	/* Karl's Hall of Fame — limestone by day */
+	--stone-bg: rgb( 214, 210, 201 );
+	--stone-grain-dark: rgba( 0, 0, 0, 0.035 );
+	--stone-grain-light: rgba( 255, 255, 255, 0.05 );
+	--engrave-shadow: rgba( 0, 0, 0, 0.4 );
+	--engrave-highlight: rgba( 255, 255, 255, 0.65 );
+	--medallion-highlight: rgba( 255, 255, 255, 0.6 );
+	--medallion-shadow: rgba( 0, 0, 0, 0.45 );
+	--stone-text-blend: multiply; /* dark text absorbed into pale stone */
 }
 
 html{
@@ -23,10 +45,6 @@ html{
 	margin: 0;
 	color: var( --color-fg );
 	background-color: var( --color-bg );
-	background-image: url(karlsemblem.svg); /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-position: center;
 }
 
 body{
@@ -287,11 +305,21 @@ form input[type="submit"]{
 		--color-danger: rgb( 248, 113, 113 );
 		--color-success: rgb( 110, 220, 110 );
 		--color-pending-bg: rgb( 45, 40, 10 );
+
+		/* Karl's Hall of Fame — black marble by night */
+		--stone-bg: rgb( 24, 24, 26 );
+		--stone-grain-dark: rgba( 0, 0, 0, 0.3 );
+		--stone-grain-light: rgba( 255, 255, 255, 0.035 );
+		--engrave-shadow: rgba( 0, 0, 0, 0.65 );
+		--engrave-highlight: rgba( 255, 255, 255, 0.4 );
+		--medallion-highlight: rgba( 255, 255, 255, 0.22 );
+		--medallion-shadow: rgba( 0, 0, 0, 0.7 );
+		--stone-text-blend: screen; /* pale text absorbed into black marble */
 	}
 
-	/* temporary, until the symbol itself gets a proper dark variant: dim it to ~5% by painting a near-opaque black layer over it */
-	html{
-		background-image: linear-gradient( rgba( 0, 0, 0, 0.75 ), rgba( 0, 0, 0, 0.75 ) ), url(karlsemblem.svg);
+	/* the symbol is a monochrome SVG: invert it wholesale rather than dimming it, so it stays exactly as bold relative to the (now-inverted) page as it is by day */
+	#backdrop{
+		filter: invert( 1 );
 	}
 }
 
@@ -390,15 +418,168 @@ form input[type="submit"]{
 	font-size: 9pt;
 	font-style: italic;
 }
+.autosave_status{
+	display: block;
+	color: var( --color-mid );
+	font-size: 9pt;
+	font-style: italic;
+	min-height: 1.5em;
+}
+.field_hint{
+	color: var( --color-mid );
+	font-size: 9pt;
+	font-style: italic;
+	margin: 0.15em 0 0.75em 0;
+}
 .flash_notice{
 	color: var( --color-success );
 }
 .flash_alert{
 	color: var( --color-danger );
 }
+.stone_surface{
+	background-color: var( --stone-bg );
+	background-image:
+		repeating-linear-gradient( 115deg, var( --stone-grain-dark ) 0px, var( --stone-grain-dark ) 1px, transparent 1px, transparent 3px ),
+		repeating-linear-gradient( 25deg, var( --stone-grain-light ) 0px, var( --stone-grain-light ) 2px, transparent 2px, transparent 5px ),
+		radial-gradient( ellipse at 25% 15%, var( --stone-grain-dark ), transparent 60% ),
+		radial-gradient( ellipse at 80% 70%, var( --stone-grain-dark ), transparent 55% );
+	padding: 2em;
+}
+.engraved{
+	font-family: 'Didot', 'Times New Roman', serif;
+	color: var( --engrave-shadow );
+	text-shadow: 0 1px 0 var( --engrave-highlight ), 0 -1px 1px var( --engrave-shadow );
+}
+.painted{
+	font-family: 'Didot', 'Times New Roman', serif;
+	mix-blend-mode: var( --stone-text-blend, multiply );
+}
+.pantheon_facade{
+	display: block;
+	text-align: center;
+	margin: 0 0 2em 0;
+}
+.pantheon_title{
+	font-size: 32pt;
+	letter-spacing: 2pt;
+	margin: 0;
+}
+.pantheon_subtitle{
+	font-size: 14pt;
+	font-style: italic;
+	letter-spacing: 3pt;
+	text-transform: uppercase;
+	margin: .5em 0 0 0;
+}
+.pantheon_gallery{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2em;
+	justify-content: center;
+}
+.honoree_tile{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: .75em;
+	width: 180px;
+	text-align: center;
+}
+.medallion{
+	position: relative;
+	width: 160px;
+	height: 160px;
+	border-radius: 50%;
+	overflow: hidden;
+	background-color: var( --color-border );
+	box-shadow: inset 0 -8px 16px var( --medallion-shadow ), 0 6px 14px var( --medallion-shadow );
+}
+.medallion.draft{
+	opacity: 0.5;
+}
+.medallion img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+.medallion::before{
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background: radial-gradient( circle at 35% 25%, var( --medallion-highlight ), transparent 55% );
+	mix-blend-mode: overlay;
+	pointer-events: none;
+	transition: background .2s ease-in-out;
+}
+.medallion::after{
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	box-shadow: inset 0 0 24px var( --medallion-shadow );
+	pointer-events: none;
+}
+.honoree_tile:hover .medallion::before{
+	background: radial-gradient( circle at 40% 22%, var( --medallion-highlight ), transparent 60% );
+}
+.honoree_name{
+	font-size: 12pt;
+}
+.honoree_hero{
+	width: 100%;
+	max-height: 70vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0 0 1em 0;
+}
+.honoree_hero_image{
+	max-width: 100%;
+	max-height: 70vh;
+	object-fit: contain;
+}
+.honoree_name_large{
+	font-size: 36pt;
+	text-align: center;
+	margin: 0;
+}
+.honoree_dates{
+	text-align: center;
+	font-size: 11pt;
+	display: flex;
+	justify-content: center;
+	gap: 1em;
+	flex-wrap: wrap;
+	margin: .5em 0;
+}
+.honoree_inscription{
+	text-align: center;
+	font-size: 18pt;
+	font-style: italic;
+	margin: 1em auto;
+	max-width: 30em;
+}
+.honoree_body{
+	max-width: 40em;
+	margin: 2em auto 0;
+	font-size: 13pt;
+}
 
 /*   I D s   */
 
+#backdrop{
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	background-image: url(karlsemblem.svg); /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+	pointer-events: none;
+}
 #wordmark{
 	color: var( --color-fg );
 	font-family: 'Arial', sans-serif;
@@ -555,6 +736,15 @@ form input[type="submit"]{
 #flash{
 	padding: 0.5em 1%;
 }
+#hall_of_fame{
+	max-width: 60em;
+	margin: 0 auto;
+}
+#honoree{
+	max-width: 60em;
+	margin: 0 auto;
+	display: block;
+}
 
 /*	style.css
 	The CSS of my website.
@@ -566,3 +756,10 @@ form input[type="submit"]{
 	kvpb.fr
 	https://x.com/ktgwkvpb
 	https://github.com/kvpb	*/
+
+/*//	style.css
+////	kvpb.fr
+////
+////	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+////	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+*///	local-part@domain
