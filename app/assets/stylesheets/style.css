@@ -1,9 +1,32 @@
 /*   t y p e s   */
 
+:root{
+	color-scheme: light dark;
+
+	--color-fg: rgb( 0, 0, 0 );
+	--color-bg: rgb( 255, 255, 255 );
+	--color-muted: rgb( 85, 85, 85 );
+	--color-hover: rgba( 0, 0, 0, 0.9 );
+	--color-faint: rgb( 230, 230, 230 );
+	--color-mid: rgb( 150, 150, 150 );
+	--color-border: rgb( 200, 200, 200 );
+
+	--color-twitter: rgb( 29, 155, 240 );
+	--color-github: rgb( 37, 41, 46 );
+	--color-danger: rgb( 178, 34, 34 );
+	--color-success: rgb( 0, 100, 0 );
+	--color-pending-bg: rgb( 255, 255, 224 );
+}
+
 html{
-	color: rgb( 0, 0, 0 );
-	background-color: rgb( 255, 255, 255 );
-	background: url(karlsemblem.svg) no-repeat fixed center; /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
+	height: 100%;
+	margin: 0;
+	color: var( --color-fg );
+	background-color: var( --color-bg );
+	background-image: url(karlsemblem.svg); /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
 }
 
 body{
@@ -11,16 +34,20 @@ body{
 	/*background-color: rgb( 255, 255, 255 );*/
 	/*background: url(https://camo.githubusercontent.com/c30ec0405c5e8bb19e19cf20836b2d036130f6b55598843f66c50365d50e0d09/68747470733a2f2f6769737463646e2e6769746861636b2e636f6d2f6b7670622f63383035393465393037396538353763353563333664656334396131613264372f7261772f656563353464353832316463303932616439313036333531343163346534666565626630373536352f6b7670627373796d626f6c2e737667) no-repeat fixed center;*/
 	width: 100%;
-	height: 100%;
-	float: left;
+	min-height: 100vh;
+	min-height: 100dvh;
+	margin: 0;
 	font-family: 'Times New Roman', serif;
 	font-size: 12pt;
-	margin: 0 auto 0 auto;
-	padding: 0;
-	width: 100%;
+	padding: 1em;
+	box-sizing: border-box;
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
+	flex-direction: row;
+}
+
+main{
+	flex: 1 1 auto;
+	min-width: 0;
 }
 
 article{
@@ -29,6 +56,9 @@ article{
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: flex-start;
+}
+article.draft{
+	opacity: 0.6;
 }
 
 header{
@@ -47,13 +77,13 @@ a{
 	text-decoration: none;
 }
 a:link{
-	color: rgb( 85, 85, 85 ); /* default values: `color: rgb( 0, 0, 93 );`; */
+	color: var( --color-muted ); /* default values: `color: rgb( 0, 0, 93 );`; */
 }
 a:visited{
-	color: rgb( 85, 85, 85 ); /* default values: `color: rgb( 85, 26, 139 );`; */
+	color: var( --color-muted ); /* default values: `color: rgb( 85, 26, 139 );`; */
 }
 a:hover{
-	color: rgba( 0, 0, 0, 0.9 );
+	color: var( --color-hover );
 	animation-name: blink;
 	animation-duration: 1s;
 	animation-timing-function: linear;
@@ -71,7 +101,7 @@ a:hover{
 	-webkit-animation-play-state: running;
 }
 a:active{
-	color: rgba( 0, 0, 0, 0.9 );
+	color: var( --color-hover );
 	animation-name: blink;
 	animation-duration: 0.1s;
 	animation-timing-function: linear;
@@ -97,15 +127,45 @@ hr{
 }
 
 span.highlight{
-	background-color: rgb( 255, 255, 0 );
+	background-color: rgb( 255, 255, 0 ); /* pure yellow is already mid-lightness, so it doesn't need inverting; the text on top of it is forced black in both themes instead, below */
+	color: rgb( 0, 0, 0 );
 }
 span.black{
-	color: rgb( 0, 0, 0 );
+	color: rgb( 0, 0, 0 ); /* named for literal black, so it does not follow the theme */
 }
 
 ::selection{
-	background-color: black;
-	color: white;
+	background-color: var( --color-fg );
+	color: var( --color-bg );
+}
+
+form label{
+	display: block;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 9pt;
+	text-transform: uppercase;
+	letter-spacing: 1pt;
+	margin: 0.75em 0 0.15em 0;
+}
+form input[type="text"], form input[type="email"], form input[type="password"], form textarea{
+	width: 100%;
+	max-width: 32em;
+	font-family: 'Times New Roman', serif;
+	font-size: 12pt;
+	padding: 0.3em;
+	box-sizing: border-box;
+	border: 1px solid var( --color-border );
+	color: var( --color-fg );
+	background-color: var( --color-bg );
+}
+form input[type="submit"]{
+	margin-top: 1em;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 1pt;
+	padding: 0.4em 1em;
 }
 
 /*   a t - r u l e s   */
@@ -210,14 +270,137 @@ span.black{
 	}
 }
 
+@media ( prefers-color-scheme: dark ){
+	:root{
+		/* exact inverse (v -> 255-v) of the day theme's grays */
+		--color-fg: rgb( 255, 255, 255 );
+		--color-bg: rgb( 0, 0, 0 );
+		--color-muted: rgb( 170, 170, 170 );
+		--color-hover: rgba( 255, 255, 255, 0.9 );
+		--color-faint: rgb( 25, 25, 25 );
+		--color-mid: rgb( 105, 105, 105 );
+		--color-border: rgb( 55, 55, 55 );
+
+		/* same hue as the day theme, lightness adjusted for a dark background */
+		--color-twitter: rgb( 29, 155, 240 );
+		--color-github: rgb( 216, 219, 222 );
+		--color-danger: rgb( 248, 113, 113 );
+		--color-success: rgb( 110, 220, 110 );
+		--color-pending-bg: rgb( 45, 40, 10 );
+	}
+
+	/* temporary, until the symbol itself gets a proper dark variant: dim it to ~5% by painting a near-opaque black layer over it */
+	html{
+		background-image: linear-gradient( rgba( 0, 0, 0, 0.95 ), rgba( 0, 0, 0, 0.95 ) ), url(karlsemblem.svg);
+	}
+}
+
 /*   c l a s s e s   */
 
-
+.kicker{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 2pt;
+	font-size: 10pt;
+	margin: 1em 0 0 0;
+}
+.headline{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-style: italic;
+	margin: 0.1em 0;
+}
+.subheadline{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	margin: 0 0 0.5em 0;
+}
+.lede{
+	font-size: 13pt;
+	margin: 0.5em 0;
+}
+.cover_image{
+	max-width: 100%;
+	height: auto;
+	display: block;
+	margin: 1em 0;
+}
+.status_badge{
+	display: inline-block;
+	color: var( --color-danger );
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	font-size: 9pt;
+	letter-spacing: 1pt;
+	border: 1px solid var( --color-danger );
+	padding: 0.1em 0.4em;
+	margin: 0 0.5em 0.5em 0;
+}
+.superuser_controls{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.75em;
+	margin: 0.5em 0;
+	font-size: 10pt;
+}
+.superuser_controls form{
+	display: inline;
+}
+.superuser_controls input[type="submit"]{
+	font: inherit;
+	color: inherit;
+	background: none;
+	border: none;
+	text-decoration: underline;
+	cursor: pointer;
+	padding: 0;
+}
+.comment{
+	border-top: 1px solid var( --color-faint );
+	padding: 0.75em 0;
+}
+.comment_author{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 10pt;
+}
+.comment_date{
+	color: var( --color-mid );
+	font-weight: normal;
+}
+.comment.pending .comment_author{
+	color: var( --color-danger );
+}
+.comments_locked{
+	color: var( --color-mid );
+	font-style: italic;
+}
+.website_field{
+	display: none;
+}
+.errors{
+	color: var( --color-danger );
+}
+.comment_moderation_notice{
+	color: var( --color-mid );
+	font-size: 9pt;
+	font-style: italic;
+}
+.flash_notice{
+	color: var( --color-success );
+}
+.flash_alert{
+	color: var( --color-danger );
+}
 
 /*   I D s   */
 
 #wordmark{
-	color: rgb( 0, 0, 0 );
+	color: var( --color-fg );
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
 	text-align: left !important;
@@ -228,7 +411,7 @@ span.black{
 	/*-webkit-animation: fadein .5s 1;*/
 }
 #line_1_logotype{
-	color: rgb( 230, 230, 230 );
+	color: var( --color-faint );
 	text-transform: uppercase;
 	font-size: 12pt;
 	/*font-variant: small-caps;*/
@@ -250,7 +433,7 @@ span.black{
 	line-height: 0.9em;
 }
 #line_4_logotype{
-	color: rgb( 230, 230, 230 );
+	color: var( --color-faint );
 	text-transform: uppercase;
 	font-size: 6pt;
 	/*font-variant: small-caps;*/
@@ -259,8 +442,8 @@ span.black{
 }
 
 /*#*/nav{
-	color: rgb( 0, 0, 0 );
-	text-shadow: .3px 0 rgb( 255, 255, 255 ), -.3px 0 rgb( 255, 255, 255 ), 0 .3px rgb( 255, 255, 255 ), 0 -.3px rgb( 255, 255, 255 ), .3px .3px rgb( 255, 255, 255 ), -.3px -.3px rgb( 255, 255, 255 ), .3px -.3px rgb( 255, 255, 255 ), -3px .3px rgb( 255, 255, 255 ); /*-webkit-text-stroke: .1pt rgb( 255, 255, 255 );*/
+	color: var( --color-fg );
+	text-shadow: .3px 0 var( --color-bg ), -.3px 0 var( --color-bg ), 0 .3px var( --color-bg ), 0 -.3px var( --color-bg ), .3px .3px var( --color-bg ), -.3px -.3px var( --color-bg ), .3px -.3px var( --color-bg ), -3px .3px var( --color-bg ); /*-webkit-text-stroke: .1pt rgb( 255, 255, 255 );*/
 	font-size: 16px !important;
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
@@ -268,36 +451,37 @@ span.black{
 	flex-direction: column;
 	flex-wrap: wrap;
 	align-items: right;
+	flex: 0 0 auto;
 	padding: .1cm;
 	border: .1cm;
-	margin: .1cm auto auto .1cm;
+	margin: 0;
 }
 #watch{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #see{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #read{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #listen{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #gettoknowandcontact{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 }
 /*#gettoknowandcontact_0{
 	text-align: right;
@@ -314,16 +498,16 @@ span.black{
 	text-align: left;
 }
 #search{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #checkout_TwitterX{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 }
 #checkout_TwitterX_1{
-	color: rgb( 29, 155, 240 ) !important;
+	color: var( --color-twitter ) !important;
 	font-size: 16pt !important;
 	text-align: left;
 }
@@ -333,10 +517,10 @@ span.black{
 	text-align: right;
 }
 #checkout_GitHub{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 }
 #checkout_GitHub_1{
-	color: rgb( 37, 41, 46 ) !important;
+	color: var( --color-github ) !important;
 	font-size: 16pt !important;
 	text-align: left;
 }
@@ -350,6 +534,25 @@ span.black{
 	margin: -4pt 0 16pt 0;
 	transform: scale( 1.5 );
 	animation: none !important;
+}
+#article{
+	display: block;
+}
+#article header{
+	display: flex;
+	flex-direction: column;
+	padding: 0;
+}
+#comments{
+	margin: 2em 0;
+}
+#pending_comments{
+	background-color: var( --color-pending-bg );
+	padding: 0.5em 1em;
+	margin: 1em 0;
+}
+#flash{
+	padding: 0.5em 1%;
 }
 
 /*	style.css
