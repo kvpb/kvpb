@@ -1,5 +1,17 @@
+#	Copyright 2026 by Karl Vincent Pierre Bertin
+#
+#	Permission to use, copy, modify, and distribute this software and its
+#	documentation for any purpose and without fee is hereby granted, provided that
+#	the above copyright notice appear in all copies and that both that copyright
+#	notice and this permission notice appear in supporting documentation, and that
+#	the name of Karl Vincent Pierre Bertin not be used in advertising or publicity
+#	pertaining to distribution of the software without specific, written prior
+#	permission. Karl Vincent Pierre Bertin makes no representations about the
+#	suitability of this software for any purpose.  It is provided "as is" without
+#	express or implied warranty.
+
 # This migration comes from active_storage (originally 20170806125915)
-class CreateActiveStorageTables < ActiveRecord::Migration[7.0]
+class CreateActiveStorageTables < ActiveRecord::Migration[ 7.0 ]
   def change
     # Use Active Record's configured type for primary and foreign keys
     primary_key_type, foreign_key_type = primary_and_foreign_key_types
@@ -49,9 +61,16 @@ class CreateActiveStorageTables < ActiveRecord::Migration[7.0]
   private
     def primary_and_foreign_key_types
       config = Rails.configuration.generators
-      setting = config.options[config.orm][:primary_key_type]
+      setting = config.options[ config.orm ][ :primary_key_type ]
       primary_key_type = setting || :primary_key
       foreign_key_type = setting || :bigint
       [ primary_key_type, foreign_key_type ]
     end
 end
+
+#	20260815224901_create_active_storage_tables.active_storage.rb
+#	kvpb.fr
+#
+#	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+#	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+#	local-part@domain
