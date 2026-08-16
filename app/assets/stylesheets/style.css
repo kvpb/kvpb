@@ -589,6 +589,140 @@ form input[type="submit"]{
 	font-size: 13pt;
 }
 
+.profile_header{
+	display: flex;
+	gap: 2em;
+	align-items: flex-start;
+	flex-wrap: wrap;
+	margin: 0 0 2em 0;
+}
+.profile_photo{
+	width: 180px;
+	height: 180px;
+	object-fit: cover;
+	border-radius: 4px;
+	flex-shrink: 0;
+}
+.profile_intro{
+	flex: 1 1 20em;
+	min-width: 0;
+}
+.profile_tagline{
+	color: var( --color-mid );
+	font-size: 10pt;
+	text-transform: uppercase;
+	letter-spacing: 1pt;
+	margin: 0 0 1em 0;
+}
+.personal_statement{
+	font-style: italic;
+	max-width: 34em;
+}
+
+.resume_layout{
+	display: flex;
+	gap: 3em;
+	align-items: flex-start;
+	flex-wrap: wrap;
+}
+.resume_sidebar{
+	flex: 0 0 16em;
+}
+.sidebar_section{
+	margin: 0 0 1.5em 0;
+}
+.sidebar_section h2{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	font-size: 10pt;
+	letter-spacing: 1pt;
+	margin: 0 0 0.5em 0;
+}
+.sidebar_section ul{
+	padding-left: 1.2em;
+	margin: 0;
+	font-size: 10pt;
+}
+.skill_list{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.skill_list li{
+	margin: 0 0 0.5em 0;
+}
+.skill_name{
+	display: block;
+	font-size: 9pt;
+	margin: 0 0 0.15em 0;
+}
+.skill_bar{
+	display: block;
+	height: 6px;
+	background-color: var( --color-faint );
+	border-radius: 3px;
+	overflow: hidden;
+}
+.skill_bar span{
+	display: block;
+	height: 100%;
+	background-color: var( --color-fg );
+}
+.soft_skills{
+	font-size: 9pt;
+	color: var( --color-mid );
+	margin: 1em 0 0 0;
+}
+.portfolio_list{
+	font-size: 9pt;
+}
+
+.resume_timeline{
+	flex: 1 1 28em;
+	min-width: 0;
+}
+.timeline{
+	list-style: none;
+	padding: 0;
+	margin: 1em 0 0 0;
+	border-left: 2px solid var( --color-border );
+}
+.timeline_entry{
+	position: relative;
+	padding: 0 0 1.5em 1.5em;
+}
+.timeline_entry::before{
+	content: '';
+	position: absolute;
+	left: -5px;
+	top: 0.3em;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background-color: var( --color-fg );
+}
+.timeline_dates{
+	font-size: 9pt;
+	color: var( --color-mid );
+	text-transform: uppercase;
+	letter-spacing: 0.5pt;
+	margin: 0 0 0.15em 0;
+}
+.timeline_title{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	margin: 0 0 0.15em 0;
+}
+.timeline_organization{
+	font-size: 10pt;
+	margin: 0 0 0.25em 0;
+}
+.timeline_description{
+	font-size: 10pt;
+	margin: 0.25em 0 0 0;
+}
+
 /*   I D s   */
 
 #backdrop{
