@@ -1,8 +1,127 @@
 <% content_for :title, "Get to know & contact" %>
 
-<section id="gettoknowandcontact" class="placeholder">
-	<h1>Get to know &amp; contact</h1>
-	<p>Coming soon.</p>
+<section id="gettoknowandcontact">
+	<header class="profile_header">
+		<% if @profile_photo.attached? %>
+			<%= image_tag @profile_photo, class: "profile_photo" %>
+		<% end %>
+		<div class="profile_intro">
+			<h1>Karl Vincent Pierre Bertin</h1>
+			<p class="profile_tagline">Paris, France</p>
+			<p class="personal_statement">Je suis énergique et ambitieux, mature et responsable. Je travaille en équipe aussi bien que seul. Aussi suis-je polyvalent — j'ai occupé tout type de postes. J'ai les permis A (sans limitation de puissance) et B (boîte automatique). Me conviennent travail à temps complet, temps partiel, remplacement...</p>
+		</div>
+	</header>
+
+	<div class="resume_layout">
+		<aside class="resume_sidebar">
+			<section class="sidebar_section">
+				<h2>Skills</h2>
+				<ul class="skill_list">
+					<li><span class="skill_name">Multi-paradigm programming (C++, C)</span><span class="skill_bar"><span style="width: 67%;"></span></span></li>
+					<li><span class="skill_name">Procedural (imperative) programming (C, C++)</span><span class="skill_bar"><span style="width: 90%;"></span></span></li>
+					<li><span class="skill_name">Functional programming (C, C++)</span><span class="skill_bar"><span style="width: 90%;"></span></span></li>
+					<li><span class="skill_name">Object-oriented programming (C++, Ruby, Python)</span><span class="skill_bar"><span style="width: 50%;"></span></span></li>
+					<li><span class="skill_name">Build automation (Makefile, Unix shell script)</span><span class="skill_bar"><span style="width: 75%;"></span></span></li>
+					<li><span class="skill_name">Web development (Rails, JavaScript, SQL, HTML, CSS)</span><span class="skill_bar"><span style="width: 67%;"></span></span></li>
+					<li><span class="skill_name">Technology (Git, Linux, macOS, LaTeX, Office)</span><span class="skill_bar"><span style="width: 100%;"></span></span></li>
+				</ul>
+				<p class="soft_skills">professionnalisme, contact au client, travail en équipe, réactivité, organisation, minutie, ponctualité, précision, rigueur, habileté, efficacité, responsabilité, réflexion, maturité, méthodique</p>
+			</section>
+
+			<section class="sidebar_section">
+				<h2>Languages</h2>
+				<ul>
+					<li>US English — bilingual, C2</li>
+					<li>Français — native, C2</li>
+					<li>Deutsch — A1</li>
+					<li>Español — B2</li>
+				</ul>
+			</section>
+
+			<section class="sidebar_section">
+				<h2>Degrees &amp; licenses</h2>
+				<ul>
+					<li>Diplôme national de licence de SHS, mention psychologie</li>
+					<li>Diplôme du baccalauréat général, série S spécialité mathématiques</li>
+					<li>Diplôme du baccalauréat général, série S spécialité physique-chimie</li>
+					<li>Permis de conduire A (unrestricted motorcycle)</li>
+					<li>Permis de conduire B (automatic car)</li>
+				</ul>
+			</section>
+
+			<section class="sidebar_section">
+				<h2>Interests</h2>
+				<p>aïkido, muay thaï, motocyclisme, cyclisme, marche, course à pied, natation, tir sportif, photographie</p>
+			</section>
+
+			<section class="sidebar_section">
+				<h2>Portfolio</h2>
+				<p><%= link_to "github.com/kvpb", "https://github.com/kvpb" %></p>
+				<ul class="portfolio_list">
+					<li><strong>URLS</strong> — Un raccourcisseur d'URL en ligne de commande.</li>
+					<li><strong>My LS</strong> — Un clone de l'utilitaire en ligne de commande LS.</li>
+					<li><strong>My PRINTF</strong> — Un clone de la routine PRINTF, la fonction de sortie formatée de la LIBC.</li>
+					<li><strong>My Mastermind</strong> — Une version en ligne de commande du jeu classique.</li>
+					<li><strong>Piano Tiles</strong> — Un Guitar Hero-like pour un hackathon de 48 heures.</li>
+					<li><strong>Machine Learning</strong> — Mon rendu pour le cours Machine Learning d'Andrew Ng de Stanford University.</li>
+					<li><strong>RPwG</strong> — Un générateur pseudo-aléatoire de mots de passe spécial.</li>
+					<li><strong>dot files</strong> — Runcoms, fichiers de configuration, installations, scripts, modèles et hacks.</li>
+					<li><strong>KVPB's LIBC (LIBFT)</strong> — Un clone de librairie (non) standard du C.</li>
+				</ul>
+			</section>
+		</aside>
+
+		<div class="resume_timeline">
+			<h2>Timeline</h2>
+			<% if superuser? %>
+				<p class="superuser_controls"><%= link_to "New milestone", new_milestone_path %></p>
+			<% end %>
+			<ol class="timeline">
+				<% @milestones.each do |milestone| %>
+					<li class="timeline_entry timeline_entry_<%= milestone.kind %>">
+						<p class="timeline_dates"><%= milestone.date_range_label %></p>
+						<h3 class="timeline_title"><%= milestone.title %></h3>
+						<p class="timeline_organization"><%= milestone.organization %><% if milestone.location.present? %> — <%= milestone.location %><% end %></p>
+						<% if milestone.description.present? %><p class="timeline_description"><%= milestone.description %></p><% end %>
+						<% if superuser? %>
+							<div class="superuser_controls">
+								<%= link_to "Edit", edit_milestone_path( milestone ) %>
+								<%= button_to "Delete", milestone_path( milestone ), method: :delete, data: { turbo_confirm: "Delete this milestone?" } %>
+							</div>
+						<% end %>
+					</li>
+				<% end %>
+			</ol>
+		</div>
+	</div>
+
+	<section id="contact_form_section">
+		<h2>Contact</h2>
+
+		<% if @contact.errors.any? %>
+			<ul class="errors">
+				<% @contact.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+			</ul>
+		<% end %>
+
+		<%= form_with model: @contact, url: contact_path, scope: :contact do |form| %>
+			<%= form.label :name, "Name" %>
+			<%= form.text_field :name, required: true %>
+
+			<%= form.label :email_address, "Email address" %>
+			<%= form.email_field :email_address, required: true %>
+
+			<%= form.label :body, "Message" %>
+			<%= form.text_area :body, required: true %>
+
+			<div class="website_field" aria-hidden="true">
+				<%= form.label :website, "Leave blank" %>
+				<%= form.text_field :website, tabindex: -1, autocomplete: "off" %>
+			</div>
+
+			<%= form.submit "Send" %>
+		<% end %>
+	</section>
 </section>
 
 <%#
