@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_224948) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_16_171908) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -40,7 +40,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_224948) do
   end
 
   create_table "articles", force: :cascade do |t|
-    t.text "body", null: false
+    t.text "body"
     t.boolean "comments_locked", default: false, null: false
     t.datetime "created_at", null: false
     t.string "headline", null: false
@@ -67,6 +67,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_224948) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "honorees", force: :cascade do |t|
+    t.date "birth_date"
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.date "death_date"
+    t.date "helped_from"
+    t.date "helped_until"
+    t.text "honor_inscription"
+    t.string "identifier", null: false
+    t.integer "kind", default: 0, null: false
+    t.date "known_from"
+    t.date "known_until"
+    t.string "name", null: false
+    t.datetime "published_at"
+    t.datetime "updated_at", null: false
+    t.index ["identifier"], name: "index_honorees_on_identifier", unique: true
+    t.index ["published_at"], name: "index_honorees_on_published_at"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -78,8 +97,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_224948) do
 
   create_table "settings", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "login_token"
     t.boolean "registration_enabled", default: false, null: false
     t.datetime "updated_at", null: false
+    t.index ["login_token"], name: "index_settings_on_login_token", unique: true
   end
 
   create_table "users", force: :cascade do |t|
