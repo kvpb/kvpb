@@ -1,21 +1,35 @@
+<%#
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its
+	documentation for any purpose and without fee is hereby granted, provided that
+	the above copyright notice appear in all copies and that both that copyright
+	notice and this permission notice appear in supporting documentation, and that
+	the name of Karl Vincent Pierre Bertin not be used in advertising or publicity
+	pertaining to distribution of the software without specific, written prior
+	permission. Karl Vincent Pierre Bertin makes no representations about the
+	suitability of this software for any purpose.  It is provided "as is" without
+	express or implied warranty.
+%>
+
 <% content_for :title, @article.headline %>
 
 <article id="article" class="<%= @article.published? ? "published" : "draft" %>">
 	<% if superuser? %>
 		<div class="superuser_controls">
 			<% unless @article.published? %><span class="status_badge">Draft</span><% end %>
-			<%= link_to "Edit", edit_article_path(@article) %>
+			<%= link_to "Edit", edit_article_path( @article ) %>
 			<% if @article.published? %>
-				<%= button_to "Unpublish", article_path(@article), method: :patch, params: { article: { published_at: "" } } %>
+				<%= button_to "Unpublish", article_path( @article ), method: :patch, params: { article: { published_at: "" } } %>
 			<% else %>
-				<%= button_to "Publish now", article_path(@article), method: :patch, params: { article: { published_at: Time.current } } %>
+				<%= button_to "Publish now", article_path( @article ), method: :patch, params: { article: { published_at: Time.current } } %>
 			<% end %>
 			<% if @article.comments_locked? %>
-				<%= button_to "Unlock comments", article_path(@article), method: :patch, params: { article: { comments_locked: false } } %>
+				<%= button_to "Unlock comments", article_path( @article ), method: :patch, params: { article: { comments_locked: false } } %>
 			<% else %>
-				<%= button_to "Lock comments", article_path(@article), method: :patch, params: { article: { comments_locked: true } } %>
+				<%= button_to "Lock comments", article_path( @article ), method: :patch, params: { article: { comments_locked: true } } %>
 			<% end %>
-			<%= button_to "Delete", article_path(@article), method: :delete, data: { turbo_confirm: "Delete this article?" } %>
+			<%= button_to "Delete", article_path( @article ), method: :delete, data: { turbo_confirm: "Delete this article?" } %>
 		</div>
 	<% end %>
 
@@ -50,8 +64,8 @@
 				<div class="comment pending">
 					<p class="comment_author"><%= comment.author_display_name %> — <%= comment.author_email %></p>
 					<p class="comment_body"><%= comment.body %></p>
-					<%= button_to "Approve", approve_article_comment_path(@article, comment), method: :patch %>
-					<%= button_to "Reject", reject_article_comment_path(@article, comment), method: :delete, data: { turbo_confirm: "Reject and delete this comment? The author will be emailed a copy." } %>
+					<%= button_to "Approve", approve_article_comment_path( @article, comment ), method: :patch %>
+					<%= button_to "Reject", reject_article_comment_path( @article, comment ), method: :delete, data: { turbo_confirm: "Reject and delete this comment? The author will be emailed a copy." } %>
 				</div>
 			<% end %>
 		</div>
@@ -63,3 +77,12 @@
 		<%= render "comments/form", article: @article, comment: @comment %>
 	<% end %>
 </section>
+
+<%#
+	show.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+%>
