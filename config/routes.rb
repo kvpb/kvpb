@@ -42,6 +42,13 @@ Rails.application.routes.draw do
   get "/gettoknowandcontact", to: "pages#gettoknowandcontact",  as: "gettoknowandcontact"
   get "/search",              to: "pages#search",               as: "search"
 
+  post   "/gettoknowandcontact/contact",             to: "contacts#create",    as: "contact"
+  get    "/gettoknowandcontact/milestones/new",      to: "milestones#new",     as: "new_milestone"
+  post   "/gettoknowandcontact/milestones",          to: "milestones#create", as: "milestones"
+  get    "/gettoknowandcontact/milestones/:id/edit", to: "milestones#edit",    as: "edit_milestone"
+  patch  "/gettoknowandcontact/milestones/:id",      to: "milestones#update"
+  delete "/gettoknowandcontact/milestones/:id",      to: "milestones#destroy", as: "milestone"
+
   # The sign-in path is not a fixed word ("session"/"login") but today's rotating token, checked
   # against the database on every request by LoginTokenConstraint — so it is neither a guessable
   # target for credential-stuffing bots nor a static secret baked into the deployed code. Kept last
