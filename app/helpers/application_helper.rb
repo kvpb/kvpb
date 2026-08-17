@@ -1,13 +1,29 @@
 module ApplicationHelper
+  def smart_quotes( text )
+    sanitize( RubyPants.new( text.to_s ).to_html, tags: [] )
+  end
+
+  def smart_format( text )
+    simple_format( RubyPants.new( text.to_s ).to_html )
+  end
+
+  def section_empty?( section )
+    case section
+    when :journal then !Article.published.exists?
+    when :gallery then !Album.published.exists?
+    when :music, :films then true
+    end
+  end
+
   def current_section_suffix
     if controller_name == "articles"
-      { label: "journal", empty: !Article.published.exists? }
+      { label: "journal", empty: section_empty?( :journal ) }
     elsif controller_name == "albums"
-      { label: "gallery", empty: !Album.published.exists? }
+      { label: "gallery", empty: section_empty?( :gallery ) }
     elsif controller_name == "pages" && action_name == "listen"
-      { label: "music", empty: true }
+      { label: "music", empty: section_empty?( :music ) }
     elsif controller_name == "pages" && action_name == "watch"
-      { label: "films", empty: true }
+      { label: "films", empty: section_empty?( :films ) }
     end
   end
 end
