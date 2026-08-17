@@ -812,6 +812,9 @@ form input[type="submit"]{
 	padding-left: 3.33pt;
 }
 
+#nav_wrapper{
+	flex: 0 0 auto;
+}
 /*#*/nav{
 	color: var( --color-fg );
 	-webkit-text-stroke: 1px var( --color-bg );
@@ -823,7 +826,6 @@ form input[type="submit"]{
 	flex-direction: column;
 	flex-wrap: wrap;
 	align-items: right;
-	flex: 0 0 auto;
 	padding: .1cm;
 	border: .1cm;
 	margin: 0;
@@ -933,6 +935,36 @@ form input[type="submit"]{
 }
 #flash{
 	padding: 0.5em 1%;
+}
+#search_overlay{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.75em 1em;
+	background-color: var( --color-bg );
+	color: var( --color-fg );
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity .3s ease, background-color .3s ease, color .3s ease;
+	z-index: 30;
+}
+.search_open #search_overlay{
+	opacity: 1;
+	pointer-events: auto;
+	background-color: black;
+	color: white;
+}
+#search_overlay input{
+	width: 100%;
+	background: transparent;
+	border: none;
+	outline: none;
+	font: inherit;
+	color: inherit;
+	font-family: 'Arial', sans-serif;
+	font-size: 24px;
 }
 #hall_of_fame{
 	max-width: 60em;
