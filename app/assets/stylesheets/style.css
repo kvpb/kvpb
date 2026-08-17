@@ -621,6 +621,64 @@ form input[type="submit"]{
 	font-size: 13pt;
 }
 
+.album_gallery{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.5em;
+}
+.album_tile{
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
+	width: 240px;
+}
+.album_cover{
+	display: block;
+	width: 240px;
+	height: 240px;
+	overflow: hidden;
+	background-color: var( --color-faint );
+}
+.album_cover.draft{
+	opacity: 0.6;
+}
+.album_cover_image{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+.album_title{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+}
+.album_meta{
+	font-size: 9pt;
+	color: var( --color-mid );
+}
+.album_header{
+	margin: 0 0 1em 0;
+}
+.album_title_large{
+	font-size: 36pt;
+	margin: 0;
+}
+.album_description{
+	max-width: 40em;
+	margin: 1em 0;
+}
+.album_photos{
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	max-width: 50em;
+}
+.album_photo{
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
 .profile_header{
 	display: flex;
 	gap: 2em;
