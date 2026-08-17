@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_17_194805) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_17_210641) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -110,6 +110,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_17_194805) do
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["starts_on"], name: "index_milestones_on_starts_on"
+  end
+
+  create_table "prints", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "identifier", null: false
+    t.datetime "published_at"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["identifier"], name: "index_prints_on_identifier", unique: true
+    t.index ["published_at"], name: "index_prints_on_published_at"
   end
 
   create_table "sessions", force: :cascade do |t|
