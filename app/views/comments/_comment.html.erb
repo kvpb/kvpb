@@ -1,6 +1,6 @@
 <div class="comment" id="<%= dom_id( comment ) %>">
 	<p class="comment_author"><%= comment.author_display_name %> <span class="comment_date"><%= comment.created_at.strftime( "%B %-d, %Y" ) %></span></p>
-	<p class="comment_body"><%= comment.body %></p>
+	<p class="comment_body"><%= smart_quotes( comment.body ) %></p>
 </div>
 
 <%#
