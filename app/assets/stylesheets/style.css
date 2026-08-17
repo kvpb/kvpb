@@ -881,7 +881,7 @@ form input[type="submit"]{
 	text-transform: uppercase;
 	font-size: 6pt;
 	/*font-variant: small-caps;*/
-	letter-spacing: 18.5pt;
+	letter-spacing: 23.1pt;
 	padding-left: 3.33pt;
 }
 
@@ -910,7 +910,7 @@ form input[type="submit"]{
 
 #nav_wrapper{
 	position: sticky;
-	top: 0;
+	top: 1em;
 	align-self: flex-start;
 	z-index: 40;
 	flex: 0 0 auto;
