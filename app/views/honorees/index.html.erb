@@ -1,4 +1,4 @@
-<% content_for :title, "Karl's Hall of Fame" %>
+<% content_for :title, "Karl’s Hall of Fame" %>
 
 <section id="hall_of_fame" class="stone_surface" data-controller="pantheon-door">
 	<div class="pantheon_content">
@@ -6,10 +6,6 @@
 			<h1 class="engraved pantheon_title">Karl&rsquo;s Hall of Fame</h1>
 			<p class="pantheon_subtitle painted">Le Panth&eacute;on de Karl</p>
 		</header>
-
-		<% if superuser? %>
-			<p class="superuser_controls"><%= link_to "New honoree", new_honoree_path %></p>
-		<% end %>
 
 		<% if @honorees.empty? %>
 			<p class="painted">Nothing here yet.</p>
@@ -23,7 +19,7 @@
 							<%= image_tag honoree.hero_image %>
 						<% end %>
 					</span>
-					<span class="honoree_name painted"><%= honoree.name %></span>
+					<span class="honoree_name painted"><%= smart_quotes( honoree.name ) %></span>
 				<% end %>
 			<% end %>
 		</div>
