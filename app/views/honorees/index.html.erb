@@ -1,31 +1,35 @@
 <% content_for :title, "Karl's Hall of Fame" %>
 
-<section id="hall_of_fame" class="stone_surface">
-	<header class="pantheon_facade">
-		<h1 class="engraved pantheon_title">Karl&rsquo;s Hall of Fame</h1>
-		<p class="pantheon_subtitle painted">Le Panth&eacute;on de Karl</p>
-	</header>
+<section id="hall_of_fame" class="stone_surface" data-controller="pantheon-door">
+	<div class="pantheon_content">
+		<header class="pantheon_facade">
+			<h1 class="engraved pantheon_title">Karl&rsquo;s Hall of Fame</h1>
+			<p class="pantheon_subtitle painted">Le Panth&eacute;on de Karl</p>
+		</header>
 
-	<% if superuser? %>
-		<p class="superuser_controls"><%= link_to "New honoree", new_honoree_path %></p>
-	<% end %>
-
-	<% if @honorees.empty? %>
-		<p class="painted">Nothing here yet.</p>
-	<% end %>
-
-	<div class="pantheon_gallery">
-		<% @honorees.each do |honoree| %>
-			<%= link_to honoree_path( honoree ), class: "honoree_tile" do %>
-				<span class="medallion <%= "draft" unless honoree.published? %>">
-					<% if honoree.hero_image.attached? %>
-						<%= image_tag honoree.hero_image %>
-					<% end %>
-				</span>
-				<span class="honoree_name painted"><%= honoree.name %></span>
-			<% end %>
+		<% if superuser? %>
+			<p class="superuser_controls"><%= link_to "New honoree", new_honoree_path %></p>
 		<% end %>
+
+		<% if @honorees.empty? %>
+			<p class="painted">Nothing here yet.</p>
+		<% end %>
+
+		<div class="pantheon_gallery">
+			<% @honorees.each do |honoree| %>
+				<%= link_to honoree_path( honoree ), class: "honoree_tile" do %>
+					<span class="medallion <%= "draft" unless honoree.published? %>">
+						<% if honoree.hero_image.attached? %>
+							<%= image_tag honoree.hero_image %>
+						<% end %>
+					</span>
+					<span class="honoree_name painted"><%= honoree.name %></span>
+				<% end %>
+			<% end %>
+		</div>
 	</div>
+
+	<%= render "pantheon_door" %>
 </section>
 
 <%#
