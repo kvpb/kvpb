@@ -1,0 +1,46 @@
+<%= form_with model: album, url: ( album.persisted? ? album_path( album ) : see_path ), scope: :album do |form| %>
+	<% if album.errors.any? %>
+		<ul class="errors">
+			<% album.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+		</ul>
+	<% end %>
+
+	<%= form.label :title, "Title" %>
+	<%= form.text_field :title, required: true %>
+
+	<%= form.label :location, "Location" %>
+	<%= form.text_field :location %>
+
+	<%= form.label :taken_on, "Taken on" %>
+	<%= form.date_field :taken_on %>
+
+	<%= form.label :description, "Description" %>
+	<%= form.text_area :description %>
+
+	<%= form.label :cover_photo, "Cover photo" %>
+	<%= form.file_field :cover_photo, accept: "image/*" %>
+	<p class="field_hint">Optional. Defaults to the first photo.</p>
+
+	<%= form.label :photos, "Photos" %>
+	<%= form.file_field :photos, multiple: true, accept: "image/*" %>
+	<p class="field_hint">Newly selected photos are added to the album; existing ones stay.</p>
+
+	<%= form.label :published_at, "Publish at" %>
+	<%= form.datetime_field :published_at, value: album.published_at&.strftime( "%Y-%m-%dT%H:%M" ) %>
+	<p class="field_hint">Blank stays a draft. A future date schedules it. Now or the past publishes it immediately.</p>
+
+	<%= form.submit album.persisted? ? "Save changes" : "Create album" %>
+<% end %>
+
+<%#
+	_form.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
