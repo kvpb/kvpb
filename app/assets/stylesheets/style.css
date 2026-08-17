@@ -43,7 +43,7 @@ body{
 	min-height: 100vh;
 	min-height: 100dvh;
 	margin: 0;
-	font-family: 'Times New Roman', serif;
+	font-family: 'Arial', sans-serif;
 	font-size: 12pt;
 	padding: 1em;
 	box-sizing: border-box;
@@ -157,7 +157,7 @@ form label{
 form input[type="text"], form input[type="email"], form input[type="password"], form textarea{
 	width: 100%;
 	max-width: 32em;
-	font-family: 'Times New Roman', serif;
+	font-family: 'Arial', sans-serif;
 	font-size: 12pt;
 	padding: 0.3em;
 	box-sizing: border-box;
