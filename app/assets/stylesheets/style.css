@@ -476,6 +476,32 @@ form input[type="submit"]{
 	font-family: 'Didot', 'Times New Roman', serif;
 	mix-blend-mode: var( --stone-text-blend, multiply );
 }
+.pantheon_door{
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.5em;
+	padding: 3em 1em;
+	text-align: center;
+}
+.pantheon_door_illustration{
+	width: 100%;
+	max-width: 320px;
+	height: auto;
+	color: var( --color-fg );
+}
+.pantheon_door_notice{
+	font-family: 'Arial', sans-serif;
+	font-size: 11pt;
+	max-width: 28em;
+	color: var( --color-mid );
+}
+.doors_closed .pantheon_content{
+	display: none;
+}
+.doors_closed .pantheon_door{
+	display: flex;
+}
 .pantheon_facade{
 	display: block;
 	text-align: center;
