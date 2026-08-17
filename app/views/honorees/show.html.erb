@@ -2,26 +2,13 @@
 
 <article id="honoree" class="stone_surface <%= "draft" unless @honoree.published? %>" data-controller="pantheon-door">
 	<div class="pantheon_content">
-		<% if superuser? %>
-			<div class="superuser_controls">
-				<% unless @honoree.published? %><span class="status_badge">Draft</span><% end %>
-				<%= link_to "Edit", edit_honoree_path( @honoree ) %>
-				<% if @honoree.published? %>
-					<%= button_to "Unpublish", honoree_path( @honoree ), method: :patch, params: { honoree: { published_at: "" } } %>
-				<% else %>
-					<%= button_to "Publish now", honoree_path( @honoree ), method: :patch, params: { honoree: { published_at: Time.current } } %>
-				<% end %>
-				<%= button_to "Delete", honoree_path( @honoree ), method: :delete, data: { turbo_confirm: "Delete this honoree?" } %>
-			</div>
-		<% end %>
-
 		<% if @honoree.hero_image.attached? %>
 			<div class="honoree_hero">
 				<%= image_tag @honoree.hero_image, class: "honoree_hero_image" %>
 			</div>
 		<% end %>
 
-		<h1 class="engraved honoree_name_large"><%= @honoree.name %></h1>
+		<h1 class="engraved honoree_name_large"><%= smart_quotes( @honoree.name ) %></h1>
 
 		<p class="honoree_dates painted">
 			<% if @honoree.birth_date.present? || @honoree.death_date.present? %>
@@ -36,10 +23,10 @@
 		</p>
 
 		<% if @honoree.honor_inscription.present? %>
-			<p class="engraved honoree_inscription">&ldquo;<%= @honoree.honor_inscription %>&rdquo;</p>
+			<p class="engraved honoree_inscription">&ldquo;<%= smart_quotes( @honoree.honor_inscription ) %>&rdquo;</p>
 		<% end %>
 
-		<div class="honoree_body painted"><%= simple_format @honoree.body %></div>
+		<div class="honoree_body painted"><%= smart_format( @honoree.body ) %></div>
 	</div>
 
 	<%= render "pantheon_door" %>
