@@ -1,10 +1,6 @@
 <% content_for :title, "See" %>
 
-<section id="see">
-	<% if superuser? %>
-		<p class="superuser_controls"><%= link_to "New album", new_album_path %></p>
-	<% end %>
-
+<section id="gallery">
 	<% if @albums.empty? %>
 		<p>Nothing here yet.</p>
 	<% end %>
@@ -17,7 +13,7 @@
 						<%= image_tag album.cover, class: "album_cover_image" %>
 					<% end %>
 				</span>
-				<span class="album_title"><%= album.title %></span>
+				<span class="album_title"><%= smart_quotes( album.title ) %></span>
 				<% if album.location.present? || album.taken_on.present? %>
 					<span class="album_meta">
 						<%= [ album.location, album.taken_on&.strftime( "%B %Y" ) ].select( &:present? ).join( ", " ) %>
