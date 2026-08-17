@@ -1,28 +1,15 @@
 <% content_for :title, @album.title %>
 
 <article id="album" class="<%= "draft" unless @album.published? %>">
-	<% if superuser? %>
-		<div class="superuser_controls">
-			<% unless @album.published? %><span class="status_badge">Draft</span><% end %>
-			<%= link_to "Edit", edit_album_path( @album ) %>
-			<% if @album.published? %>
-				<%= button_to "Unpublish", album_path( @album ), method: :patch, params: { album: { published_at: "" } } %>
-			<% else %>
-				<%= button_to "Publish now", album_path( @album ), method: :patch, params: { album: { published_at: Time.current } } %>
-			<% end %>
-			<%= button_to "Delete", album_path( @album ), method: :delete, data: { turbo_confirm: "Delete this album?" } %>
-		</div>
-	<% end %>
-
 	<header class="album_header">
-		<h1 class="album_title_large"><%= @album.title %></h1>
+		<h1 class="album_title_large"><%= smart_quotes( @album.title ) %></h1>
 		<% if @album.location.present? || @album.taken_on.present? %>
 			<p class="album_meta"><%= [ @album.location, @album.taken_on&.strftime( "%B %Y" ) ].select( &:present? ).join( ", " ) %></p>
 		<% end %>
 	</header>
 
 	<% if @album.description.present? %>
-		<div class="album_description"><%= simple_format @album.description %></div>
+		<div class="album_description"><%= smart_format( @album.description ) %></div>
 	<% end %>
 
 	<div class="album_photos">
