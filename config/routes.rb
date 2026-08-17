@@ -36,7 +36,14 @@ Rails.application.routes.draw do
   patch  "/hall-of-fame/:identifier",         to: "honorees#update"
   delete "/hall-of-fame/:identifier",         to: "honorees#destroy"
 
-  get "/see",                 to: "pages#see",                  as: "see"
+  get    "/see",                              to: "albums#index",    as: "see"
+  post   "/see",                              to: "albums#create"
+  get    "/see/new",                          to: "albums#new",      as: "new_album"
+  get    "/see/:identifier",                  to: "albums#show",     as: "album"
+  get    "/see/:identifier/edit",             to: "albums#edit",     as: "edit_album"
+  patch  "/see/:identifier",                  to: "albums#update"
+  delete "/see/:identifier",                  to: "albums#destroy"
+
   get "/listen",              to: "pages#listen",               as: "listen"
   get "/watch",               to: "pages#watch",                as: "watch"
   get "/gettoknowandcontact", to: "pages#gettoknowandcontact",  as: "gettoknowandcontact"
