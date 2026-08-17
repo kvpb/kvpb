@@ -1,4 +1,15 @@
 module ApplicationHelper
+  def current_section_suffix
+    if controller_name == "articles"
+      { label: "journal", empty: !Article.published.exists? }
+    elsif controller_name == "pages" && action_name == "see"
+      { label: "gallery", empty: true }
+    elsif controller_name == "pages" && action_name == "listen"
+      { label: "music", empty: true }
+    elsif controller_name == "pages" && action_name == "watch"
+      { label: "films", empty: true }
+    end
+  end
 end
 
 #	application_helper.rb
