@@ -49,6 +49,8 @@ body{
 	box-sizing: border-box;
 	display: flex;
 	flex-direction: row;
+	-webkit-text-stroke: 1px var( --color-bg );
+	paint-order: stroke fill;
 }
 
 main{
@@ -155,15 +157,22 @@ form label{
 	margin: 0.75em 0 0.15em 0;
 }
 form input[type="text"], form input[type="email"], form input[type="password"], form textarea{
+	display: block;
 	width: 100%;
 	max-width: 32em;
 	font-family: 'Arial', sans-serif;
+	font-weight: 900;
 	font-size: 12pt;
-	padding: 0.3em;
+	padding: 0.5em 0.6em;
 	box-sizing: border-box;
-	border: 1px solid var( --color-border );
+	border: 2px solid var( --color-fg );
+	border-radius: 0;
 	color: var( --color-fg );
 	background-color: var( --color-bg );
+}
+form input[type="text"]:focus, form input[type="email"]:focus, form input[type="password"]:focus, form textarea:focus{
+	outline: 2px solid var( --color-fg );
+	outline-offset: 2px;
 }
 form input[type="submit"]{
 	margin-top: 1em;
@@ -228,6 +237,15 @@ form input[type="submit"]{
 	}
 	100%{
 		opacity: 1;
+	}
+}
+
+@keyframes spin_counterclockwise{
+	from{
+		transform: rotate( 0deg );
+	}
+	to{
+		transform: rotate( -360deg );
 	}
 }
 
@@ -393,26 +411,6 @@ form input[type="submit"]{
 	border: 1px solid var( --color-danger );
 	padding: 0.1em 0.4em;
 	margin: 0 0.5em 0.5em 0;
-}
-.superuser_controls{
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 0.75em;
-	margin: 0.5em 0;
-	font-size: 10pt;
-}
-.superuser_controls form{
-	display: inline;
-}
-.superuser_controls input[type="submit"]{
-	font: inherit;
-	color: inherit;
-	background: none;
-	border: none;
-	text-decoration: underline;
-	cursor: pointer;
-	padding: 0;
 }
 .comment{
 	border-top: 1px solid var( --color-faint );
@@ -679,98 +677,117 @@ form input[type="submit"]{
 	display: block;
 }
 
-.profile_header{
-	display: flex;
-	gap: 2em;
-	align-items: flex-start;
-	flex-wrap: wrap;
-	margin: 0 0 2em 0;
+#print{
+	max-width: 50em;
+	margin: 0 auto;
 }
-.profile_photo{
+.print_image{
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+.print_caption{
+	margin: 1em 0 0 0;
+}
+.print_title{
+	font-size: 20pt;
+	margin: 0 0 0.5em 0;
+}
+.print_exif{
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 0.25em 0.75em;
+	margin: 0;
+	font-size: 10pt;
+}
+.print_exif dt{
+	color: var( --color-mid );
+	text-transform: uppercase;
+	letter-spacing: 0.5pt;
+}
+.print_exif dd{
+	margin: 0;
+}
+
+.name_disc{
+	position: relative;
+	width: 320px;
+	height: 320px;
+	margin: 0 auto 2em auto;
+}
+.profile_photo_disc{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate( -50%, -50% );
 	width: 180px;
 	height: 180px;
 	object-fit: cover;
-	border-radius: 4px;
-	flex-shrink: 0;
+	border-radius: 50%;
 }
-.profile_intro{
-	flex: 1 1 20em;
-	min-width: 0;
+.name_ring{
+	position: absolute;
+	inset: 0;
+	user-select: none;
+	animation: spin_counterclockwise 20s linear infinite;
 }
-.profile_tagline{
-	color: var( --color-mid );
-	font-size: 10pt;
-	text-transform: uppercase;
-	letter-spacing: 1pt;
-	margin: 0 0 1em 0;
+.name_ring_japanese{
+	animation-direction: reverse;
 }
-.personal_statement{
-	font-style: italic;
-	max-width: 34em;
-}
-
-.resume_layout{
-	display: flex;
-	gap: 3em;
-	align-items: flex-start;
-	flex-wrap: wrap;
-}
-.resume_sidebar{
-	flex: 0 0 16em;
-}
-.sidebar_section{
-	margin: 0 0 1.5em 0;
-}
-.sidebar_section h2{
+.name_ring span{
+	position: absolute;
+	top: 50%;
+	left: 50%;
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
+	letter-spacing: 0.5px;
+}
+.name_ring_latin span{
+	font-size: 12px;
 	text-transform: uppercase;
-	font-size: 10pt;
-	letter-spacing: 1pt;
-	margin: 0 0 0.5em 0;
 }
-.sidebar_section ul{
-	padding-left: 1.2em;
-	margin: 0;
-	font-size: 10pt;
+.name_ring_japanese span{
+	font-size: 11px;
 }
-.skill_list{
-	list-style: none;
-	padding: 0;
-	margin: 0;
+.name_ring span .ring_char{
+	display: inline-block;
+	transform: rotate( 180deg );
 }
-.skill_list li{
-	margin: 0 0 0.5em 0;
+.name_ring span .ring_char.ring_code{
+	font-family: 'Courier New', Courier, monospace;
+	text-transform: none;
 }
-.skill_name{
+#section_header.name_header{
+	display: flex;
+	flex-direction: column;
+}
+.name_header_primary, .name_header_aka{
 	display: block;
-	font-size: 9pt;
-	margin: 0 0 0.15em 0;
+	text-transform: uppercase;
+	font-size: 21pt;
+	letter-spacing: -0.5pt;
+	line-height: 0.85em;
 }
-.skill_bar{
-	display: block;
-	height: 6px;
-	background-color: var( --color-faint );
-	border-radius: 3px;
-	overflow: hidden;
-}
-.skill_bar span{
-	display: block;
-	height: 100%;
-	background-color: var( --color-fg );
-}
-.soft_skills{
-	font-size: 9pt;
+.name_header_aka{
 	color: var( --color-mid );
-	margin: 1em 0 0 0;
 }
-.portfolio_list{
-	font-size: 9pt;
+.name_header_primary_ja, .name_header_aka_ja{
+	display: block;
+	font-family: 'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+	font-size: 11pt;
+	letter-spacing: normal;
+	line-height: 1em;
+}
+.name_header_primary_ja{
+	margin-top: 0.2px;
+}
+.name_header_aka_ja{
+	color: var( --color-mid );
 }
 
 .resume_timeline{
-	flex: 1 1 28em;
-	min-width: 0;
+	max-width: 40em;
+	margin: 0 auto 2em auto;
 }
 .timeline{
 	list-style: none;
@@ -823,6 +840,7 @@ form input[type="submit"]{
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center;
+	opacity: 0.5;
 	pointer-events: none;
 }
 #wordmark{
@@ -844,15 +862,12 @@ form input[type="submit"]{
 	letter-spacing: 10pt/*3.67pt*/;
 	padding-left: 3.33pt;
 }
-#line_2_logotype, #line_2b_logotype{
+#line_2_logotype{
 	text-transform: uppercase;
 	font-size: 48pt;
 	/*font-variant: small-caps;*/
 	letter-spacing: -5.5pt;
 	line-height: 0.75em;
-}
-#line_2b_logotype.section_empty{
-	opacity: 0.5;
 }
 #line_3_logotype{
 	font-family: /*'ヒラギノ角ゴ Pro W3', */'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', 'ＭＳ ゴシック' , 'MS Gothic', 'Noto Sans CJK JP', 'TakaoPGothic', sans-serif !important;
@@ -866,12 +881,40 @@ form input[type="submit"]{
 	text-transform: uppercase;
 	font-size: 6pt;
 	/*font-variant: small-caps;*/
-	letter-spacing: 6.50pt;
+	letter-spacing: 18.5pt;
 	padding-left: 3.33pt;
 }
 
+#section_header{
+	display: block;
+	color: var( --color-fg );
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	font-size: 48pt;
+	letter-spacing: -5.5pt;
+	line-height: 0.75em;
+	text-align: left;
+	padding: 0;
+	margin: 22px 0 16px 0;
+	user-select: none;
+}
+#section_possessive{
+	text-transform: none;
+	font-variant: small-caps;
+	letter-spacing: normal;
+}
+.section_empty{
+	opacity: 0.5;
+}
+
 #nav_wrapper{
+	position: sticky;
+	top: 0;
+	align-self: flex-start;
+	z-index: 40;
 	flex: 0 0 auto;
+	user-select: none;
 }
 /*#*/nav{
 	color: var( --color-fg );
@@ -996,23 +1039,27 @@ form input[type="submit"]{
 }
 #search_overlay{
 	position: fixed;
-	top: 0;
+	top: var( --search_origin_y, 0px );
 	left: 0;
 	width: 100%;
 	box-sizing: border-box;
-	padding: 0.75em 1em;
+	padding: 0.4em 1em;
 	background-color: var( --color-bg );
 	color: var( --color-fg );
-	opacity: 0;
+	box-shadow: 0 8px 24px rgba( 0, 0, 0, 0.35 );
+	clip-path: inset( 0 calc( 100% - var( --search_origin_x, 50% ) ) 0 var( --search_origin_x, 50% ) );
 	pointer-events: none;
-	transition: opacity .3s ease, background-color .3s ease, color .3s ease;
+	transition: clip-path .3s ease, background-color .3s ease, color .3s ease;
 	z-index: 30;
 }
+.search_open #search{
+	visibility: hidden;
+}
 .search_open #search_overlay{
-	opacity: 1;
+	clip-path: inset( 0 0 0 0 );
 	pointer-events: auto;
-	background-color: black;
-	color: white;
+	background-color: var( --color-fg );
+	color: var( --color-bg );
 }
 #search_overlay input{
 	width: 100%;
@@ -1022,7 +1069,18 @@ form input[type="submit"]{
 	font: inherit;
 	color: inherit;
 	font-family: 'Arial', sans-serif;
-	font-size: 24px;
+	font-weight: 900;
+	font-size: 18px;
+	user-select: text;
+}
+#gettoknowandcontact_page{
+	max-width: 60em;
+	margin: 0 auto;
+	display: block;
+}
+#contact_form_section{
+	max-width: 40em;
+	margin: 0 auto;
 }
 #hall_of_fame{
 	max-width: 60em;
