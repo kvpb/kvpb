@@ -1,7 +1,4 @@
 class PagesController < ApplicationController
-  def see
-  end
-
   def listen
   end
 
