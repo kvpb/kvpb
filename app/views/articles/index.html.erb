@@ -1,10 +1,6 @@
 <% content_for :title, "Read" %>
 
-<section id="read">
-	<% if superuser? %>
-		<p class="superuser_controls"><%= link_to "New article", new_article_path %></p>
-	<% end %>
-
+<section id="journal">
 	<% if @articles.empty? %>
 		<p>Nothing published yet.</p>
 	<% end %>
@@ -15,10 +11,10 @@
 			<% if article.cover_image.attached? %>
 				<%= link_to article_path( article ) do %><%= image_tag article.cover_image, class: "cover_image" %><% end %>
 			<% end %>
-			<% if article.kicker.present? %><p class="kicker"><%= article.kicker %></p><% end %>
-			<h2 class="headline"><%= link_to article.headline, article_path( article ) %></h2>
-			<% if article.subheadline.present? %><p class="subheadline"><%= article.subheadline %></p><% end %>
-			<% if article.lede.present? %><p class="lede"><%= article.lede %></p><% end %>
+			<% if article.kicker.present? %><p class="kicker"><%= smart_quotes( article.kicker ) %></p><% end %>
+			<h2 class="headline"><%= link_to smart_quotes( article.headline ), article_path( article ) %></h2>
+			<% if article.subheadline.present? %><p class="subheadline"><%= smart_quotes( article.subheadline ) %></p><% end %>
+			<% if article.lede.present? %><p class="lede"><%= smart_quotes( article.lede ) %></p><% end %>
 		</article>
 	<% end %>
 </section>
