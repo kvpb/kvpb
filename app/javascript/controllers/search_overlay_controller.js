@@ -1,8 +1,10 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Trades the "find" nav link for a full-width bar: the background sweeps from the page's
-// theme colors to black-on-white text, and a real text input takes focus so the caret blinks
-// as it would in any ordinary field. Escape, or a click outside the bar, closes it again.
+// Trades the "find" nav link for a bar that reveals outward from that link's own position to
+// both screen edges, its background sweeping from the page's theme colors to black-on-white
+// text, and a real text input takes focus so the caret blinks as it would in any ordinary
+// field. The navigation bar always stays layered above it, never covered. Escape, or a click
+// outside the bar, closes it again.
 export default class extends Controller {
   static targets = [ "overlay", "input" ]
 
@@ -16,7 +18,10 @@ export default class extends Controller {
     document.removeEventListener( "click", this.boundCloseOnClickOutside )
   }
 
-  open() {
+  open( event ) {
+    const rect = event.currentTarget.getBoundingClientRect()
+    this.overlayTarget.style.setProperty( "--search_origin_x", `${ rect.left }px` )
+    this.overlayTarget.style.setProperty( "--search_origin_y", `${ rect.top }px` )
     this.element.classList.add( "search_open" )
     this.inputTarget.focus()
     document.addEventListener( "keydown", this.boundCloseOnEscape )
