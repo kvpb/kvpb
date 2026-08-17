@@ -111,6 +111,7 @@ GEM
     erubi (1.13.1)
     et-orbi (1.4.1)
       tzinfo
+    exifr (1.5.1)
     fugit (1.13.0)
       et-orbi (~> 1.4)
       raabro (~> 1.4)
@@ -291,6 +292,7 @@ GEM
       rubocop-performance (>= 1.24)
       rubocop-rails (>= 2.30)
     ruby-progressbar (1.13.0)
+    rubypants (0.7.1)
     rubyzip (3.4.1)
     securerandom (0.4.1)
     selenium-webdriver (4.47.0)
@@ -378,6 +380,7 @@ DEPENDENCIES
   brakeman
   capybara
   debug
+  exifr (~> 1.5)
   importmap-rails
   jbuilder
   kamal
@@ -385,6 +388,7 @@ DEPENDENCIES
   puma (>= 5.0)
   rails (~> 8.1)
   rubocop-rails-omakase
+  rubypants (~> 0.7.1)
   selenium-webdriver
   solid_cable
   solid_cache
