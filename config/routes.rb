@@ -10,9 +10,7 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
-
-  root "application#index"
+  root "pages#gettoknowandcontact"
 
   resource :registration, only: %i[new create]
 
@@ -43,6 +41,8 @@ Rails.application.routes.draw do
   get    "/see/:identifier/edit",             to: "albums#edit",     as: "edit_album"
   patch  "/see/:identifier",                  to: "albums#update"
   delete "/see/:identifier",                  to: "albums#destroy"
+
+  get    "/see/prints/:identifier",           to: "prints#show",     as: "print"
 
   get "/listen",              to: "pages#listen",               as: "listen"
   get "/watch",               to: "pages#watch",                as: "watch"
