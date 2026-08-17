@@ -3,17 +3,14 @@
 	<%= link_to root_path do %><div id='wordmark'>
 		<span id='line_1_logotype'>kvpb.fr</span>
 		<span id='line_2_logotype'>Karl</span>
-		<% if ( section = current_section_suffix ) %>
-			<span id='line_2b_logotype' class="<%= "section_empty" if section[ :empty ] %>">'s <%= section[ :label ] %></span>
-		<% end %>
 		<span id='line_3_logotype'>カール</span>
-		<span id='line_4_logotype'>version 1.00</span>
+		<span id='line_4_logotype'>type 1</span>
 	</div><% end %>
 	<hr>
-	<%= link_to read_path, id: "read" do %><span id="read">read</span><% end %>
-	<%= link_to see_path, id: "see" do %><span id="see">see</span><% end %>
-	<%= link_to listen_path, id: "listen" do %><span id="listen">listen</span><% end %>
-	<%= link_to watch_path, id: "watch" do %><span id="watch">watch</span><% end %>
+	<% if section_empty?( :journal ) %><span id="read" class="section_empty">read</span><% else %><%= link_to read_path, id: "read" do %><span id="read">read</span><% end %><% end %>
+	<% if section_empty?( :gallery ) %><span id="see" class="section_empty">see</span><% else %><%= link_to see_path, id: "see" do %><span id="see">see</span><% end %><% end %>
+	<% if section_empty?( :music ) %><span id="listen" class="section_empty">listen</span><% else %><%= link_to listen_path, id: "listen" do %><span id="listen">listen</span><% end %><% end %>
+	<% if section_empty?( :films ) %><span id="watch" class="section_empty">watch</span><% else %><%= link_to watch_path, id: "watch" do %><span id="watch">watch</span><% end %><% end %>
 	<%= link_to gettoknowandcontact_path, id: "gettoknowandcontact" do %><div><!--<div id="gettoknowandcontact">-->
 		<!--<span id="gettoknowandcontact_0">&nbsp;</span><br>-->
 		<span id="gettoknowandcontact_1">get to know</span><br>
