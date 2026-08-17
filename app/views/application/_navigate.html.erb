@@ -2,6 +2,9 @@
 	<%= link_to root_path do %><div id='wordmark'>
 		<span id='line_1_logotype'>kvpb.fr</span>
 		<span id='line_2_logotype'>Karl</span>
+		<% if ( section = current_section_suffix ) %>
+			<span id='line_2b_logotype' class="<%= "section_empty" if section[ :empty ] %>">'s <%= section[ :label ] %></span>
+		<% end %>
 		<span id='line_3_logotype'>カール</span>
 		<span id='line_4_logotype'>version 1.00</span>
 	</div><% end %>
