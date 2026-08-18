@@ -1,12 +1,15 @@
 class ArticlesController < ApplicationController
   include Autosavable
+  include Paginatable
 
   before_action :set_article, only: %i[show edit update destroy]
   before_action :require_superuser, except: %i[index show]
   before_action :require_visible_article, only: :show
+  before_action :redirect_if_section_empty, only: :index
 
   def index
-    @articles = superuser? ? Article.all.order( created_at: :desc ) : Article.published
+    scope = superuser? ? Article.all.order( created_at: :desc ) : Article.published
+    @articles = paginate( scope )
   end
 
   def show
@@ -71,6 +74,10 @@ class ArticlesController < ApplicationController
 
     def require_visible_article
       raise ActiveRecord::RecordNotFound if !@article.published? && !superuser?
+    end
+
+    def redirect_if_section_empty
+      redirect_to root_path if helpers.section_empty?( :journal ) && !superuser?
     end
 
     def article_params
