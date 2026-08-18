@@ -1,29 +1,48 @@
 
 <section id="gettoknowandcontact_page">
 	<div class="about_layout">
-		<div class="name_disc" data-controller="medallion-physics">
-			<% if @profile_photo.attached? %>
-				<div class="profile_photo_medallion" data-medallion-physics-target="medallion">
-					<%= image_tag @profile_photo, class: "profile_photo_disc" %>
+		<div class="about_sidebar">
+			<div class="name_disc" data-controller="medallion-physics">
+				<% if @profile_photo.attached? %>
+					<div class="profile_photo_medallion" data-medallion-physics-target="medallion">
+						<%= image_tag @profile_photo, class: "profile_photo_disc" %>
+					</div>
+				<% end %>
+				<div class="name_ring name_ring_latin" aria-hidden="true">
+					<% ring_text = "Karl Vincent Pierre Bertin `kvpb`  Karl Thomas George West `ktgw`  " %>
+					<% ring_code = false %>
+					<% ring_chars = ring_text.chars.map do |char| %>
+						<% ring_code = !ring_code if char == "`" %>
+						<% [ char, ring_code || char == "`" ] %>
+					<% end %>
+					<% ring_chars.reverse.each_with_index do |( char, code ), i| %>
+						<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_chars.length * i %>deg ) translateY( calc( var( --disc ) * -105 / 237 ) )"><span class="ring_char<%= " ring_code" if code %>"><%= char %></span></span>
+					<% end %>
 				</div>
+				<div class="name_ring name_ring_japanese" aria-hidden="true">
+					<% ring_text_ja = "カール・ビンセント・ピエール・ベルティン  カール・トーマス・ジョージ・ウェスト  " %>
+					<% ring_text_ja.chars.reverse.each_with_index do |char, i| %>
+						<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_text_ja.length * i %>deg ) translateY( calc( var( --disc ) * -118 / 237 ) )"><span class="ring_char"><%= char %></span></span>
+					<% end %>
+				</div>
+			</div>
+
+			<% skill_groups = {
+				"aptitudes & skills" => [],
+				"diplomas, certifications & permits" => [],
+				"languages & programming languages" => [],
+				"activities & interests" => []
+			} %>
+			<% skill_groups.each do |label, items| %>
+				<% if items.any? %>
+					<div class="skills_group">
+						<h3><%= label %></h3>
+						<ul>
+							<% items.each do |item| %><li><%= item %></li><% end %>
+						</ul>
+					</div>
+				<% end %>
 			<% end %>
-			<div class="name_ring name_ring_latin" aria-hidden="true">
-				<% ring_text = "Karl Vincent Pierre Bertin `kvpb`  Karl Thomas George West `ktgw`  " %>
-				<% ring_code = false %>
-				<% ring_chars = ring_text.chars.map do |char| %>
-					<% ring_code = !ring_code if char == "`" %>
-					<% [ char, ring_code || char == "`" ] %>
-				<% end %>
-				<% ring_chars.reverse.each_with_index do |( char, code ), i| %>
-					<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_chars.length * i %>deg ) translateY( -105px )"><span class="ring_char<%= " ring_code" if code %>"><%= char %></span></span>
-				<% end %>
-			</div>
-			<div class="name_ring name_ring_japanese" aria-hidden="true">
-				<% ring_text_ja = "カール・ビンセント・ピエール・ベルティン  カール・トーマス・ジョージ・ウェスト  " %>
-				<% ring_text_ja.chars.reverse.each_with_index do |char, i| %>
-					<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_text_ja.length * i %>deg ) translateY( -118px )"><span class="ring_char"><%= char %></span></span>
-				<% end %>
-			</div>
 		</div>
 
 		<% if @milestones.any? %>
@@ -44,33 +63,39 @@
 	</div>
 
 	<section id="contact_form_section">
-		<h2>Contact me.</h2>
+		<% sent = flash[ :message_sent ].present? %>
+		<%# "Gotta contact me?" %>
+		<%# "'You've contacted me.'" %>
+		<h2 data-controller="rewrite-heading" data-rewrite-heading-sent-value="<%= sent %>">
+			<span class="heading_line" data-rewrite-heading-target="line"><span data-rewrite-heading-target="text">Wanna reach out to me?</span><span class="type_cursor"></span></span>
+		</h2>
 
-		<% if @contact.errors.any? %>
+		<% if @message.errors.any? %>
 			<ul class="errors">
-				<% @contact.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+				<% @message.errors.full_messages.each do |error_message| %><li><%= error_message %></li><% end %>
 			</ul>
 		<% end %>
 
-		<%= form_with model: @contact, url: contact_path, scope: :contact do |form| %>
+		<%= form_with model: @message, url: contact_path, scope: :message, html: { class: ( "message_sent" if sent ) } do |form| %>
 			<%= form.label :name, "What’s your name?" %>
 			<div class="text_field_glass">
-				<%= form.text_field :name, required: true, placeholder: "name" %>
+				<%= form.text_field :name, required: true, placeholder: "name", disabled: sent %>
 			</div>
 
 			<%= form.label :phone_number, "What’s your number?" %>
 			<div class="text_field_glass">
-				<%= form.telephone_field :phone_number, required: true, placeholder: "phone number" %>
+				<%= form.telephone_field :phone_number, required: true, placeholder: "phone number", disabled: sent %>
 			</div>
 
 			<%= form.label :email_address, "What’s your email address?" %>
 			<div class="text_field_glass">
-				<%= form.email_field :email_address, required: true, placeholder: "email address" %>
+				<%= form.email_field :email_address, required: true, placeholder: "email address", disabled: sent %>
 			</div>
 
-			<%= form.label :body, "What do you have to tell me?" %>
+			<%# "What do you have to tell me?" %>
+			<%= form.label :body, "What do you wanna tell me?" %>
 			<div class="text_field_glass">
-				<%= form.text_area :body, required: true, placeholder: "message" %>
+				<%= form.text_area :body, required: true, placeholder: "message", disabled: sent %>
 			</div>
 
 			<div class="website_field" aria-hidden="true">
@@ -78,7 +103,11 @@
 				<%= form.text_field :website, tabindex: -1, autocomplete: "off" %>
 			</div>
 
-			<%= form.submit "Send" %>
+			<% if sent %>
+				<%= form.submit "Sent", disabled: true %>
+			<% else %>
+				<%= form.submit "Send" %>
+			<% end %>
 		<% end %>
 	</section>
 </section>
