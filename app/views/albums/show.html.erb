@@ -1,4 +1,4 @@
-<% content_for :title, @album.title %>
+<% content_for :title, @album.title.presence %>
 
 <article id="album" class="<%= "draft" unless @album.published? %>">
 	<header class="album_header">
