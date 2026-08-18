@@ -11,6 +11,7 @@ class PagesController < ApplicationController
     @milestones = Milestone.chronological
     @message = Message.new
     @profile_photo = Setting.current.profile_photo
+    @skills_by_category = Skill.ordered.group_by( &:category )
   end
 
   def search
