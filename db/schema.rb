@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_18_202225) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_18_210109) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -149,6 +149,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_18_202225) do
     t.boolean "registration_enabled", default: false, null: false
     t.datetime "updated_at", null: false
     t.index ["login_token"], name: "index_settings_on_login_token", unique: true
+  end
+
+  create_table "skills", force: :cascade do |t|
+    t.integer "category", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["category", "position"], name: "index_skills_on_category_and_position"
   end
 
   create_table "users", force: :cascade do |t|
