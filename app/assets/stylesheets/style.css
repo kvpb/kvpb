@@ -193,9 +193,9 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 	overflow: hidden;
 	isolation: isolate;
 }
-/* redrawn as balanced dots while the user is actively typing, back to a thin solid line once they're not */
+/* redrawn as spaced dashes while the user is actively typing, back to a thin solid line once they're not. A hand-drawn dash pattern (four repeating background gradients standing in for the border) was tried for exact control over dash/gap/thickness, but a background paints under the box's squircle corner only where an actual border also exists to carve that shape out of it — without one the corners render square and the straight edges get clipped away, so this stays with the real border, whose dash size is tied to border-width rather than independently settable */
 #contact_form_section .text_field_glass:focus-within{
-	border-style: dotted;
+	border-style: dashed;
 }
 /* the gaussian blur — frosted-glass center, strongest at the middle, masked down to nothing by the time it reaches the border */
 #contact_form_section .text_field_glass::before{
@@ -206,19 +206,6 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 	-webkit-backdrop-filter: blur( 12px );
 	mask-image: radial-gradient( ellipse at center, black 0%, black 30%, transparent 75% );
 	-webkit-mask-image: radial-gradient( ellipse at center, black 0%, black 30%, transparent 75% );
-	pointer-events: none;
-}
-/* the reflection: a plain white zone, blurred soft at its own edges, brightening whatever's beneath it via screen blend — fixed geometry, nothing computed, nothing tracked */
-#contact_form_section .text_field_glass::after{
-	content: '';
-	position: absolute;
-	top: -30%;
-	left: -4%;
-	width: 22%;
-	height: 160%;
-	background: white;
-	filter: blur( 14px );
-	mix-blend-mode: screen;
 	pointer-events: none;
 }
 #contact_form_section .text_field_glass input, #contact_form_section .text_field_glass textarea{
@@ -817,7 +804,7 @@ form input[type="submit"]{
 	height: 237px;
 	margin: 0;
 }
-/* box-shadow for the convex curvature, ::after for a plain white reflection. The shake/lag transform itself lives on .name_disc, not here — the rings orbit the photo, so the whole disc has to move as one object, not just the photo underneath it */
+/* box-shadow for the convex curvature. The shake/lag transform itself lives on .name_disc, not here — the rings orbit the photo, so the whole disc has to move as one object, not just the photo underneath it */
 .profile_photo_medallion{
 	position: absolute;
 	top: 50%;
@@ -836,20 +823,6 @@ form input[type="submit"]{
 	height: 100%;
 	object-fit: cover;
 	display: block;
-}
-/* the reflection: a plain white zone, blurred soft at its own edges, brightening whatever's beneath it via screen blend. Fixed size and shape, but its position rides --reflection-shift-x/-y, which the medallion-physics controller updates every frame — so as the medallion gets nudged or lags behind a scroll, the light visibly shifts with it, the way it would catch differently on something that's actually wobbling */
-.profile_photo_medallion::after{
-	content: '';
-	position: absolute;
-	top: calc( 6% + var( --reflection-shift-y, 0px ) );
-	left: calc( 12% + var( --reflection-shift-x, 0px ) );
-	width: 55%;
-	height: 32%;
-	border-radius: 50%;
-	background: white;
-	filter: blur( 16px );
-	mix-blend-mode: screen;
-	pointer-events: none;
 }
 .name_ring{
 	position: absolute;
