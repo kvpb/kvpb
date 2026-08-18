@@ -330,6 +330,12 @@ form input[type="submit"]{
 	filter: invert( 1 );
 }
 
+/* --color-github stays the fixed brand gray by design; by night it reads too close to --color-fg white to stand out, so outline it instead of recoloring it */
+:root[data-theme="dark"] #checkout_GitHub_1{
+	-webkit-text-stroke: 0.5px var( --color-fg );
+	paint-order: stroke fill;
+}
+
 @media ( prefers-color-scheme: dark ){
 	/* :not([data-theme="light"]) lets the sunset controller force day colors even when the OS is set to dark */
 	:root:not([data-theme="light"]){
@@ -359,6 +365,11 @@ form input[type="submit"]{
 
 	:root:not([data-theme="light"]) #backdrop{
 		filter: invert( 1 );
+	}
+
+	:root:not([data-theme="light"]) #checkout_GitHub_1{
+		-webkit-text-stroke: 0.5px var( --color-fg );
+		paint-order: stroke fill;
 	}
 }
 
@@ -709,11 +720,21 @@ form input[type="submit"]{
 	margin: 0;
 }
 
+.about_layout{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	column-gap: 2em;
+	/* matches the gap between the section header's last line and the disc above it, so the timeline sits exactly as close beneath the disc once it wraps underneath */
+	row-gap: 16.164px;
+}
 .name_disc{
 	position: relative;
-	width: 320px;
-	height: 320px;
-	margin: 0 auto 2em auto;
+	flex: 0 0 auto;
+	/* sized to the rings' own visual radius rather than a round number, so the box has no empty margin left for the flex row to butt up against */
+	width: 237px;
+	height: 237px;
+	margin: 0;
 }
 .profile_photo_disc{
 	position: absolute;
@@ -786,8 +807,9 @@ form input[type="submit"]{
 }
 
 .resume_timeline{
+	flex: 1 1 20em;
 	max-width: 40em;
-	margin: 0 auto 2em auto;
+	margin: 0 0 2em 0;
 }
 .timeline{
 	list-style: none;
@@ -839,7 +861,8 @@ form input[type="submit"]{
 	background-image: url(karlsemblem.svg); /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
 	background-repeat: no-repeat;
 	background-attachment: fixed;
-	background-position: center;
+	/* the seal's circle, not the svg canvas, is what must sit equidistant from the top/left/right edges; the canvas centers the circle almost exactly, so a horizontal offset seeded from viewport width doubles as the vertical offset, deliberately leaving the leftover slack at the bottom */
+	background-position: calc( 50vw - 238.077844px ) calc( 50vw - 236.763473px );
 	opacity: 0.5;
 	pointer-events: none;
 }
@@ -1046,6 +1069,9 @@ form input[type="submit"]{
 	padding: 0.4em 1em;
 	background-color: var( --color-bg );
 	color: var( --color-fg );
+	/* currentColor already is the inverse of this element's own background-color: .search_open swaps color and background-color between --color-fg and --color-bg */
+	border-top: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
 	box-shadow: 0 8px 24px rgba( 0, 0, 0, 0.35 );
 	clip-path: inset( 0 calc( 100% - var( --search_origin_x, 50% ) ) 0 var( --search_origin_x, 50% ) );
 	pointer-events: none;
@@ -1062,7 +1088,9 @@ form input[type="submit"]{
 	color: var( --color-bg );
 }
 #search_overlay input{
+	box-sizing: border-box;
 	width: 100%;
+	padding: 0.3em 0.5em;
 	background: transparent;
 	border: none;
 	outline: none;
@@ -1072,6 +1100,8 @@ form input[type="submit"]{
 	font-weight: 900;
 	font-size: 18px;
 	user-select: text;
+	/* the overlay's own background is opaque, so the site-wide halo against #backdrop is pointless here and only dulls the glyph edges */
+	-webkit-text-stroke-width: 0;
 }
 #gettoknowandcontact_page{
 	max-width: 60em;
