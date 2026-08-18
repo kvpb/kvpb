@@ -3,26 +3,27 @@ class ContactsController < ApplicationController
 
   def create
     if honeypot_tripped?
-      redirect_to gettoknowandcontact_path, notice: "Message sent."
+      flash[ :message_sent ] = true
+      redirect_to gettoknowandcontact_path
       return
     end
 
-    @contact = Contact.new( contact_params )
-    if @contact.valid?
-      ContactMailer.new_message( @contact ).deliver_now
-      redirect_to gettoknowandcontact_path, notice: "Message sent."
+    @message = Message.new( message_params )
+    if @message.save
+      flash[ :message_sent ] = true
+      redirect_to gettoknowandcontact_path
     else
-      redirect_to gettoknowandcontact_path, alert: @contact.errors.full_messages.to_sentence
+      redirect_to gettoknowandcontact_path, alert: @message.errors.full_messages.to_sentence
     end
   end
 
   private
     def honeypot_tripped?
-      params.dig( :contact, :website ).present?
+      params.dig( :message, :website ).present?
     end
 
-    def contact_params
-      params.require( :contact ).permit( :name, :phone_number, :email_address, :body )
+    def message_params
+      params.require( :message ).permit( :name, :phone_number, :email_address, :body )
     end
 end
 
