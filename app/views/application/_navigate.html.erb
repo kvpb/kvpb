@@ -26,6 +26,7 @@
 		<span id="checkout_GitHub_1">kvpb</span><br>
 		<span id="checkout_GitHub_2">GitHub</span>
 	</div><% end %>
+	<button type="button" id="theme_toggle" role="switch" aria-checked="false" aria-label="Toggle light and dark appearance" data-controller="theme-toggle" data-action="click->theme-toggle#toggle"><span id="theme_toggle_knob"></span></button>
 </nav>
 <div id="search_overlay" data-search-overlay-target="overlay">
 	<%= form_with url: search_path, method: :get do |form| %>
