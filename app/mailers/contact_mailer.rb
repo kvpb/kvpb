@@ -1,10 +1,12 @@
 class ContactMailer < ApplicationMailer
-  def new_message( contact )
-    @contact = contact
+  # Messages arrive in the back end and stay there until Karl deliberately forwards one — nothing
+  # is emailed automatically on submission, so this only ever fires from MessagesController#forward.
+  def forward( message )
+    @message = message
 
-    mail to: User.find_by( superuser: true )&.email_address,
-         reply_to: @contact.email_address,
-         subject: "New message from #{@contact.name}"
+    mail to: Setting.current.personal_email,
+         reply_to: @message.email_address,
+         subject: "Forwarded message from #{@message.name}"
   end
 end
 
