@@ -1,4 +1,6 @@
 class PagesController < ApplicationController
+  before_action :redirect_if_section_empty, only: %i[listen watch]
+
   def listen
   end
 
@@ -7,12 +9,18 @@ class PagesController < ApplicationController
 
   def gettoknowandcontact
     @milestones = Milestone.chronological
-    @contact = Contact.new
+    @message = Message.new
     @profile_photo = Setting.current.profile_photo
   end
 
   def search
   end
+
+  private
+    def redirect_if_section_empty
+      section = action_name == "listen" ? :music : :films
+      redirect_to root_path if helpers.section_empty?( section ) && !superuser?
+    end
 end
 
 #	pages_controller.rb
