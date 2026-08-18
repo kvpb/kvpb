@@ -8,6 +8,7 @@ export default class extends Controller {
   static values = { recheckDelay: { type: Number, default: 300000 } }
 
   connect() {
+    if ( localStorage.getItem( "theme_override" ) ) return
     if ( !navigator.geolocation ) return
     navigator.geolocation.getCurrentPosition(
       ( position ) => this.startWatching( position.coords.latitude, position.coords.longitude ),
