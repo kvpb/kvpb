@@ -4,23 +4,33 @@
 		<p>Nothing here yet.</p>
 	<% end %>
 
-	<div class="album_gallery">
-		<% @albums.each do |album| %>
-			<%= link_to album_path( album ), class: "album_tile" do %>
-				<span class="album_cover <%= "draft" unless album.published? %>">
-					<% if album.cover %>
-						<%= image_tag album.cover, class: "album_cover_image" %>
-					<% end %>
-				</span>
-				<span class="album_title"><%= smart_quotes( album.title ) %></span>
-				<% if album.location.present? || album.taken_on.present? %>
-					<span class="album_meta">
-						<%= [ album.location, album.taken_on&.strftime( "%B %Y" ) ].select( &:present? ).join( ", " ) %>
-					</span>
-				<% end %>
+	<% @albums.each do |album| %>
+		<% photos = album.photos.to_a %>
+		<% if photos.size == 1 %>
+			<div class="album_solo <%= "draft" unless album.published? %>">
+				<%= image_tag photos[ 0 ], class: "album_photo" %>
+				<%= render "caption", album: album %>
+			</div>
+		<% else %>
+			<%= link_to album_path( album ), class: "album_cover_flow #{"draft" unless album.published?}" do %>
+				<div class="cover_flow_stage">
+					<% if photos.size > 3 %><div class="cover_flow_hint cover_flow_hint_left" aria-hidden="true"></div><% end %>
+					<% if photos[1] %><%= image_tag photos[1], class: "cover_flow_side cover_flow_side_left" %><% end %>
+					<% if photos[0] %><%= image_tag photos[0], class: "cover_flow_cover" %><% end %>
+					<% if photos[2] %><%= image_tag photos[2], class: "cover_flow_side cover_flow_side_right" %><% end %>
+					<% if photos.size > 3 %><div class="cover_flow_hint cover_flow_hint_right" aria-hidden="true"></div><% end %>
+				</div>
+				<%= render "caption", album: album %>
 			<% end %>
 		<% end %>
-	</div>
+	<% end %>
+
+	<% if @total_pages > 1 %>
+		<nav class="pagination">
+			<% if @page < @total_pages %><%= link_to "Older", see_path( page: @page + 1 ), data: { controller: "blink-on-press" } %><% end %>
+			<% if @page > 1 %><%= link_to "Newer", see_path( page: @page - 1 ), data: { controller: "blink-on-press" } %><% end %>
+		</nav>
+	<% end %>
 </section>
 
 <%#
