@@ -58,6 +58,11 @@
 				<%= form.text_field :name, required: true, placeholder: "name" %>
 			</div>
 
+			<%= form.label :phone_number, "What’s your number?" %>
+			<div class="text_field_glass">
+				<%= form.telephone_field :phone_number, required: true, placeholder: "phone number" %>
+			</div>
+
 			<%= form.label :email_address, "What’s your email address?" %>
 			<div class="text_field_glass">
 				<%= form.email_field :email_address, required: true, placeholder: "email address" %>
