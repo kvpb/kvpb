@@ -34,14 +34,14 @@
 				"activities & interests" => []
 			} %>
 			<% skill_groups.each do |label, items| %>
-				<% if items.any? %>
-					<div class="skills_group">
-						<h3><%= label %></h3>
+				<div class="skills_group">
+					<h3><%= label %></h3>
+					<% if items.any? %>
 						<ul>
 							<% items.each do |item| %><li><%= item %></li><% end %>
 						</ul>
-					</div>
-				<% end %>
+					<% end %>
+				</div>
 			<% end %>
 		</div>
 
