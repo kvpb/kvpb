@@ -1,32 +1,36 @@
 require "test_helper"
 
 class ContactsControllerTest < ActionDispatch::IntegrationTest
-  test "a valid message is emailed to the superuser and redirects with a notice" do
-    assert_emails 1 do
-      post contact_path, params: { contact: { name: "Guest", phone_number: "0123456789", email_address: "guest@example.com", body: "Hello" } }
+  test "a valid message is stored in the back end and no email is sent" do
+    assert_difference "Message.count", 1 do
+      assert_no_emails do
+        post contact_path, params: { message: { name: "Guest", phone_number: "0123456789", email_address: "guest@example.com", body: "Hello" } }
+      end
     end
 
     assert_redirected_to gettoknowandcontact_path
+    assert flash[ :message_sent ]
   end
 
-  test "an invalid message is not sent" do
-    assert_no_emails do
-      post contact_path, params: { contact: { name: "", phone_number: "", email_address: "not-an-email", body: "" } }
+  test "an invalid message is not stored" do
+    assert_no_difference "Message.count" do
+      post contact_path, params: { message: { name: "", phone_number: "", email_address: "not-an-email", body: "" } }
     end
   end
 
-  test "a message without a phone number is not sent" do
-    assert_no_emails do
-      post contact_path, params: { contact: { name: "Guest", phone_number: "", email_address: "guest@example.com", body: "Hello" } }
+  test "a message without a phone number is not stored" do
+    assert_no_difference "Message.count" do
+      post contact_path, params: { message: { name: "Guest", phone_number: "", email_address: "guest@example.com", body: "Hello" } }
     end
   end
 
   test "honeypot field silently drops the message" do
-    assert_no_emails do
-      post contact_path, params: { contact: { name: "Bot", phone_number: "0123456789", email_address: "bot@example.com", body: "Spam", website: "https://spam.example" } }
+    assert_no_difference "Message.count" do
+      post contact_path, params: { message: { name: "Bot", phone_number: "0123456789", email_address: "bot@example.com", body: "Spam", website: "https://spam.example" } }
     end
 
     assert_redirected_to gettoknowandcontact_path
+    assert flash[ :message_sent ]
   end
 end
 
