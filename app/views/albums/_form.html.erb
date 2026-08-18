@@ -6,16 +6,22 @@
 	<% end %>
 
 	<%= form.label :title, "Title" %>
-	<%= form.text_field :title, required: true %>
+	<div class="text_field_glass">
+		<%= form.text_field :title, required: true %>
+	</div>
 
 	<%= form.label :location, "Location" %>
-	<%= form.text_field :location %>
+	<div class="text_field_glass">
+		<%= form.text_field :location %>
+	</div>
 
 	<%= form.label :taken_on, "Taken on" %>
 	<%= form.date_field :taken_on %>
 
 	<%= form.label :description, "Description" %>
-	<%= form.text_area :description %>
+	<div class="text_field_glass">
+		<%= form.text_area :description %>
+	</div>
 
 	<%= form.label :cover_photo, "Cover photo" %>
 	<%= form.file_field :cover_photo, accept: "image/*" %>
