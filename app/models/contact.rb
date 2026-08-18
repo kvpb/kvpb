@@ -3,10 +3,12 @@ class Contact
   include ActiveModel::Attributes
 
   attribute :name, :string
+  attribute :phone_number, :string
   attribute :email_address, :string
   attribute :body, :string
 
   validates :name, presence: true
+  validates :phone_number, presence: true
   validates :email_address, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :body, presence: true
 end
