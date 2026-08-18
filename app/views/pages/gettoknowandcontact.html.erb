@@ -1,41 +1,43 @@
 <% content_for :title, "Get to know & contact" %>
 
 <section id="gettoknowandcontact_page">
-	<div class="name_disc">
-		<% if @profile_photo.attached? %>
-			<%= image_tag @profile_photo, class: "profile_photo_disc" %>
-		<% end %>
-		<div class="name_ring name_ring_latin" aria-hidden="true">
-			<% ring_text = "Karl Vincent Pierre Bertin `kvpb` · Karl Thomas George West `ktgw` · " %>
-			<% ring_code = false %>
-			<% ring_chars = ring_text.chars.map do |char| %>
-				<% ring_code = !ring_code if char == "`" %>
-				<% [ char, ring_code || char == "`" ] %>
+	<div class="about_layout">
+		<div class="name_disc">
+			<% if @profile_photo.attached? %>
+				<%= image_tag @profile_photo, class: "profile_photo_disc" %>
 			<% end %>
-			<% ring_chars.reverse.each_with_index do |( char, code ), i| %>
-				<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_chars.length * i %>deg ) translateY( -105px )"><span class="ring_char<%= " ring_code" if code %>"><%= char %></span></span>
-			<% end %>
+			<div class="name_ring name_ring_latin" aria-hidden="true">
+				<% ring_text = "Karl Vincent Pierre Bertin `kvpb`  Karl Thomas George West `ktgw`  " %>
+				<% ring_code = false %>
+				<% ring_chars = ring_text.chars.map do |char| %>
+					<% ring_code = !ring_code if char == "`" %>
+					<% [ char, ring_code || char == "`" ] %>
+				<% end %>
+				<% ring_chars.reverse.each_with_index do |( char, code ), i| %>
+					<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_chars.length * i %>deg ) translateY( -105px )"><span class="ring_char<%= " ring_code" if code %>"><%= char %></span></span>
+				<% end %>
+			</div>
+			<div class="name_ring name_ring_japanese" aria-hidden="true">
+				<% ring_text_ja = "カール・ビンセント・ピエール・ベルティン  カール・トーマス・ジョージ・ウェスト  " %>
+				<% ring_text_ja.chars.reverse.each_with_index do |char, i| %>
+					<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_text_ja.length * i %>deg ) translateY( -118px )"><span class="ring_char"><%= char %></span></span>
+				<% end %>
+			</div>
 		</div>
-		<div class="name_ring name_ring_japanese" aria-hidden="true">
-			<% ring_text_ja = "カール・ビンセント・ピエール・ベルティン · カール・トーマス・ジョージ・ウェスト · " %>
-			<% ring_text_ja.chars.reverse.each_with_index do |char, i| %>
-				<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_text_ja.length * i %>deg ) translateY( -118px )"><span class="ring_char"><%= char %></span></span>
-			<% end %>
-		</div>
-	</div>
 
-	<div class="resume_timeline">
-		<h2>Timeline</h2>
-		<ol class="timeline">
-			<% @milestones.each do |milestone| %>
-				<li class="timeline_entry timeline_entry_<%= milestone.kind %>">
-					<p class="timeline_dates"><%= milestone.date_range_label %></p>
-					<h3 class="timeline_title"><%= smart_quotes( milestone.title ) %></h3>
-					<p class="timeline_organization"><%= smart_quotes( milestone.organization ) %><% if milestone.location.present? %> — <%= milestone.location %><% end %></p>
-					<% if milestone.description.present? %><p class="timeline_description"><%= smart_quotes( milestone.description ) %></p><% end %>
-				</li>
-			<% end %>
-		</ol>
+		<div class="resume_timeline">
+			<h2>Timeline</h2>
+			<ol class="timeline">
+				<% @milestones.each do |milestone| %>
+					<li class="timeline_entry timeline_entry_<%= milestone.kind %>">
+						<p class="timeline_dates"><%= milestone.date_range_label %></p>
+						<h3 class="timeline_title"><%= smart_quotes( milestone.title ) %></h3>
+						<p class="timeline_organization"><%= smart_quotes( milestone.organization ) %><% if milestone.location.present? %> — <%= milestone.location %><% end %></p>
+						<% if milestone.description.present? %><p class="timeline_description"><%= smart_quotes( milestone.description ) %></p><% end %>
+					</li>
+				<% end %>
+			</ol>
+		</div>
 	</div>
 
 	<section id="contact_form_section">
