@@ -1,10 +1,14 @@
 class AlbumsController < ApplicationController
+  include Paginatable
+
   before_action :set_album, only: %i[show edit update destroy]
   before_action :require_superuser, except: %i[index show]
   before_action :require_visible_album, only: :show
+  before_action :redirect_if_section_empty, only: :index
 
   def index
-    @albums = superuser? ? Album.all.order( taken_on: :desc ) : Album.published
+    scope = superuser? ? Album.all.order( taken_on: :desc ) : Album.published
+    @albums = paginate( scope )
   end
 
   def show
@@ -47,6 +51,10 @@ class AlbumsController < ApplicationController
 
     def require_visible_album
       raise ActiveRecord::RecordNotFound if !@album.published? && !superuser?
+    end
+
+    def redirect_if_section_empty
+      redirect_to root_path if helpers.section_empty?( :gallery ) && !superuser?
     end
 
     def album_params
