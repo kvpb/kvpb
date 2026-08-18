@@ -1,8 +1,8 @@
 class Milestone < ApplicationRecord
-  enum :kind, { education: 0, work: 1 }
+  enum :kind, { education: 0, work: 1, birth: 2 }
 
   validates :title, presence: true
-  validates :organization, presence: true
+  validates :organization, presence: true, unless: :birth?
   validates :starts_on, presence: true
 
   scope :chronological, -> { order( starts_on: :desc ) }
@@ -12,6 +12,8 @@ class Milestone < ApplicationRecord
   end
 
   def date_range_label
+    return date_label if date_label.present?
+
     starts_label = starts_on.strftime( "%B %Y" )
     return starts_label if !ongoing? && ends_on.strftime( "%B %Y" ) == starts_label
 
