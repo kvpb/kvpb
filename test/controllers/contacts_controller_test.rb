@@ -3,7 +3,7 @@ require "test_helper"
 class ContactsControllerTest < ActionDispatch::IntegrationTest
   test "a valid message is emailed to the superuser and redirects with a notice" do
     assert_emails 1 do
-      post contact_path, params: { contact: { name: "Guest", email_address: "guest@example.com", body: "Hello" } }
+      post contact_path, params: { contact: { name: "Guest", phone_number: "0123456789", email_address: "guest@example.com", body: "Hello" } }
     end
 
     assert_redirected_to gettoknowandcontact_path
@@ -11,13 +11,19 @@ class ContactsControllerTest < ActionDispatch::IntegrationTest
 
   test "an invalid message is not sent" do
     assert_no_emails do
-      post contact_path, params: { contact: { name: "", email_address: "not-an-email", body: "" } }
+      post contact_path, params: { contact: { name: "", phone_number: "", email_address: "not-an-email", body: "" } }
+    end
+  end
+
+  test "a message without a phone number is not sent" do
+    assert_no_emails do
+      post contact_path, params: { contact: { name: "Guest", phone_number: "", email_address: "guest@example.com", body: "Hello" } }
     end
   end
 
   test "honeypot field silently drops the message" do
     assert_no_emails do
-      post contact_path, params: { contact: { name: "Bot", email_address: "bot@example.com", body: "Spam", website: "https://spam.example" } }
+      post contact_path, params: { contact: { name: "Bot", phone_number: "0123456789", email_address: "bot@example.com", body: "Spam", website: "https://spam.example" } }
     end
 
     assert_redirected_to gettoknowandcontact_path
