@@ -1,4 +1,4 @@
-<% content_for :title, @print.title.presence || "Print" %>
+<% content_for :title, @print.title.presence %>
 
 <article id="print" class="<%= "draft" unless @print.published? %>">
 	<% if @print.image.attached? %>
