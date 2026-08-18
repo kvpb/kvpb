@@ -266,7 +266,7 @@ form input[type="submit"]{
 #contact_form_section form.message_sent .text_field_glass textarea::placeholder{
 	color: var( --color-mid );
 }
-/* the line itself, not the heading, carries the slide — margin-left is set from JS on every keystroke of the erase/type animation, and this transition is what turns those discrete jumps into one smooth glide from the left edge to the right */
+/* the line itself, not the heading, carries the motion — margin-left is set from JS: once after erasing, to throw the empty cursor over to the right in one snap, then again on every keystroke of typing, to keep the growing text pinned to that same right edge */
 #contact_form_section .heading_line{
 	display: inline-block;
 	white-space: nowrap;
@@ -1025,8 +1025,10 @@ form input[type="submit"]{
 	color: var( --color-mid );
 }
 
+/* min-width, not just flex-basis, is what actually forces a clean wrap: without it a flex item happily shrinks below its basis down toward its content's own minimum before ever wrapping, squeezing the timeline instead of moving it below the sidebar the way flex-wrap on .about_layout intends */
 .resume_timeline{
 	flex: 1 1 20em;
+	min-width: 20em;
 	max-width: 40em;
 	margin: 0 0 2em 0;
 }
