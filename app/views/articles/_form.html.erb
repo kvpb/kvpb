@@ -14,19 +14,29 @@
 	<span class="autosave_status" data-autosave-target="status"></span>
 
 	<%= form.label :kicker, "Kicker" %>
-	<%= form.text_field :kicker %>
+	<div class="text_field_glass">
+		<%= form.text_field :kicker %>
+	</div>
 
 	<%= form.label :headline, "Headline" %>
-	<%= form.text_field :headline, required: true %>
+	<div class="text_field_glass">
+		<%= form.text_field :headline, required: true %>
+	</div>
 
 	<%= form.label :subheadline, "Subheadline" %>
-	<%= form.text_field :subheadline %>
+	<div class="text_field_glass">
+		<%= form.text_field :subheadline %>
+	</div>
 
 	<%= form.label :lede, "Lede" %>
-	<%= form.text_area :lede %>
+	<div class="text_field_glass">
+		<%= form.text_area :lede %>
+	</div>
 
 	<%= form.label :body, "Body" %>
-	<%= form.text_area :body, rows: 20 %>
+	<div class="text_field_glass">
+		<%= form.text_area :body, rows: 20 %>
+	</div>
 
 	<%= form.label :cover_image, "Cover image" %>
 	<%= form.file_field :cover_image, accept: "image/*" %>
