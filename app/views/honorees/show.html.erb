@@ -1,4 +1,4 @@
-<% content_for :title, @honoree.name %>
+<% content_for :title, @honoree.name.presence %>
 
 <article id="honoree" class="stone_surface <%= "draft" unless @honoree.published? %>" data-controller="pantheon-door">
 	<div class="pantheon_content">
