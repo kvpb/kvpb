@@ -184,7 +184,6 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 #contact_form_section .text_field_glass{
 	position: relative;
 	width: 100%;
-	max-width: 32em;
 	border-radius: 14px;
 	corner-shape: superellipse( 5 );
 	border-width: 1px;
@@ -240,13 +239,51 @@ form input[type="submit"]{
 	margin: 1em 0 0 auto;
 	padding: 0.5em 1.5em;
 	border: none;
-	border-radius: 0;
+	border-radius: 14px;
+	corner-shape: superellipse( 5 );
 	background-color: var( --color-fg );
 	color: var( --color-bg );
 	cursor: pointer;
 }
 #contact_form_section form input[type="submit"]:hover{
 	background-color: var( --color-hover );
+}
+#contact_form_section form input[type="submit"]:disabled{
+	background-color: var( --color-mid );
+	color: var( --color-bg );
+	cursor: default;
+}
+/* once the message is sent, every label and field reads as done, not just the button — border, placeholder, and typed-in text alike fade to the same muted gray */
+#contact_form_section form.message_sent label,
+#contact_form_section form.message_sent .text_field_glass input,
+#contact_form_section form.message_sent .text_field_glass textarea{
+	color: var( --color-mid );
+}
+#contact_form_section form.message_sent .text_field_glass{
+	border-color: var( --color-mid );
+}
+#contact_form_section form.message_sent .text_field_glass input::placeholder,
+#contact_form_section form.message_sent .text_field_glass textarea::placeholder{
+	color: var( --color-mid );
+}
+/* the line itself, not the heading, carries the slide — margin-left is set from JS on every keystroke of the erase/type animation, and this transition is what turns those discrete jumps into one smooth glide from the left edge to the right */
+#contact_form_section .heading_line{
+	display: inline-block;
+	white-space: nowrap;
+	transition: margin-left 0.15s ease;
+}
+#contact_form_section .heading_line.heading_replacement{
+	color: var( --color-mid );
+}
+/* a real text cursor: a hard on/off blink, not the fade the rest of the site's blink keyframe does */
+#contact_form_section .type_cursor{
+	display: inline-block;
+	width: 2px;
+	height: 0.85em;
+	margin-left: 2px;
+	vertical-align: -0.1em;
+	background-color: currentColor;
+	animation: cursor_blink 1s steps( 1 ) infinite;
 }
 
 /*   a t - r u l e s   */
@@ -262,6 +299,15 @@ form input[type="submit"]{
 	}
 	100%{
 		opacity: 1.0;
+	}
+}
+
+@keyframes cursor_blink{
+	0%, 49%{
+		opacity: 1;
+	}
+	50%, 100%{
+		opacity: 0;
 	}
 }
 
@@ -698,43 +744,102 @@ form input[type="submit"]{
 	font-size: 13pt;
 }
 
-.album_gallery{
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1.5em;
-}
-.album_tile{
-	display: flex;
-	flex-direction: column;
-	gap: 0.5em;
-	width: 240px;
-}
-.album_cover{
+/* one Cover Flow stage per album, stacked down the page — only the stage itself goes full-bleed, the same -1em/+1em pair that cancels body's right padding on the album's own page. The caption below stays put, subject to the ordinary margins like everything else */
+.album_cover_flow{
 	display: block;
-	width: 240px;
-	height: 240px;
-	overflow: hidden;
-	background-color: var( --color-faint );
+	margin: 0 0 3em 0;
 }
-.album_cover.draft{
+.album_cover_flow.draft, .album_solo.draft{
 	opacity: 0.6;
 }
-.album_cover_image{
-	width: 100%;
+/* a one-photo album isn't a Cover Flow — there's nothing to flow through, so it's just the photo itself, full-bleed like .album_photo already is on the album's own page, sitting here unlinked */
+.album_solo{
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	margin: 0 0 3em 0;
+}
+.cover_flow_stage{
+	position: relative;
+	height: 60vh;
+	min-height: 320px;
+	max-height: 600px;
+	margin-right: -1em;
+	width: calc( 100% + 1em );
+	overflow: hidden;
+	perspective: 1200px;
+}
+/* never cropped — the whole photo always shows. width is auto by default (the photo at its own natural aspect ratio, full stage height), and max-width only steps in to shrink it, never to crop it, the moment that natural width would otherwise reach into the 6% strip reserved for the side covers */
+.cover_flow_cover{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate( -50%, -50% );
+	width: auto;
+	max-width: 60%;
 	height: 100%;
-	object-fit: cover;
+	object-fit: contain;
+	z-index: 3;
 	display: block;
+}
+/* the side covers ride the same shared perspective as the stage itself, so both lean away at a consistent angle rather than each carrying its own vanishing point */
+/* the two outermost things in the stage — a side cover if there are only 2 or 3 photos, or the gray hint behind it if there are more — reach the true left/right edge of the stage, same as the center cover's own full-bleed edge. The side covers sit inset top and bottom (8%/84%) so the taller hint, full height behind them, still peeks out above and below even though both start at the same 0% */
+.cover_flow_side{
+	position: absolute;
+	top: 8%;
+	height: 84%;
+	width: 28%;
+	object-fit: cover;
+	z-index: 2;
+	opacity: 0.88;
+}
+.cover_flow_side_left{
+	left: 0;
+	transform-origin: left center;
+	transform: rotateY( 35deg );
+}
+.cover_flow_side_right{
+	right: 0;
+	transform-origin: right center;
+	transform: rotateY( -35deg );
+}
+/* a plain gray sliver, not a real photo, standing in for whatever's further back in the stack — full stage height, taller than the side cover in front of it, so it's the part that's actually visible reaching the true edge */
+.cover_flow_hint{
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 28%;
+	background-color: var( --color-mid );
+	opacity: 0.35;
+	z-index: 1;
+}
+.cover_flow_hint_left{
+	left: 0;
+}
+.cover_flow_hint_right{
+	right: 0;
 }
 .album_title{
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
+	display: block;
+}
+/* title, then author, then date or location on their own lines — both here (the caption stacked under a Cover Flow entry) and in .album_header on the album's own page (real <p> tags there, already block on their own) */
+.album_author, .album_location, .album_date{
+	font-size: 9pt;
+	color: var( --color-mid );
+	display: block;
+	margin: 0.2em 0 0 0;
 }
 .album_meta{
 	font-size: 9pt;
 	color: var( --color-mid );
+	margin: 0.75em 0 0 0;
 }
+/* overrides the generic header{display:flex;flex-direction:row} — title, author, and date need to stack, not sit in a row */
 .album_header{
-	margin: 0 0 1em 0;
+	display: block;
+	margin: 1em 0;
 }
 .album_title_large{
 	font-size: 36pt;
@@ -748,14 +853,26 @@ form input[type="submit"]{
 	display: flex;
 	flex-direction: column;
 	gap: 1em;
-	max-width: 50em;
 }
+/* full-bleed: the 1em cancels out body's own padding on the right, the same distance the nav already keeps main clear of on the left, so the photo reaches the true window edge on both sides without needing to know the nav's own width */
 .album_photo{
-	max-width: 100%;
+	width: calc( 100% + 1em );
+	max-width: calc( 100% + 1em );
 	height: auto;
 	display: block;
+	margin-right: -1em;
 }
 
+.pagination{
+	display: flex;
+	justify-content: space-between;
+	margin: 2em 0;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 1pt;
+	font-size: 10pt;
+}
 #print{
 	max-width: 50em;
 	margin: 0 auto;
@@ -796,12 +913,36 @@ form input[type="submit"]{
 	/* matches the gap between the section header's last line and the disc above it, so the timeline sits exactly as close beneath the disc once it wraps underneath */
 	row-gap: 16.164px;
 }
+/* the disc and the skill lists stacked beneath it, as one column the timeline sits beside once it exists. No max-width here: the disc itself is what should cap this column's width, by way of --disc below, not a number fixed independently of it */
+.about_sidebar{
+	flex: 0 0 auto;
+	display: flex;
+	flex-direction: column;
+	row-gap: 1.5em;
+}
+.skills_group h3{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 10pt;
+	text-transform: uppercase;
+	letter-spacing: 0.5pt;
+	margin: 0;
+}
+.skills_group ul{
+	list-style: none;
+	margin: 0.4em 0 0 0;
+	padding: 0;
+	font-size: 10pt;
+}
+.skills_group li{
+	margin: 0.15em 0 0 0;
+}
+/* --disc is the one true size: the photo, both rings, and their type are all defined as a fraction of it below, so the whole medallion scales as one coherent object instead of drifting apart at different rates. Bound by clamp() rather than left to bare 100vw/3, so it can't shrink past legible ring type on a phone or balloon past a sensible badge size on an ultra-wide; between those bounds it tracks the page exactly as asked */
 .name_disc{
 	position: relative;
-	flex: 0 0 auto;
-	/* sized to the rings' own visual radius rather than a round number, so the box has no empty margin left for the flex row to butt up against */
-	width: 237px;
-	height: 237px;
+	--disc: clamp( 200px, calc( 100vw / 3 ), 480px );
+	width: var( --disc );
+	height: var( --disc );
 	margin: 0;
 }
 /* box-shadow for the convex curvature. The shake/lag transform itself lives on .name_disc, not here — the rings orbit the photo, so the whole disc has to move as one object, not just the photo underneath it */
@@ -810,8 +951,8 @@ form input[type="submit"]{
 	top: 50%;
 	left: 50%;
 	transform: translate( -50%, -50% );
-	width: 180px;
-	height: 180px;
+	width: calc( var( --disc ) * 180 / 237 );
+	height: calc( var( --disc ) * 180 / 237 );
 	border-radius: 50%;
 	overflow: hidden;
 	user-select: none;
@@ -842,11 +983,11 @@ form input[type="submit"]{
 	letter-spacing: 0.5px;
 }
 .name_ring_latin span{
-	font-size: 12px;
+	font-size: calc( var( --disc ) * 12 / 237 );
 	text-transform: uppercase;
 }
 .name_ring_japanese span{
-	font-size: 11px;
+	font-size: calc( var( --disc ) * 11 / 237 );
 }
 .name_ring span .ring_char{
 	display: inline-block;
@@ -986,6 +1127,7 @@ form input[type="submit"]{
 	padding-left: 3.33pt;
 }
 
+/* the .1cm negative margin cancels nav's own right padding exactly, so the section name picks up right where "Karl" in the nav wordmark leaves off — bypassing the gap between the nav bar and the main column instead of sitting flush against it */
 #section_header{
 	display: block;
 	color: var( --color-fg );
@@ -997,7 +1139,7 @@ form input[type="submit"]{
 	line-height: 0.75em;
 	text-align: left;
 	padding: 0;
-	margin: 22px 0 16px 0;
+	margin: 22px 0 16px -.1cm;
 	user-select: none;
 }
 #section_possessive{
@@ -1130,6 +1272,24 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 	-webkit-animation-iteration-count: infinite !important;
 	-webkit-animation-play-state: running !important;
 }
+/* the same held-down blink as the nav, so article previews read as clickable the same unmistakable way — driven by blink_on_press_controller.js rather than :active, which wasn't reliably engaging on these elements. Photos and the Cover Flow deliberately don't get this: only the nav blinks */
+.headline a.pressed, .cover_image.pressed{
+	animation-name: blink;
+	animation-duration: 0.1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: running;
+	-moz-animation-name: blink;
+	-moz-animation-duration: 0.1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-play-state: running;
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 0.1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
+}
 #theme_toggle{
 	/* offset from the window's left and bottom edges exactly mirrors the logo's offset from the window's left and top edges */
 	position: fixed;
@@ -1237,13 +1397,36 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 	margin: 0 auto;
 	display: block;
 }
-#contact_form_section{
-	max-width: 40em;
-	margin: 0 auto;
-}
 #hall_of_fame{
 	max-width: 60em;
 	margin: 0 auto;
+}
+#messages_page{
+	max-width: 60em;
+	margin: 0 auto;
+}
+.message_entry{
+	border-top: 1px solid var( --color-faint );
+	padding: 0.75em 0;
+}
+.message_entry.unread{
+	background-color: var( --color-pending-bg );
+	padding: 0.75em 1em;
+}
+.message_meta{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 10pt;
+}
+.message_body{
+	white-space: pre-line;
+}
+.message_actions{
+	display: flex;
+	column-gap: 0.5em;
+}
+.message_actions form{
+	margin: 0;
 }
 #honoree{
 	max-width: 60em;
