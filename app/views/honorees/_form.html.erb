@@ -14,7 +14,9 @@
 	<span class="autosave_status" data-autosave-target="status"></span>
 
 	<%= form.label :name, "Name" %>
-	<%= form.text_field :name, required: true %>
+	<div class="text_field_glass">
+		<%= form.text_field :name, required: true %>
+	</div>
 
 	<%= form.label :kind, "Kind" %>
 	<%= form.select :kind, Honoree.kinds.keys.map { |k| [ k.capitalize, k ] } %>
@@ -38,10 +40,14 @@
 	<%= form.date_field :helped_until %>
 
 	<%= form.label :honor_inscription, "Honor inscription" %>
-	<%= form.text_area :honor_inscription %>
+	<div class="text_field_glass">
+		<%= form.text_area :honor_inscription %>
+	</div>
 
 	<%= form.label :body, "Crossed portrait" %>
-	<%= form.text_area :body, rows: 20 %>
+	<div class="text_field_glass">
+		<%= form.text_area :body, rows: 20 %>
+	</div>
 
 	<%= form.label :hero_image, "Hero image" %>
 	<%= form.file_field :hero_image, accept: "image/*" %>
