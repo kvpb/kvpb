@@ -9,13 +9,19 @@
 	<%= form.select :kind, Milestone.kinds.keys.map { |k| [ k.capitalize, k ] } %>
 
 	<%= form.label :title, "Title" %>
-	<%= form.text_field :title, required: true %>
+	<div class="text_field_glass">
+		<%= form.text_field :title, required: true %>
+	</div>
 
 	<%= form.label :organization, "Organization" %>
-	<%= form.text_field :organization %>
+	<div class="text_field_glass">
+		<%= form.text_field :organization %>
+	</div>
 
 	<%= form.label :location, "Location" %>
-	<%= form.text_field :location %>
+	<div class="text_field_glass">
+		<%= form.text_field :location %>
+	</div>
 
 	<%= form.label :starts_on, "Starts on" %>
 	<%= form.date_field :starts_on, required: true %>
@@ -25,11 +31,15 @@
 	<p class="field_hint">Blank means ongoing.</p>
 
 	<%= form.label :date_label, "Date label (override)" %>
-	<%= form.text_field :date_label %>
+	<div class="text_field_glass">
+		<%= form.text_field :date_label %>
+	</div>
 	<p class="field_hint">Leave blank to compute from starts on / ends on. Use this for anything less precise than a month, like a decade.</p>
 
 	<%= form.label :description, "Description" %>
-	<%= form.text_area :description %>
+	<div class="text_field_glass">
+		<%= form.text_area :description %>
+	</div>
 
 	<%= form.submit milestone.persisted? ? "Save changes" : "Create milestone" %>
 <% end %>
