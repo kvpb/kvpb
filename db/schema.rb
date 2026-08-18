@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_17_210641) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_18_202225) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -99,13 +99,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_17_210641) do
     t.index ["published_at"], name: "index_honorees_on_published_at"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.string "email_address", null: false
+    t.string "name", null: false
+    t.string "phone_number", null: false
+    t.boolean "read", default: false, null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "milestones", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "date_label"
     t.text "description"
     t.date "ends_on"
     t.integer "kind", default: 0, null: false
     t.string "location"
-    t.string "organization", null: false
+    t.string "organization"
     t.date "starts_on", null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
@@ -134,6 +145,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_17_210641) do
   create_table "settings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "login_token"
+    t.string "personal_email"
     t.boolean "registration_enabled", default: false, null: false
     t.datetime "updated_at", null: false
     t.index ["login_token"], name: "index_settings_on_login_token", unique: true
