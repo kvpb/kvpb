@@ -139,6 +139,51 @@ hr{
 	border: none;
 }
 
+/* font sizes borrowed from The New York Times' own body copy scale — the family stays Arial, not their Cheltenham/Georgia, and colors/weights stay the site's own monochrome, only the size relationships are theirs. #article and #comments are excluded: the journal is getting its own front-page, multi-column "une" treatment later and is left alone until then. That exclusion is wrapped in :where() specifically so it costs nothing specificity-wise — :not() otherwise inherits the specificity of its most specific argument, and an ID in there would make every rule below outrank .headline, .pantheon_title, .album_title_large and the rest of this site's own titles instead of yielding to them. A bare element selector, :where()'s zero cost included, never outweighs a class one, so this only ever fills in what nothing more specific already claims */
+:is( h1, h2, h3, p, ul, ol, li, blockquote ):not( :where( #article, #article *, #comments, #comments * ) ){
+	font-family: 'Arial', sans-serif;
+}
+h1:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-weight: 900;
+	font-size: 34px;
+	line-height: 1.15;
+	margin: 0.3em 0 0.4em 0;
+}
+h2:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-weight: 900;
+	font-size: 24px;
+	line-height: 1.25;
+	margin: 1.2em 0 0.4em 0;
+}
+h3:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-weight: 900;
+	font-size: 19px;
+	line-height: 1.3;
+	margin: 1em 0 0.3em 0;
+}
+p:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-size: 17px;
+	line-height: 1.7;
+	margin: 0 0 1em 0;
+}
+ul:not( :where( #article, #article *, #comments, #comments * ) ), ol:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-size: 17px;
+	line-height: 1.7;
+	margin: 0 0 1em 0;
+	padding-left: 1.5em;
+}
+li:not( :where( #article, #article *, #comments, #comments * ) ){
+	margin: 0.3em 0;
+}
+blockquote:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-size: 22px;
+	font-style: italic;
+	line-height: 1.5;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid var( --color-fg );
+}
+
 span.highlight{
 	background-color: rgb( 255, 255, 0 ); /* pure yellow is already mid-lightness, so it doesn't need inverting; the text on top of it is forced black in both themes instead, below */
 	color: rgb( 0, 0, 0 );
@@ -180,8 +225,8 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 	outline-offset: 2px;
 }
 
-/* the contact form's three real fields get a squircle frosted-glass treatment; sign-in, registration, and the honeypot field keep the plain square style above untouched */
-#contact_form_section .text_field_glass{
+/* every real text field site-wide gets this squircle frosted-glass treatment; only the honeypot field keeps the plain square style above untouched, since it has to look unremarkable to a bot */
+.text_field_glass{
 	position: relative;
 	width: 100%;
 	border-radius: 14px;
@@ -193,11 +238,11 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 	isolation: isolate;
 }
 /* redrawn as spaced dashes while the user is actively typing, back to a thin solid line once they're not. A hand-drawn dash pattern (four repeating background gradients standing in for the border) was tried for exact control over dash/gap/thickness, but a background paints under the box's squircle corner only where an actual border also exists to carve that shape out of it — without one the corners render square and the straight edges get clipped away, so this stays with the real border, whose dash size is tied to border-width rather than independently settable */
-#contact_form_section .text_field_glass:focus-within{
+.text_field_glass:focus-within{
 	border-style: dashed;
 }
 /* the gaussian blur — frosted-glass center, strongest at the middle, masked down to nothing by the time it reaches the border */
-#contact_form_section .text_field_glass::before{
+.text_field_glass::before{
 	content: '';
 	position: absolute;
 	inset: 0;
@@ -207,7 +252,8 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 	-webkit-mask-image: radial-gradient( ellipse at center, black 0%, black 30%, transparent 75% );
 	pointer-events: none;
 }
-#contact_form_section .text_field_glass input, #contact_form_section .text_field_glass textarea{
+/* :not([type="hidden"]) rather than a bare `input` — the extra attribute selector, not the honeypot's own hidden state, is the point: form input[type="…"] above matches on a real type value too, so a bare `input` here loses to it on specificity and the field keeps its square 2px border instead of ever going borderless */
+.text_field_glass input:not( [type="hidden"] ), .text_field_glass textarea{
 	position: relative;
 	z-index: 1;
 	display: block;
@@ -221,7 +267,7 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 	color: var( --color-fg );
 	background: color-mix( in srgb, var( --color-bg ) 45%, transparent );
 }
-#contact_form_section .text_field_glass input:focus, #contact_form_section .text_field_glass textarea:focus{
+.text_field_glass input:not( [type="hidden"] ):focus, .text_field_glass textarea:focus{
 	outline: 2px solid var( --color-fg );
 	outline-offset: 2px;
 }
@@ -920,11 +966,12 @@ form input[type="submit"]{
 	flex-direction: column;
 	row-gap: 1.5em;
 }
-.skills_group h3{
+/* timeline and the four skill group names sit at the same visual rank — the timeline only lives under its own h2, in a separate column, because it needs a column of its own, not because it outranks these. Sized to match the nav's own menu entries (16pt small-caps, e.g. #read/#see/#listen/#watch below), since these are section labels in the same sense those are, not body headings */
+.resume_timeline h2, .skills_group h3{
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
-	font-size: 10pt;
-	text-transform: uppercase;
+	font-size: 16pt;
+	font-variant: small-caps;
 	letter-spacing: 0.5pt;
 	margin: 0;
 }
@@ -938,6 +985,10 @@ form input[type="submit"]{
 	margin: 0.15em 0 0 0;
 }
 /* --disc is the one true size: the photo, both rings, and their type are all defined as a fraction of it below, so the whole medallion scales as one coherent object instead of drifting apart at different rates. Bound by clamp() rather than left to bare 100vw/3, so it can't shrink past legible ring type on a phone or balloon past a sensible badge size on an ultra-wide; between those bounds it tracks the page exactly as asked */
+/* centered within the sidebar column by default. Once the sidebar has wrapped to the full page width and no longer sits beside the timeline, viewport_center_controller.js takes over with a translateX of its own, centering on the actual window instead — the two never fight, since the JS only ever touches this wrapper's transform and medallion-physics only ever touches .name_disc's */
+.name_disc_center{
+	align-self: center;
+}
 .name_disc{
 	position: relative;
 	--disc: clamp( 200px, calc( 100vw / 3 ), 480px );
@@ -1394,10 +1445,12 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 	/* the overlay's own background is opaque, so the site-wide halo against #backdrop is pointless here and only dulls the glyph edges */
 	-webkit-text-stroke-width: 0;
 }
+/* no max-width/auto-centering here anymore — that used to leave an auto margin wider than .about_layout's own 2em column-gap between the sidebar and the timeline, so the sidebar never quite reached flush against main's edge the way every other section does. The contact form keeps its own cap below instead */
 #gettoknowandcontact_page{
-	max-width: 60em;
-	margin: 0 auto;
 	display: block;
+}
+#contact_form_section{
+	max-width: 60em;
 }
 #hall_of_fame{
 	max-width: 60em;
