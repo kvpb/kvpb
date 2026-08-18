@@ -1,12 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Plays once, right after a message is sent: erases "Wanna reach out to me?" a character at
-// a time while the line slides over to hug the right edge, then types the reply in gray,
-// growing back out from that same right edge. Left alone (sent is false) it's just the plain
-// heading with a cursor blinking at the end.
+// Plays once, right after a message is sent, in three distinct beats: erase "Wanna reach out to
+// me?" a character at a time in place (staying put on the left, no sliding yet), then throw the
+// now-empty cursor over to the right edge in one quick snap, then type the reply in gray, growing
+// back out from that same right edge. Left alone (sent is false) it is just the plain heading
+// with a cursor blinking at the end.
 const ORIGINAL = "Wanna reach out to me?"
 const REPLACEMENT = "I may or may not get back to you."
 const STEP_MS = 40
+const THROW_MS = 200
 
 export default class extends Controller {
   static targets = [ "line", "text" ]
@@ -22,11 +24,13 @@ export default class extends Controller {
 
   erase( remaining ) {
     this.textTarget.textContent = ORIGINAL.slice( 0, remaining )
-    this.align()
 
     if ( remaining === 0 ) {
-      this.lineTarget.classList.add( "heading_replacement" )
-      this.type( 0 )
+      this.align()
+      this.timeout = setTimeout( () => {
+        this.lineTarget.classList.add( "heading_replacement" )
+        this.type( 0 )
+      }, THROW_MS )
       return
     }
 
