@@ -8,9 +8,7 @@ import { Controller } from "@hotwired/stimulus"
 // with zero lag. On top of that shared 2D drift, the photo alone leans in 3D like a PS Vita
 // LiveArea bubble, tilting toward whatever direction it's currently offset in; the orbiting ring
 // text stays flat, since only the disc's shared translation carries it along, not the medallion's
-// own tilt. The reflection shifts with the same offset, so the light visibly reacts to every nudge
-// and every scroll kick, the way it would catch differently on a real object that's actually
-// wobbling. Stiffness is kept low and damping high so the response eases in and out rather than
+// own tilt. Stiffness is kept low and damping high so the response eases in and out rather than
 // snapping — acceleration and deceleration that scale with how far off rest the disc currently is,
 // the way an actual spring behaves, rather than a sharp, constant-speed jerk toward the target.
 export default class extends Controller {
@@ -22,7 +20,6 @@ export default class extends Controller {
     damping: { type: Number, default: 0.88 },
     scrollKick: { type: Number, default: 0.5 },
     scrollAccelerationThreshold: { type: Number, default: 2.5 },
-    reflectionCoupling: { type: Number, default: 0.7 },
     tiltSensitivity: { type: Number, default: 1.8 },
     tiltPerspective: { type: Number, default: 500 }
   }
@@ -110,8 +107,6 @@ export default class extends Controller {
     this.offsetY += this.velocityY
 
     this.element.style.transform = `translate( ${ this.offsetX }px, ${ this.offsetY }px )`
-    this.element.style.setProperty( "--reflection-shift-x", `${ this.offsetX * this.reflectionCouplingValue }px` )
-    this.element.style.setProperty( "--reflection-shift-y", `${ this.offsetY * this.reflectionCouplingValue }px` )
 
     // the medallion alone leans in 3D off the same offset — a PS Vita LiveArea bubble tilt — while
     // the ring text above stays flat, carried only by the disc's shared 2D translation
