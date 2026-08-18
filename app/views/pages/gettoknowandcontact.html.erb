@@ -2,9 +2,11 @@
 
 <section id="gettoknowandcontact_page">
 	<div class="about_layout">
-		<div class="name_disc">
+		<div class="name_disc" data-controller="medallion-physics">
 			<% if @profile_photo.attached? %>
-				<%= image_tag @profile_photo, class: "profile_photo_disc" %>
+				<div class="profile_photo_medallion" data-medallion-physics-target="medallion">
+					<%= image_tag @profile_photo, class: "profile_photo_disc" %>
+				</div>
 			<% end %>
 			<div class="name_ring name_ring_latin" aria-hidden="true">
 				<% ring_text = "Karl Vincent Pierre Bertin `kvpb`  Karl Thomas George West `ktgw`  " %>
@@ -25,23 +27,25 @@
 			</div>
 		</div>
 
-		<div class="resume_timeline">
-			<h2>Timeline</h2>
-			<ol class="timeline">
-				<% @milestones.each do |milestone| %>
-					<li class="timeline_entry timeline_entry_<%= milestone.kind %>">
-						<p class="timeline_dates"><%= milestone.date_range_label %></p>
-						<h3 class="timeline_title"><%= smart_quotes( milestone.title ) %></h3>
-						<p class="timeline_organization"><%= smart_quotes( milestone.organization ) %><% if milestone.location.present? %> — <%= milestone.location %><% end %></p>
-						<% if milestone.description.present? %><p class="timeline_description"><%= smart_quotes( milestone.description ) %></p><% end %>
-					</li>
-				<% end %>
-			</ol>
-		</div>
+		<% if @milestones.any? %>
+			<div class="resume_timeline">
+				<h2>Timeline</h2>
+				<ol class="timeline">
+					<% @milestones.each do |milestone| %>
+						<li class="timeline_entry timeline_entry_<%= milestone.kind %>">
+							<p class="timeline_dates"><%= milestone.date_range_label %></p>
+							<h3 class="timeline_title"><%= smart_quotes( milestone.title ) %></h3>
+							<p class="timeline_organization"><%= smart_quotes( milestone.organization ) %><% if milestone.location.present? %> — <%= milestone.location %><% end %></p>
+							<% if milestone.description.present? %><p class="timeline_description"><%= smart_quotes( milestone.description ) %></p><% end %>
+						</li>
+					<% end %>
+				</ol>
+			</div>
+		<% end %>
 	</div>
 
 	<section id="contact_form_section">
-		<h2>Contact</h2>
+		<h2>Contact me.</h2>
 
 		<% if @contact.errors.any? %>
 			<ul class="errors">
@@ -50,14 +54,20 @@
 		<% end %>
 
 		<%= form_with model: @contact, url: contact_path, scope: :contact do |form| %>
-			<%= form.label :name, "Name" %>
-			<%= form.text_field :name, required: true %>
+			<%= form.label :name, "What’s your name?" %>
+			<div class="text_field_glass">
+				<%= form.text_field :name, required: true, placeholder: "name" %>
+			</div>
 
-			<%= form.label :email_address, "Email address" %>
-			<%= form.email_field :email_address, required: true %>
+			<%= form.label :email_address, "What’s your email address?" %>
+			<div class="text_field_glass">
+				<%= form.email_field :email_address, required: true, placeholder: "email address" %>
+			</div>
 
-			<%= form.label :body, "Message" %>
-			<%= form.text_area :body, required: true %>
+			<%= form.label :body, "What do you have to tell me?" %>
+			<div class="text_field_glass">
+				<%= form.text_area :body, required: true, placeholder: "message" %>
+			</div>
 
 			<div class="website_field" aria-hidden="true">
 				<%= form.label :website, "Leave blank" %>
