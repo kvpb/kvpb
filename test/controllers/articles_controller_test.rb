@@ -17,6 +17,23 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
     assert_match articles( :draft ).headline, response.body
   end
 
+  test "index redirects guests to root when the journal is empty" do
+    Article.published.destroy_all
+
+    get read_path
+
+    assert_redirected_to root_path
+  end
+
+  test "index still renders for a signed-in superuser when the journal is empty" do
+    Article.published.destroy_all
+    sign_in_as( users( :one ) )
+
+    get read_path
+
+    assert_response :success
+  end
+
   test "show renders a published article for guests" do
     get article_path( articles( :published ) )
 
