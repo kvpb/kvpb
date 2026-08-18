@@ -2,43 +2,40 @@
 <section id="gettoknowandcontact_page">
 	<div class="about_layout">
 		<div class="about_sidebar">
-			<div class="name_disc" data-controller="medallion-physics">
-				<% if @profile_photo.attached? %>
-					<div class="profile_photo_medallion" data-medallion-physics-target="medallion">
-						<%= image_tag @profile_photo, class: "profile_photo_disc" %>
+			<div class="name_disc_center" data-controller="viewport-center">
+				<div class="name_disc" data-controller="medallion-physics">
+					<% if @profile_photo.attached? %>
+						<div class="profile_photo_medallion" data-medallion-physics-target="medallion">
+							<%= image_tag @profile_photo, class: "profile_photo_disc" %>
+						</div>
+					<% end %>
+					<div class="name_ring name_ring_latin" aria-hidden="true">
+						<% ring_text = "Karl Vincent Pierre Bertin `kvpb`  Karl Thomas George West `ktgw`  " %>
+						<% ring_code = false %>
+						<% ring_chars = ring_text.chars.map do |char| %>
+							<% ring_code = !ring_code if char == "`" %>
+							<% [ char, ring_code || char == "`" ] %>
+						<% end %>
+						<% ring_chars.reverse.each_with_index do |( char, code ), i| %>
+							<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_chars.length * i %>deg ) translateY( calc( var( --disc ) * -105 / 237 ) )"><span class="ring_char<%= " ring_code" if code %>"><%= char %></span></span>
+						<% end %>
 					</div>
-				<% end %>
-				<div class="name_ring name_ring_latin" aria-hidden="true">
-					<% ring_text = "Karl Vincent Pierre Bertin `kvpb`  Karl Thomas George West `ktgw`  " %>
-					<% ring_code = false %>
-					<% ring_chars = ring_text.chars.map do |char| %>
-						<% ring_code = !ring_code if char == "`" %>
-						<% [ char, ring_code || char == "`" ] %>
-					<% end %>
-					<% ring_chars.reverse.each_with_index do |( char, code ), i| %>
-						<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_chars.length * i %>deg ) translateY( calc( var( --disc ) * -105 / 237 ) )"><span class="ring_char<%= " ring_code" if code %>"><%= char %></span></span>
-					<% end %>
-				</div>
-				<div class="name_ring name_ring_japanese" aria-hidden="true">
-					<% ring_text_ja = "カール・ビンセント・ピエール・ベルティン  カール・トーマス・ジョージ・ウェスト  " %>
-					<% ring_text_ja.chars.reverse.each_with_index do |char, i| %>
-						<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_text_ja.length * i %>deg ) translateY( calc( var( --disc ) * -118 / 237 ) )"><span class="ring_char"><%= char %></span></span>
-					<% end %>
+					<div class="name_ring name_ring_japanese" aria-hidden="true">
+						<% ring_text_ja = "カール・ビンセント・ピエール・ベルティン  カール・トーマス・ジョージ・ウェスト  " %>
+						<% ring_text_ja.chars.reverse.each_with_index do |char, i| %>
+							<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_text_ja.length * i %>deg ) translateY( calc( var( --disc ) * -118 / 237 ) )"><span class="ring_char"><%= char %></span></span>
+						<% end %>
+					</div>
 				</div>
 			</div>
 
-			<% skill_groups = {
-				"aptitudes & skills" => [],
-				"diplomas, certifications & permits" => [],
-				"languages & programming languages" => [],
-				"activities & interests" => []
-			} %>
-			<% skill_groups.each do |label, items| %>
+			<% Skill.categories.keys.each do |category| %>
+				<% items = @skills_by_category[ category ] || [] %>
 				<div class="skills_group">
-					<h3><%= label %></h3>
+					<h3><%= Skill::CATEGORY_LABELS.fetch( category ) %></h3>
 					<% if items.any? %>
 						<ul>
-							<% items.each do |item| %><li><%= item %></li><% end %>
+							<% items.each do |skill| %><li><%= skill.name %></li><% end %>
 						</ul>
 					<% end %>
 				</div>
@@ -47,13 +44,14 @@
 
 		<% if @milestones.any? %>
 			<div class="resume_timeline">
-				<h2>Timeline</h2>
+				<h2>timeline</h2>
 				<ol class="timeline">
 					<% @milestones.each do |milestone| %>
+						<% timeline_org_line = [ ( smart_quotes( milestone.organization ) if milestone.organization.present? ), ( milestone.location if milestone.location.present? ) ].compact.join( " — " ) %>
 						<li class="timeline_entry timeline_entry_<%= milestone.kind %>">
 							<p class="timeline_dates"><%= milestone.date_range_label %></p>
 							<h3 class="timeline_title"><%= smart_quotes( milestone.title ) %></h3>
-							<p class="timeline_organization"><%= smart_quotes( milestone.organization ) %><% if milestone.location.present? %> — <%= milestone.location %><% end %></p>
+							<% if timeline_org_line.present? %><p class="timeline_organization"><%= timeline_org_line %></p><% end %>
 							<% if milestone.description.present? %><p class="timeline_description"><%= smart_quotes( milestone.description ) %></p><% end %>
 						</li>
 					<% end %>
