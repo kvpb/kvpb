@@ -37,7 +37,7 @@ class MilestonesController < ApplicationController
     end
 
     def milestone_params
-      params.require( :milestone ).permit( :kind, :title, :organization, :location, :starts_on, :ends_on, :description )
+      params.require( :milestone ).permit( :kind, :title, :organization, :location, :starts_on, :ends_on, :date_label, :description )
     end
 end
 
