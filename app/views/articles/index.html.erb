@@ -8,13 +8,20 @@
 		<article class="<%= article.published? ? "published" : "draft" %>">
 			<% unless article.published? %><p class="status_badge">Draft</p><% end %>
 			<% if article.cover_image.attached? %>
-				<%= link_to article_path( article ) do %><%= image_tag article.cover_image, class: "cover_image" %><% end %>
+				<%= link_to article_path( article ), data: { controller: "blink-on-press" } do %><%= image_tag article.cover_image, class: "cover_image" %><% end %>
 			<% end %>
 			<% if article.kicker.present? %><p class="kicker"><%= smart_quotes( article.kicker ) %></p><% end %>
-			<h2 class="headline"><%= link_to smart_quotes( article.headline ), article_path( article ) %></h2>
+			<h2 class="headline"><%= link_to smart_quotes( article.headline ), article_path( article ), data: { controller: "blink-on-press" } %></h2>
 			<% if article.subheadline.present? %><p class="subheadline"><%= smart_quotes( article.subheadline ) %></p><% end %>
 			<% if article.lede.present? %><p class="lede"><%= smart_quotes( article.lede ) %></p><% end %>
 		</article>
+	<% end %>
+
+	<% if @total_pages > 1 %>
+		<nav class="pagination">
+			<% if @page < @total_pages %><%= link_to "Older", read_path( page: @page + 1 ), data: { controller: "blink-on-press" } %><% end %>
+			<% if @page > 1 %><%= link_to "Newer", read_path( page: @page - 1 ), data: { controller: "blink-on-press" } %><% end %>
+		</nav>
 	<% end %>
 </section>
 
