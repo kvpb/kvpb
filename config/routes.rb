@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   resource :registration, only: %i[new create]
 
+  get    "/journal",                          to: "articles#index"
   get    "/read",                             to: "articles#index",  as: "read"
   post   "/read",                             to: "articles#create"
   get    "/read/new",                         to: "articles#new",    as: "new_article"
@@ -34,6 +35,7 @@ Rails.application.routes.draw do
   patch  "/hall-of-fame/:identifier",         to: "honorees#update"
   delete "/hall-of-fame/:identifier",         to: "honorees#destroy"
 
+  get    "/gallery",                          to: "albums#index"
   get    "/see",                              to: "albums#index",    as: "see"
   post   "/see",                              to: "albums#create"
   get    "/see/new",                          to: "albums#new",      as: "new_album"
@@ -45,8 +47,11 @@ Rails.application.routes.draw do
   get    "/see/prints/:identifier",           to: "prints#show",     as: "print"
 
   get "/listen",              to: "pages#listen",               as: "listen"
+  get "/music",               to: "pages#listen"
   get "/watch",               to: "pages#watch",                as: "watch"
+  get "/video",               to: "pages#watch"
   get "/gettoknowandcontact", to: "pages#gettoknowandcontact",  as: "gettoknowandcontact"
+  get "/about",               to: "pages#gettoknowandcontact"
   get "/search",              to: "pages#search",               as: "search"
 
   post   "/gettoknowandcontact/contact",             to: "contacts#create",    as: "contact"
@@ -55,6 +60,11 @@ Rails.application.routes.draw do
   get    "/gettoknowandcontact/milestones/:id/edit", to: "milestones#edit",    as: "edit_milestone"
   patch  "/gettoknowandcontact/milestones/:id",      to: "milestones#update"
   delete "/gettoknowandcontact/milestones/:id",      to: "milestones#destroy", as: "milestone"
+
+  get    "/messages",                 to: "messages#index",       as: "messages"
+  patch  "/messages/:id/mark_read",   to: "messages#mark_read",   as: "mark_read_message"
+  patch  "/messages/:id/mark_unread", to: "messages#mark_unread", as: "mark_unread_message"
+  post   "/messages/:id/forward",     to: "messages#forward",     as: "forward_message"
 
   # The sign-in path is not a fixed word ("session"/"login") but today's rotating token, checked
   # against the database on every request by LoginTokenConstraint — so it is neither a guessable
