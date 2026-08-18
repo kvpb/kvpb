@@ -24,6 +24,8 @@ module ApplicationHelper
       { label: "music", empty: section_empty?( :music ) }
     elsif controller_name == "pages" && action_name == "watch"
       { label: "films", empty: section_empty?( :films ) }
+    elsif %w[messages milestones skills].include?( controller_name )
+      { label: "back end", empty: false }
     end
   end
 end
