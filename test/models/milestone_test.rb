@@ -40,12 +40,25 @@ class MilestoneTest < ActiveSupport::TestCase
     assert_equal "September 2023 – present", ongoing.date_range_label
   end
 
-  test "kind distinguishes education from work" do
+  test "kind distinguishes education from work from birth" do
     education = Milestone.new( kind: :education )
     work = Milestone.new( kind: :work )
+    birth = Milestone.new( kind: :birth )
 
     assert education.education?
     assert work.work?
+    assert birth.birth?
+  end
+
+  test "a birth milestone doesn't require an organization" do
+    birth = Milestone.new( kind: :birth, title: "Birth", starts_on: Date.current )
+
+    assert birth.valid?
+  end
+
+  test "date_range_label prefers an explicit date_label override" do
+    imprecise = Milestone.new( starts_on: "1990-01-01", date_label: "1990s" )
+    assert_equal "1990s", imprecise.date_range_label
   end
 end
 
