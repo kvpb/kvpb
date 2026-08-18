@@ -24,8 +24,13 @@
 	--engrave-shadow: rgba( 0, 0, 0, 0.4 );
 	--engrave-highlight: rgba( 255, 255, 255, 0.65 );
 	--medallion-highlight: rgba( 255, 255, 255, 0.6 );
-	--medallion-shadow: rgba( 0, 0, 0, 0.45 );
+	--medallion-shadow: rgba( 0, 0, 0, 0.08 );
 	--stone-text-blend: multiply; /* dark text absorbed into pale stone */
+}
+
+/* every element eases between its light and dark colors instead of snapping, so flipping the theme reads as one smooth cut rather than a harsh jump; elements with their own transition (the toggle, the wordmark) override this outright rather than merging with it, which is fine since those already resolve to the same 1/4s */
+*{
+	transition: background-color .25s ease, color .25s ease, border-color .25s ease, fill .25s ease, stroke .25s ease, filter .25s ease;
 }
 
 html{
@@ -174,6 +179,66 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 	outline: 2px solid var( --color-fg );
 	outline-offset: 2px;
 }
+
+/* the contact form's three real fields get a squircle frosted-glass treatment; sign-in, registration, and the honeypot field keep the plain square style above untouched */
+#contact_form_section .text_field_glass{
+	position: relative;
+	width: 100%;
+	max-width: 32em;
+	border-radius: 14px;
+	corner-shape: superellipse( 5 );
+	border-width: 1px;
+	border-color: var( --color-fg );
+	border-style: solid;
+	overflow: hidden;
+	isolation: isolate;
+}
+/* redrawn as balanced dots while the user is actively typing, back to a thin solid line once they're not */
+#contact_form_section .text_field_glass:focus-within{
+	border-style: dotted;
+}
+/* the gaussian blur — frosted-glass center, strongest at the middle, masked down to nothing by the time it reaches the border */
+#contact_form_section .text_field_glass::before{
+	content: '';
+	position: absolute;
+	inset: 0;
+	backdrop-filter: blur( 12px );
+	-webkit-backdrop-filter: blur( 12px );
+	mask-image: radial-gradient( ellipse at center, black 0%, black 30%, transparent 75% );
+	-webkit-mask-image: radial-gradient( ellipse at center, black 0%, black 30%, transparent 75% );
+	pointer-events: none;
+}
+/* the reflection: a plain white zone, blurred soft at its own edges, brightening whatever's beneath it via screen blend — fixed geometry, nothing computed, nothing tracked */
+#contact_form_section .text_field_glass::after{
+	content: '';
+	position: absolute;
+	top: -30%;
+	left: -4%;
+	width: 22%;
+	height: 160%;
+	background: white;
+	filter: blur( 14px );
+	mix-blend-mode: screen;
+	pointer-events: none;
+}
+#contact_form_section .text_field_glass input, #contact_form_section .text_field_glass textarea{
+	position: relative;
+	z-index: 1;
+	display: block;
+	width: 100%;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 12pt;
+	padding: 0.5em 0.6em;
+	box-sizing: border-box;
+	border: none;
+	color: var( --color-fg );
+	background: color-mix( in srgb, var( --color-bg ) 45%, transparent );
+}
+#contact_form_section .text_field_glass input:focus, #contact_form_section .text_field_glass textarea:focus{
+	outline: 2px solid var( --color-fg );
+	outline-offset: 2px;
+}
 form input[type="submit"]{
 	margin-top: 1em;
 	font-family: 'Arial', sans-serif;
@@ -181,6 +246,20 @@ form input[type="submit"]{
 	text-transform: uppercase;
 	letter-spacing: 1pt;
 	padding: 0.4em 1em;
+}
+/* sober and industrial, like the search bar, not the floating liquid-marble button originally imagined — that idea didn't fit the site's typ 1 design language */
+#contact_form_section form input[type="submit"]{
+	display: block;
+	margin: 1em 0 0 auto;
+	padding: 0.5em 1.5em;
+	border: none;
+	border-radius: 0;
+	background-color: var( --color-fg );
+	color: var( --color-bg );
+	cursor: pointer;
+}
+#contact_form_section form input[type="submit"]:hover{
+	background-color: var( --color-hover );
 }
 
 /*   a t - r u l e s   */
@@ -307,9 +386,7 @@ form input[type="submit"]{
 	--color-mid: rgb( 105, 105, 105 );
 	--color-border: rgb( 55, 55, 55 );
 
-	/* same hue as the day theme, lightness adjusted for a dark background */
-	--color-twitter: rgb( 29, 155, 240 );
-	--color-github: rgb( 216, 219, 222 );
+	/* --color-twitter and --color-github are deliberately absent here: brand colors, never touched by theme */
 	--color-danger: rgb( 248, 113, 113 );
 	--color-success: rgb( 110, 220, 110 );
 	--color-pending-bg: rgb( 45, 40, 10 );
@@ -321,7 +398,7 @@ form input[type="submit"]{
 	--engrave-shadow: rgba( 0, 0, 0, 0.65 );
 	--engrave-highlight: rgba( 255, 255, 255, 0.4 );
 	--medallion-highlight: rgba( 255, 255, 255, 0.22 );
-	--medallion-shadow: rgba( 0, 0, 0, 0.7 );
+	--medallion-shadow: rgba( 0, 0, 0, 0.09 );
 	--stone-text-blend: screen; /* pale text absorbed into black marble */
 }
 
@@ -330,9 +407,9 @@ form input[type="submit"]{
 	filter: invert( 1 );
 }
 
-/* --color-github stays the fixed brand gray by design; by night it reads too close to --color-fg white to stand out, so outline it instead of recoloring it */
+/* --color-github is the fixed brand gray, day and night alike; by night that near-black text nearly vanishes against the black page, so a real outline — not a recolor — is what keeps it legible */
 :root[data-theme="dark"] #checkout_GitHub_1{
-	-webkit-text-stroke: 0.5px var( --color-fg );
+	-webkit-text-stroke: 1.5px var( --color-fg );
 	paint-order: stroke fill;
 }
 
@@ -347,8 +424,6 @@ form input[type="submit"]{
 		--color-mid: rgb( 105, 105, 105 );
 		--color-border: rgb( 55, 55, 55 );
 
-		--color-twitter: rgb( 29, 155, 240 );
-		--color-github: rgb( 216, 219, 222 );
 		--color-danger: rgb( 248, 113, 113 );
 		--color-success: rgb( 110, 220, 110 );
 		--color-pending-bg: rgb( 45, 40, 10 );
@@ -359,7 +434,7 @@ form input[type="submit"]{
 		--engrave-shadow: rgba( 0, 0, 0, 0.65 );
 		--engrave-highlight: rgba( 255, 255, 255, 0.4 );
 		--medallion-highlight: rgba( 255, 255, 255, 0.22 );
-		--medallion-shadow: rgba( 0, 0, 0, 0.7 );
+		--medallion-shadow: rgba( 0, 0, 0, 0.09 );
 		--stone-text-blend: screen;
 	}
 
@@ -368,8 +443,12 @@ form input[type="submit"]{
 	}
 
 	:root:not([data-theme="light"]) #checkout_GitHub_1{
-		-webkit-text-stroke: 0.5px var( --color-fg );
+		-webkit-text-stroke: 1.5px var( --color-fg );
 		paint-order: stroke fill;
+	}
+
+	:root:not([data-theme="light"]) #theme_toggle_knob{
+		transform: translateY( 20px );
 	}
 }
 
@@ -555,7 +634,8 @@ form input[type="submit"]{
 	border-radius: 50%;
 	overflow: hidden;
 	background-color: var( --color-border );
-	box-shadow: inset 0 -8px 16px var( --medallion-shadow ), 0 6px 14px var( --medallion-shadow );
+	/* no offset on either shadow: the light comes from the viewer straight ahead of the screen, not from any one side */
+	box-shadow: inset 0 0 16px var( --medallion-shadow ), 0 0 14px var( --medallion-shadow );
 }
 .medallion.draft{
 	opacity: 0.5;
@@ -566,13 +646,14 @@ form input[type="submit"]{
 	object-fit: cover;
 	display: block;
 }
+/* a bright, tight band standing in for the rim-light on a flat water droplet — most of the ellipse falls outside the circle, so only a crescent near the edge actually shows through */
 .medallion::before{
 	content: '';
 	position: absolute;
 	inset: 0;
 	border-radius: 50%;
-	background: radial-gradient( circle at 35% 25%, var( --medallion-highlight ), transparent 55% );
-	mix-blend-mode: overlay;
+	background: radial-gradient( ellipse 95% 30% at 50% 25%, rgba( 255, 255, 255, 0.9 ), transparent 65% );
+	mix-blend-mode: screen;
 	pointer-events: none;
 	transition: background .2s ease-in-out;
 }
@@ -585,7 +666,7 @@ form input[type="submit"]{
 	pointer-events: none;
 }
 .honoree_tile:hover .medallion::before{
-	background: radial-gradient( circle at 40% 22%, var( --medallion-highlight ), transparent 60% );
+	background: radial-gradient( ellipse 95% 30% at 50% 75%, rgba( 255, 255, 255, 0.9 ), transparent 65% );
 }
 .honoree_name{
 	font-size: 12pt;
@@ -736,15 +817,39 @@ form input[type="submit"]{
 	height: 237px;
 	margin: 0;
 }
-.profile_photo_disc{
+/* box-shadow for the convex curvature, ::after for a plain white reflection. The shake/lag transform itself lives on .name_disc, not here — the rings orbit the photo, so the whole disc has to move as one object, not just the photo underneath it */
+.profile_photo_medallion{
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate( -50%, -50% );
 	width: 180px;
 	height: 180px;
-	object-fit: cover;
 	border-radius: 50%;
+	overflow: hidden;
+	user-select: none;
+	/* no offset on either shadow: the light comes from the viewer straight ahead of the screen, not from any one side */
+	box-shadow: inset 0 0 20px var( --medallion-shadow ), 0 0 14px var( --medallion-shadow );
+}
+.profile_photo_disc{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+/* the reflection: a plain white zone, blurred soft at its own edges, brightening whatever's beneath it via screen blend. Fixed size and shape, but its position rides --reflection-shift-x/-y, which the medallion-physics controller updates every frame — so as the medallion gets nudged or lags behind a scroll, the light visibly shifts with it, the way it would catch differently on something that's actually wobbling */
+.profile_photo_medallion::after{
+	content: '';
+	position: absolute;
+	top: calc( 6% + var( --reflection-shift-y, 0px ) );
+	left: calc( 12% + var( --reflection-shift-x, 0px ) );
+	width: 55%;
+	height: 32%;
+	border-radius: 50%;
+	background: white;
+	filter: blur( 16px );
+	mix-blend-mode: screen;
+	pointer-events: none;
 }
 .name_ring{
 	position: absolute;
@@ -874,7 +979,7 @@ form input[type="submit"]{
 	padding: 0;
 	display: flex;
 	flex-direction: column;
-	transition: color .1s ease-in-out;
+	transition: color .25s ease-in-out;
 	/*-webkit-animation: fadein .5s 1;*/
 }
 #line_1_logotype{
@@ -1027,11 +1132,62 @@ form input[type="submit"]{
 	font-variant: small-caps;
 	text-align: right;
 }
+/* checkout_TwitterX/checkout_GitHub are menu options too — the hr above them is just an inert divider, the same as the one above read/see/listen/watch, not a boundary between categories */
 #search:hover, #gettoknowandcontact:hover, #watch:hover, #listen:hover, #see:hover, #read:hover, #checkout_TwitterX:hover, #checkout_GitHub:hover{
 	transform-origin: top left;
 	margin: -4pt 0 16pt 0;
 	transform: scale( 1.5 );
 	animation: none !important;
+}
+/* held down, though, they blink again — faster, same as any link's :active state — which needs !important and higher specificity than :hover above to win the cascade while both states are true at once; the `a` qualifier keeps this off the bare, unlinked .section_empty span, since a dead option can't actually be clicked */
+a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, a#see:active, a#read:active, a#checkout_TwitterX:active, a#checkout_GitHub:active{
+	animation-name: blink !important;
+	animation-duration: 0.1s !important;
+	animation-timing-function: linear !important;
+	animation-iteration-count: infinite !important;
+	animation-play-state: running !important;
+	-moz-animation-name: blink !important;
+	-moz-animation-duration: 0.1s !important;
+	-moz-animation-timing-function: linear !important;
+	-moz-animation-iteration-count: infinite !important;
+	-moz-animation-play-state: running !important;
+	-webkit-animation-name: blink !important;
+	-webkit-animation-duration: 0.1s !important;
+	-webkit-animation-timing-function: linear !important;
+	-webkit-animation-iteration-count: infinite !important;
+	-webkit-animation-play-state: running !important;
+}
+#theme_toggle{
+	/* offset from the window's left and bottom edges exactly mirrors the logo's offset from the window's left and top edges */
+	position: fixed;
+	left: 19.7734375px;
+	bottom: 19.7734375px;
+	box-sizing: border-box;
+	width: 20px;
+	height: 40px;
+	margin: 0;
+	padding: 0;
+	border: none;
+	border-radius: 10px;
+	background: var( --color-mid );
+	cursor: pointer;
+	appearance: none;
+	z-index: 40;
+	transition: background-color .25s ease;
+}
+#theme_toggle_knob{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: var( --color-fg );
+	transition: transform .25s ease, background-color .25s ease;
+}
+/* light theme: the knob sits in the top half (light on) — dark theme slides it to the bottom half (light off) */
+:root[data-theme="dark"] #theme_toggle_knob{
+	transform: translateY( 20px );
 }
 #article{
 	display: block;
