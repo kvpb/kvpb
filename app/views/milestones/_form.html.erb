@@ -12,7 +12,7 @@
 	<%= form.text_field :title, required: true %>
 
 	<%= form.label :organization, "Organization" %>
-	<%= form.text_field :organization, required: true %>
+	<%= form.text_field :organization %>
 
 	<%= form.label :location, "Location" %>
 	<%= form.text_field :location %>
@@ -23,6 +23,10 @@
 	<%= form.label :ends_on, "Ends on" %>
 	<%= form.date_field :ends_on %>
 	<p class="field_hint">Blank means ongoing.</p>
+
+	<%= form.label :date_label, "Date label (override)" %>
+	<%= form.text_field :date_label %>
+	<p class="field_hint">Leave blank to compute from starts on / ends on. Use this for anything less precise than a month, like a decade.</p>
 
 	<%= form.label :description, "Description" %>
 	<%= form.text_area :description %>
