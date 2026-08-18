@@ -61,6 +61,12 @@ Rails.application.routes.draw do
   patch  "/gettoknowandcontact/milestones/:id",      to: "milestones#update"
   delete "/gettoknowandcontact/milestones/:id",      to: "milestones#destroy", as: "milestone"
 
+  get    "/gettoknowandcontact/skills/new",      to: "skills#new",     as: "new_skill"
+  post   "/gettoknowandcontact/skills",          to: "skills#create", as: "skills"
+  get    "/gettoknowandcontact/skills/:id/edit", to: "skills#edit",    as: "edit_skill"
+  patch  "/gettoknowandcontact/skills/:id",      to: "skills#update"
+  delete "/gettoknowandcontact/skills/:id",      to: "skills#destroy", as: "skill"
+
   get    "/messages",                 to: "messages#index",       as: "messages"
   patch  "/messages/:id/mark_read",   to: "messages#mark_read",   as: "mark_read_message"
   patch  "/messages/:id/mark_unread", to: "messages#mark_unread", as: "mark_unread_message"
