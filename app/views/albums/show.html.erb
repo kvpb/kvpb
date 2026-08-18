@@ -1,22 +1,22 @@
 <% content_for :title, @album.title.presence %>
 
 <article id="album" class="<%= "draft" unless @album.published? %>">
-	<header class="album_header">
-		<h1 class="album_title_large"><%= smart_quotes( @album.title ) %></h1>
-		<% if @album.location.present? || @album.taken_on.present? %>
-			<p class="album_meta"><%= [ @album.location, @album.taken_on&.strftime( "%B %Y" ) ].select( &:present? ).join( ", " ) %></p>
-		<% end %>
-	</header>
-
-	<% if @album.description.present? %>
-		<div class="album_description"><%= smart_format( @album.description ) %></div>
-	<% end %>
-
 	<div class="album_photos">
 		<% @album.photos.each do |photo| %>
 			<%= image_tag photo, class: "album_photo" %>
 		<% end %>
 	</div>
+
+	<header class="album_header">
+		<h1 class="album_title_large"><%= smart_quotes( @album.title ) %></h1>
+		<p class="album_author">Karl</p>
+		<% if @album.location.present? %><p class="album_location"><%= @album.location %></p><% end %>
+		<% if @album.taken_on.present? %><p class="album_meta"><%= @album.taken_on.strftime( "%B %Y" ) %></p><% end %>
+	</header>
+
+	<% if @album.description.present? %>
+		<div class="album_description"><%= smart_format( @album.description ) %></div>
+	<% end %>
 </article>
 
 <%#
