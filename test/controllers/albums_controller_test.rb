@@ -21,6 +21,20 @@ class AlbumsControllerTest < ActionDispatch::IntegrationTest
     assert_match draft.title, response.body
   end
 
+  test "index redirects guests to root when the gallery is empty" do
+    get see_path
+
+    assert_redirected_to root_path
+  end
+
+  test "index still renders for a signed-in superuser when the gallery is empty" do
+    sign_in_as( users( :one ) )
+
+    get see_path
+
+    assert_response :success
+  end
+
   test "show renders a published album for guests" do
     album = Album.create!( title: "Published", published_at: 1.day.ago )
     get album_path( album )
