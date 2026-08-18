@@ -1,4 +1,4 @@
-<% content_for :title, @article.headline %>
+<% content_for :title, @article.headline.presence %>
 
 <article id="article" class="<%= @article.published? ? "published" : "draft" %>">
 	<% if @article.cover_image.attached? %>
