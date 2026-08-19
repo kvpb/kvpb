@@ -7,6 +7,58 @@ class Milestone < ApplicationRecord
 
   scope :chronological, -> { order( starts_on: :desc ) }
 
+  # real milestones, most recent first, with an unpersisted ("It's a secret to everybody.") filler Milestone
+  # spliced in wherever two successive periods neither overlap nor continue from one month to the next — a real
+  # gap the timeline doesn't otherwise account for. Comparing every milestone only to its immediate neighbor by
+  # start date isn't enough: a milestone can run for years underneath several shorter ones nested inside it (the
+  # SHS degree here spans 2015–2018 with an unrelated internship inside that range), so the gap check tracks the
+  # furthest "covered through" point seen so far, not just the previous milestone's own end, the standard
+  # interval-merging approach. Two birth-kind milestones never get a filler between them regardless of the gap —
+  # birth is a single moment, not a stretch of unaccounted-for lived time, so there's nothing to call "a secret"
+  # between two of them (concretely: nothing appears between "probable former life" and "birth" itself). Never
+  # persisted — .new, never .save — so nothing here ever reaches the DB
+  def self.chronological_with_gaps
+    ascending = chronological.reverse
+    return ascending.reverse if ascending.size < 2
+
+    entries = [ ascending.first ]
+    covered_through = effective_end_on( ascending.first )
+    previous = ascending.first
+
+    ascending.drop( 1 ).each do |milestone|
+      gap_between_two_births = previous.birth? && milestone.birth?
+      if !gap_between_two_births && month_index( milestone.starts_on ) - month_index( covered_through ) > 1
+        entries << gap_filler( covered_through, milestone.starts_on )
+      end
+      entries << milestone
+      covered_through = [ covered_through, effective_end_on( milestone ) ].max
+      previous = milestone
+    end
+
+    entries.reverse
+  end
+
+  def self.effective_end_on( milestone )
+    return milestone.starts_on if milestone.birth?
+    milestone.ends_on || Date.current
+  end
+  private_class_method :effective_end_on
+
+  def self.month_index( date )
+    date.year * 12 + date.month
+  end
+  private_class_method :month_index
+
+  def self.gap_filler( covered_through, next_starts_on )
+    new(
+      kind: :work,
+      title: "It's a secret to everybody.",
+      starts_on: covered_through.beginning_of_month >> 1,
+      ends_on: ( next_starts_on.beginning_of_month << 1 ).end_of_month
+    )
+  end
+  private_class_method :gap_filler
+
   def ongoing?
     ends_on.nil?
   end
