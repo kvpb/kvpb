@@ -231,35 +231,38 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 	width: 100%;
 	border-radius: 14px;
 	corner-shape: superellipse( 5 );
-	border-width: 1px;
-	border-color: var( --color-fg );
-	border-style: solid;
-	overflow: hidden;
 	isolation: isolate;
 }
-/* the real border goes transparent rather than switching to border-style:dashed, since a browser-native dashed border has no way to animate — spinning the dashes needs actual paint under CSS's control. content-box/padding-box masked against each other (mask-composite:exclude) punches the middle out of a padding-thick ring, leaving only the ring itself for repeating-conic-gradient's alternating color/transparent wedges to paint dashes onto — a technique that reads as evenly-spaced dashes on a true circle, and close enough to it on this squircle for the difference not to matter at this size. rotate(-360deg): CSS's rotation angle grows clockwise, so a decreasing (negative) one turns the dashes counterclockwise — "le sens trigonométrique" */
-.text_field_glass:focus-within{
-	border-color: transparent;
-}
-.text_field_glass::after{
-	content: '';
+/* no overflow:hidden here, and no native border either, not even a static one made transparent on focus — browsers that don't understand corner-shape:superellipse(5) (Firefox, at least for now) fall back to a plain circular-arc border-radius for anything clipped to this element's own shape, and a squircle corner draws noticeably closer to the true rectangular corner than a circle of the same radius does, so an overflow:hidden here would clip away exactly the corners (and the short straight run beside them) of the SVG-drawn border in any such browser, while Chrome, which resolves the clip as the same superellipse it's drawn against, shows the whole thing intact. The border is always that SVG path below, solid and dashed alike: squircle_dash_border_path_solid and _dashed share one d/transform computed once in squircle_dash_border_controller.js, traced to this exact element's own current width and height along the same power-5 superellipse corner-shape:superellipse(5) draws, so the two states are pixel-identical and only differ in dasharray/animation — crossfading via opacity is then a true like-for-like swap. Dashes flowing continuously along the border, through the squircle corners, is also the only reason SVG is here at all: a first attempt at just the motion (a rotating conic-gradient ring) spun like a clock hand, not the marching-ants look actually wanted, and only an SVG path's stroke-dashoffset can animate that around a curve */
+.squircle_dash_border_svg{
 	position: absolute;
 	inset: 0;
-	border-radius: inherit;
-	padding: 1px;
-	background: repeating-conic-gradient( from 0deg, var( --color-fg ) 0deg 8deg, transparent 8deg 16deg );
-	-webkit-mask: linear-gradient( #fff 0 0 ) content-box, linear-gradient( #fff 0 0 );
-	-webkit-mask-composite: xor;
-	mask-composite: exclude;
-	opacity: 0;
 	pointer-events: none;
 }
-.text_field_glass:focus-within::after{
-	opacity: 1;
-	animation: rotate_dashes 3s linear infinite;
+.squircle_dash_border_path{
+	fill: none;
+	stroke: var( --color-fg );
+	stroke-width: 1px;
+	transition: opacity 0.3s ease;
 }
-@keyframes rotate_dashes{
-	to{ transform: rotate( -360deg ); }
+.squircle_dash_border_path_solid{
+	opacity: 1;
+}
+.text_field_glass:focus-within .squircle_dash_border_path_solid{
+	opacity: 0;
+}
+.squircle_dash_border_path_dashed{
+	opacity: 0;
+	stroke: rgb( 0, 0, 0 );
+	stroke-dasharray: 8 8;
+}
+.text_field_glass:focus-within .squircle_dash_border_path_dashed{
+	opacity: 1;
+	animation: march_dashes 1s linear infinite;
+}
+/* positive, not negative: squirclePath() above draws clockwise (top edge left-to-right, then down the right side, etc.), and a decreasing stroke-dashoffset marches dashes forward along however the path was drawn — clockwise, here. Counting up instead marches them backward against that drawing direction, i.e. counterclockwise, "le sens trigonométrique" */
+@keyframes march_dashes{
+	to{ stroke-dashoffset: 16; }
 }
 /* the gaussian blur — frosted-glass center, strongest at the middle, masked down to nothing by the time it reaches the border */
 .text_field_glass::before{
@@ -287,9 +290,9 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 	color: var( --color-fg );
 	background: color-mix( in srgb, var( --color-bg ) 45%, transparent );
 }
+/* no focus outline here — the marching-ants squircle border is already the focus indicator, and this rule's own rectangular outline drawn on top of that rounded border reads as a second, unrelated selection box around the field */
 .text_field_glass input:not( [type="hidden"] ):focus, .text_field_glass textarea:focus{
-	outline: 2px solid var( --color-fg );
-	outline-offset: 2px;
+	outline: none;
 }
 form input[type="submit"]{
 	margin-top: 1em;
