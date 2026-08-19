@@ -959,9 +959,12 @@ form input[type="submit"]{
 	/* matches the gap between the section header's last line and the disc above it, so the timeline sits exactly as close beneath the disc once it wraps underneath */
 	row-gap: 16.164px;
 }
-/* the disc and the skill lists stacked beneath it, as one column the timeline sits beside once it exists. No max-width here: the disc itself is what should cap this column's width, by way of --disc below, not a number fixed independently of it */
+/* flex-basis is 200px — the medallion's own hard floor, same number as min-width just below — not the viewport-scaled preferred size that lives in max-width instead. That split matters specifically because flex-wrap decides whether a line breaks using each item's flex-basis clamped to its min/max, not its final shrunk size: a basis already sitting above the floor, like the preferred size was here before, gets used as-is for that decision, so two columns were judged to "not fit" by their preferred widths rather than their minimums, giving up on parallel earlier than the floor actually required. With basis pinned to the floor, the wrap decision is always made against the floor, while flex-grow still lets the column expand up to its viewport-scaled max-width whenever there's room for that. container-type turns this column into a query container, so --disc below can read cqw units: a percentage that consistently means "percent of this column," in every property and at every nesting depth, unlike a bare % which means something different in a translateY() than it does in a width */
 .about_sidebar{
-	flex: 0 0 auto;
+	flex: 1 1 200px;
+	min-width: 200px;
+	max-width: clamp( 200px, calc( 100vw / 3 ), 480px );
+	container-type: inline-size;
 	display: flex;
 	flex-direction: column;
 	row-gap: 1.5em;
@@ -984,14 +987,19 @@ form input[type="submit"]{
 .skills_group li{
 	margin: 0.15em 0 0 0;
 }
-/* --disc is the one true size: the photo, both rings, and their type are all defined as a fraction of it below, so the whole medallion scales as one coherent object instead of drifting apart at different rates. Bound by clamp() rather than left to bare 100vw/3, so it can't shrink past legible ring type on a phone or balloon past a sensible badge size on an ultra-wide; between those bounds it tracks the page exactly as asked */
-/* centered within the sidebar column by default. Once the sidebar has wrapped to the full page width and no longer sits beside the timeline, viewport_center_controller.js takes over with a translateX of its own, centering on the actual window instead — the two never fight, since the JS only ever touches this wrapper's transform and medallion-physics only ever touches .name_disc's */
+/* --disc is the one true size: the photo, both rings, and their type are all defined as a fraction of it below, so the whole medallion scales as one coherent object instead of drifting apart at different rates. 100cqw — not 100vw/3 directly, and not a bare % — is what makes it track the sidebar's own actual (possibly squeezed) width: cqw always means "percent of the nearest container-type ancestor," the same in a width as in a translateY() ten elements deep, so the rings can read it too without the mismatch a plain % caused before. Bound by clamp() so it can't shrink past legible ring type on a phone or balloon past a sensible badge size on an ultra-wide */
 .name_disc_center{
 	align-self: center;
 }
+/* below the same 432px (200px + 2em column-gap + 200px) that makes .about_sidebar and .resume_timeline wrap off of each other, the sidebar is alone on its row with the full row's width to itself, flush left against nav by default the same as every other section on the site — but the medallion inside it (unlike a block of body text) reads better centered than left-hung once nothing shares the row. Auto margins on a flex item absorb whatever width the row isn't using, centering the sidebar's own box within the row without stretching it — the vw/3 cap above stays exactly as it was, so the medallion itself still can't balloon past what "c'est exagéré" already ruled out; only its position moves. Scoped to .about_sidebar alone rather than justify-content on .about_layout, so .resume_timeline's own row (this container query affects both, since it wraps them both) stays flush left, matching the rest of the site, while only the medallion's row centers. Landing anywhere in this centered range keeps the sidebar's own box inside main's content width by construction, so it can never reach as far left as nav regardless of viewport or zoom — no need to know nav's width at all. True viewport-centering (ignoring nav's width entirely) was tried and dropped: reaching all the way past nav to the physical middle of the screen and never overlapping nav are mutually exclusive once the viewport is narrower than twice nav's width, so the one obligation Karl marked absolute ("must never overlap, under any circumstance") wins */
+@container about_area ( max-width: 432px ){
+	.about_sidebar{
+		margin: 0 auto;
+	}
+}
 .name_disc{
 	position: relative;
-	--disc: clamp( 200px, calc( 100vw / 3 ), 480px );
+	--disc: clamp( 200px, 100cqw, 480px );
 	width: var( --disc );
 	height: var( --disc );
 	margin: 0;
@@ -1077,9 +1085,10 @@ form input[type="submit"]{
 }
 
 /* min-width, not just flex-basis, is what actually forces a clean wrap: without it a flex item happily shrinks below its basis down toward its content's own minimum before ever wrapping, squeezing the timeline instead of moving it below the sidebar the way flex-wrap on .about_layout intends */
+/* 200px, not an em value picked independently — the same floor as --disc's own minimum below, so neither column is ever asked to be narrower than the medallion itself is allowed to get. Long lines (a milestone title, a section name) just wrap inside that width rather than forcing the column wider */
 .resume_timeline{
-	flex: 1 1 20em;
-	min-width: 20em;
+	flex: 1 1 200px;
+	min-width: 200px;
 	max-width: 40em;
 	margin: 0 0 2em 0;
 }
@@ -1445,9 +1454,11 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 	/* the overlay's own background is opaque, so the site-wide halo against #backdrop is pointless here and only dulls the glyph edges */
 	-webkit-text-stroke-width: 0;
 }
-/* no max-width/auto-centering here anymore — that used to leave an auto margin wider than .about_layout's own 2em column-gap between the sidebar and the timeline, so the sidebar never quite reached flush against main's edge the way every other section does. The contact form keeps its own cap below instead */
+/* no max-width/auto-centering here anymore — that used to leave an auto margin wider than .about_layout's own 2em column-gap between the sidebar and the timeline, so the sidebar never quite reached flush against main's edge the way every other section does. The contact form keeps its own cap below instead. Named as a container so .name_disc_center's @container rule below can query this element's own width specifically, rather than whichever container-type ancestor happens to be nearest (.about_sidebar is one too, for --disc's cqw, but its width is the wrong number for this question) */
 #gettoknowandcontact_page{
 	display: block;
+	container-type: inline-size;
+	container-name: about_area;
 }
 #contact_form_section{
 	max-width: 60em;
@@ -1499,6 +1510,19 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 	kvpb.fr
 	https://x.com/ktgwkvpb
 	https://github.com/kvpb	*/
+
+/* TEMPORARY — margin ruler for manually aligning the logotype in Firefox. Delete this whole rule once the finished CSS comes back */
+body::before{
+	content: "";
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 1em;
+	width: 1pt;
+	background: green;
+	pointer-events: none;
+	z-index: 9999;
+}
 
 /*//	style.css
 ////	kvpb.fr
