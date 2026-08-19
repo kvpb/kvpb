@@ -14,7 +14,7 @@
 	<span class="autosave_status" data-autosave-target="status"></span>
 
 	<%= form.label :name, "Name" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_field :name, required: true %>
 	</div>
 
@@ -40,12 +40,12 @@
 	<%= form.date_field :helped_until %>
 
 	<%= form.label :honor_inscription, "Honor inscription" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_area :honor_inscription %>
 	</div>
 
 	<%= form.label :body, "Crossed portrait" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_area :body, rows: 20 %>
 	</div>
 
