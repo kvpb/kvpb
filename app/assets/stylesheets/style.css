@@ -987,6 +987,11 @@ form input[type="submit"]{
 .skills_group li{
 	margin: 0.15em 0 0 0;
 }
+/* Shields.io badges reused as-is from readme.md, for now — same images, same one-per-line list this section already had, not yet the wrapped, side-by-side arrangement the README itself uses */
+.skill_badge{
+	height: 20px;
+	vertical-align: middle;
+}
 /* --disc is the one true size: the photo, both rings, and their type are all defined as a fraction of it below, so the whole medallion scales as one coherent object instead of drifting apart at different rates. 100cqw — not 100vw/3 directly, and not a bare % — is what makes it track the sidebar's own actual (possibly squeezed) width: cqw always means "percent of the nearest container-type ancestor," the same in a width as in a translateY() ten elements deep, so the rings can read it too without the mismatch a plain % caused before. Bound by clamp() so it can't shrink past legible ring type on a phone or balloon past a sensible badge size on an ultra-wide */
 .name_disc_center{
 	align-self: center;
@@ -1125,11 +1130,19 @@ form input[type="submit"]{
 	margin: 0 0 0.15em 0;
 }
 .timeline_organization, .timeline_location{
-	font-size: 10pt;
 	margin: 0 0 0.25em 0;
 }
-.timeline_description{
+.timeline_organization{
 	font-size: 10pt;
+	font-variant: small-caps;
+}
+.timeline_location{
+	font-size: 9pt;
+	color: var( --color-mid );
+	text-transform: uppercase;
+}
+/* no explicit font-size — .timeline_title doesn't set one either, so both inherit the same size from body rather than each pinning its own number that could drift apart later */
+.timeline_description{
 	margin: 0.25em 0 0 0;
 }
 
