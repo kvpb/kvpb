@@ -8,7 +8,7 @@ class PagesController < ApplicationController
   end
 
   def gettoknowandcontact
-    @milestones = Milestone.chronological
+    @milestones = Milestone.chronological_with_gaps
     @message = Message.new
     @profile_photo = Setting.current.profile_photo
     @skills_by_category = Skill.ordered.group_by( &:category )
