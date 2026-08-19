@@ -9,7 +9,7 @@
 	<%= form.select :category, Skill.categories.keys.map { |key| [ Skill::CATEGORY_LABELS.fetch( key ), key ] } %>
 
 	<%= form.label :name, "Name" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_field :name, required: true %>
 	</div>
 
