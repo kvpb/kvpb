@@ -32,12 +32,12 @@ class MilestoneTest < ActiveSupport::TestCase
 
   test "date_range_label shows a range across two different months" do
     multi_month = Milestone.new( starts_on: "2014-01-01", ends_on: "2015-07-31" )
-    assert_equal "from January 2014 to July 2015", multi_month.date_range_label
+    assert_equal "from January 2014 to\u00A0July 2015", multi_month.date_range_label
   end
 
   test "date_range_label shows 'now' when ongoing" do
     ongoing = Milestone.new( starts_on: "2023-09-01", ends_on: nil )
-    assert_equal "from September 2023 to now", ongoing.date_range_label
+    assert_equal "from September 2023 to\u00A0now", ongoing.date_range_label
   end
 
   test "kind distinguishes education from work from birth" do
