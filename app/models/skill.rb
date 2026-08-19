@@ -1,15 +1,40 @@
 class Skill < ApplicationRecord
-  enum :category, { aptitudes_skills: 0, degrees_certifications_licenses: 1, languages_programming_languages: 2, activities_interests: 3 }
+  enum :category, {
+    languages: 0,
+    programming_languages: 1,
+    frameworks: 2,
+    software_development_software: 3,
+    operating_systems: 4,
+    licenses: 5,
+    certifications: 6,
+    degrees: 7,
+    aptitudes_skills: 8,
+    activities_interests: 9
+  }
 
   validates :name, presence: true
   validates :category, presence: true
 
   scope :ordered, -> { order( :position, :created_at ) }
 
+  # aptitudes_skills, activities_interests, and certifications are left out here on purpose: their records aren't
+  # going anywhere, they're just not shown on the about-me page for now (certifications specifically because the
+  # one record in it, from 42, was never actually earned — Karl dropped out before certifying)
+  DISPLAYED_CATEGORIES = %w[
+    languages programming_languages frameworks software_development_software
+    operating_systems licenses degrees
+  ].freeze
+
   CATEGORY_LABELS = {
+    "languages" => "languages",
+    "programming_languages" => "programming languages",
+    "frameworks" => "frameworks",
+    "software_development_software" => "software development software",
+    "operating_systems" => "operating systems",
+    "licenses" => "licenses",
+    "certifications" => "certifications",
+    "degrees" => "degrees",
     "aptitudes_skills" => "aptitudes & skills",
-    "degrees_certifications_licenses" => "degrees, certifications & licenses",
-    "languages_programming_languages" => "languages & programming languages",
     "activities_interests" => "activities & interests"
   }.freeze
 
