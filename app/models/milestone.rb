@@ -38,7 +38,13 @@ class Milestone < ApplicationRecord
     entries.reverse
   end
 
+  # date_label_ends_on exists for exactly one situation: starts_on holds a real, precise date, but date_label
+  # hides it behind something vaguer ("nineties") for anyone reading the page — including, deliberately, a gap
+  # filler counting from it, which would otherwise leak the hidden precision right back out via its own "from
+  # <precise date>" wording. Set, it says where the *labeled* range actually ends for gap-computation purposes,
+  # regardless of what starts_on itself says
   def self.effective_end_on( milestone )
+    return milestone.date_label_ends_on if milestone.date_label_ends_on.present?
     return milestone.starts_on if milestone.birth?
     milestone.ends_on || Date.current
   end
