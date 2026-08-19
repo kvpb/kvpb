@@ -17,7 +17,8 @@ class Milestone < ApplicationRecord
     starts_label = starts_on.strftime( "%B %Y" )
     return starts_label if !ongoing? && ends_on.strftime( "%B %Y" ) == starts_label
 
-    "from #{starts_label} to #{ongoing? ? "now" : ends_on.strftime( "%B %Y" )}"
+    # a non-breaking space between "to" and what follows it, so a wrap lands before "to" rather than stranding it alone at the end of a line
+    "from #{starts_label} to\u00A0#{ongoing? ? "now" : ends_on.strftime( "%B %Y" )}"
   end
 end
 
