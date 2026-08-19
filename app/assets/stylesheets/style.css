@@ -1124,7 +1124,7 @@ form input[type="submit"]{
 	font-weight: 900;
 	margin: 0 0 0.15em 0;
 }
-.timeline_organization{
+.timeline_organization, .timeline_location{
 	font-size: 10pt;
 	margin: 0 0 0.25em 0;
 }
@@ -1388,6 +1388,28 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 :root[data-theme="dark"] #theme_toggle_knob{
 	transform: translateY( 20px );
 }
+/* three independently positioned lines rather than one block relying on line-height to land in the right places: translateY(50%) drops each line down by half its own height, so bottom below sets each line's center, not its edge, exactly on the switch's quarter-points, immune to whatever a line-height's rounding would otherwise do. left is the switch's own 19.7734375px offset plus its 20px width plus a 10px gap — the same 10px the three lines' own bottoms are spaced apart by below, so the switch keeps that same rhythm rather than sitting cramped against the text. max-width caps at the logotype's own measured right edge (200.7421875px) so the block can never reach past it — at this size the widest line still lands over 50px short of that edge, so no letter-spacing condensing is needed to stay inside it */
+.copyright_notice{
+	position: fixed;
+	left: calc( 19.7734375px + 20px + 10px );
+	max-width: calc( 200.7421875px - 19.7734375px - 20px - 10px );
+	transform: translateY( 50% );
+	color: var( --color-faint );
+	text-transform: uppercase;
+	font-size: 5pt;
+	white-space: nowrap;
+	z-index: 40;
+}
+/* the switch spans from its own 19.7734375px bottom offset to +40px of height; these three bottoms are that span's upper-quarter, half, and lower-quarter points — the middle of the upper half, the middle of the whole switch, and the middle of the lower half */
+#copyright_notice_1{
+	bottom: 49.7734375px;
+}
+#copyright_notice_2{
+	bottom: 39.7734375px;
+}
+#copyright_notice_3{
+	bottom: 29.7734375px;
+}
 #article{
 	display: block;
 	max-width: 700px;
@@ -1515,7 +1537,7 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 	https://x.com/ktgwkvpb
 	https://github.com/kvpb	*/
 
-/* TEMPORARY — ruler for manually aligning the logotype in Firefox, bordering the menu items' own spans (body's 1em margin plus nav's own .1cm padding), not the outer margin itself. Delete this whole rule once the finished CSS comes back */
+/* disabled — the green ruler for manually aligning the logotype in Firefox, bordering the menu items' own spans (body's 1em margin plus nav's own .1cm padding), not the outer margin itself. Kept, not deleted, in case a future alignment pass needs it again
 body::before{
 	content: "";
 	position: fixed;
@@ -1528,6 +1550,7 @@ body::before{
 	pointer-events: none;
 	z-index: 9999;
 }
+*/
 
 /*//	style.css
 ////	kvpb.fr
