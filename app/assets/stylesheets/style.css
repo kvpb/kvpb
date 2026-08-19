@@ -1030,10 +1030,10 @@ form input[type="submit"]{
 .name_disc_center{
 	align-self: center;
 }
-/* below the same 432px (200px + 2em column-gap + 200px) that makes .about_sidebar and .resume_timeline wrap off of each other, the sidebar is alone on its row with the full row's width to itself, flush left against nav by default the same as every other section on the site — but the medallion inside it (unlike a block of body text) reads better centered than left-hung once nothing shares the row. Auto margins on a flex item absorb whatever width the row isn't using, centering the sidebar's own box within the row without stretching it — the vw/3 cap above stays exactly as it was, so the medallion itself still can't balloon past what "c'est exagéré" already ruled out; only its position moves. Scoped to .about_sidebar alone rather than justify-content on .about_layout, so .resume_timeline's own row (this container query affects both, since it wraps them both) stays flush left, matching the rest of the site, while only the medallion's row centers. Landing anywhere in this centered range keeps the sidebar's own box inside main's content width by construction, so it can never reach as far left as nav regardless of viewport or zoom — no need to know nav's width at all. True viewport-centering (ignoring nav's width entirely) was tried and dropped: reaching all the way past nav to the physical middle of the screen and never overlapping nav are mutually exclusive once the viewport is narrower than twice nav's width, so the one obligation Karl marked absolute ("must never overlap, under any circumstance") wins */
+/* below the same 432px (200px + 2em column-gap + 200px) that makes .about_sidebar and .resume_timeline wrap off of each other, the sidebar is alone on its row with the full row's width to itself — like .resume_timeline (which has no max-width tight enough to ever hit this ceiling), it should widen to fill that row rather than stay pinned to the vw/3 cap that only exists to keep the two columns from crowding each other side by side. Dropping the cap here doesn't reopen "c'est exagéré": --disc's own clamp above already hard-ceilings the medallion at 480px directly, independent of how wide .about_sidebar itself gets to be, so only the skill-group text around it gains the extra room. The medallion still reads better centered than left-hung once nothing shares the row — name_disc_center's align-self:center already does that within whatever width .about_sidebar ends up with, so no extra centering rule is needed here now that the sidebar's own box is the one growing instead of staying narrow within a centered margin */
 @container about_area ( max-width: 432px ){
 	.about_sidebar{
-		margin: 0 auto;
+		max-width: none;
 	}
 }
 .name_disc{
@@ -1125,11 +1125,12 @@ form input[type="submit"]{
 
 /* min-width, not just flex-basis, is what actually forces a clean wrap: without it a flex item happily shrinks below its basis down toward its content's own minimum before ever wrapping, squeezing the timeline instead of moving it below the sidebar the way flex-wrap on .about_layout intends */
 /* 200px, not an em value picked independently — the same floor as --disc's own minimum below, so neither column is ever asked to be narrower than the medallion itself is allowed to get. Long lines (a milestone title, a section name) just wrap inside that width rather than forcing the column wider */
+/* no trailing margin of its own anymore — #signature's own margin-top is what now opens the gap beneath whichever column runs longer, the timeline usually, and a second margin stacked on top of that would only pull the two apart further than the 1.5em rhythm calls for */
 .resume_timeline{
 	flex: 1 1 200px;
 	min-width: 200px;
 	max-width: 40em;
-	margin: 0 0 2em 0;
+	margin: 0;
 }
 /* position:relative here, not just on .timeline_entry below, is what makes the one continuous line further down possible: it needs one fixed pair of coordinates (the first entry's cross, the last entry's cross) to run between, not a running total of how tall every entry's own date block happened to wrap to */
 .timeline{
@@ -1152,9 +1153,11 @@ form input[type="submit"]{
 	mask-size: 4px 12px, auto;
 	mask-composite: intersect, intersect;
 }
+/* margin:0 overrides the sitewide NYT-typography li rule (0.3em top and bottom) — spacing between entries is already this padding's own job, so that generic margin only ever adds redundant, collapsed space between entries, and on the last entry, whose bottom margin nothing follows to collapse with, it doesn't collapse away at all: .resume_timeline is a flex item of .about_layout, and flex items don't let a child's margin escape through their own edge, so it was quietly padding out .resume_timeline's own height by exactly that 0.3em past the timeline's actual last pixel */
 .timeline_entry{
 	position: relative;
 	padding: 0 0 1.5em 1.5em;
+	margin: 0;
 }
 /* a diagonal cross (×) rather than the literal '+' character before, drawn as an SVG mask rather than text — border-style:dashed and text glyphs can't get round caps on their own strokes, but an SVG stroke can (stroke-linecap:round), and mask-image lets that shape be filled with var(--color-fg) instead of a color baked into the SVG, so it still answers to the theme. On .timeline_title rather than .timeline_entry, and top is a fixed, small offset (6.35px = half of .timeline_title's own 24.7px line-height, minus half the cross's own 12px) — deliberately NOT tied to how tall .timeline_dates rendered above it: .timeline_title's own top always lands wherever the date above it actually ended, whether that took one line or two, the same way any two stacked block elements do in normal flow, so anchoring the cross to the title directly gets that for free, without needing dates to be forced to some fixed height (which only wasted space under the many one-line dates) or needing to know that height at all. left is -32.5px, not the -7px that centered it correctly back when this sat on .timeline_entry directly: .timeline_title sits 25.5px further right than .timeline_entry's own edge (.timeline_entry's own 1.5em left padding), and .timeline::before below is positioned from that same .timeline_entry/.timeline edge, not from .timeline_title's — so anchoring the cross to .timeline_title without correcting for that 25.5px offset pulls it off the line, which is exactly what happened. -7 - 25.5 = -32.5, landing the cross's center (its own left plus half its 12px width) back on the line's own center at x=-1px, measured from the shared .timeline_entry/.timeline edge */
 .timeline_title::before{
@@ -1220,6 +1223,22 @@ form input[type="submit"]{
 	/* the seal's circle, not the svg canvas, is what must sit equidistant from the top/left/right edges; the canvas centers the circle almost exactly, so a horizontal offset seeded from viewport width doubles as the vertical offset, deliberately leaving the leftover slack at the bottom */
 	background-position: calc( 50vw - 238.077844px ) calc( 50vw - 236.763473px );
 	opacity: 0.5;
+	pointer-events: none;
+}
+/* appended once at the end of main's own content, in normal flow like every other element on the page — not position:fixed, so it never floats above the rest and scrolls away with the page exactly the way the header and the body's own text do, rather than staying pinned to the viewport like #theme_toggle/#copyright_notice_block do. margin-left:auto (its containing block, main, lays its children out in normal block flow, not flex, so this — not align-self — is what pushes a fixed-width box flush to the right) with the same 19.7734375px used on every other side, the one edge margin already established site-wide, is what keeps it spaced from main's own right/bottom edges the same way the header and nav are spaced from theirs. margin-top is the one side that isn't that constant: 1.5em there, not 19.7734375px, is the same rhythm #contact_form_section uses above and below itself, so whatever content main renders above the signature — the timeline included, once its own former 2em trailing margin stopped stacking a second gap on top of this one — sits exactly as far from it as the header sits from the contact form. mask-image + background-color, not the artwork's own #D8D8D8 fill, is what lets it read as true black by day and white by night off var(--color-fg) directly, exactly like every other glyph on the site rather than a lightened/darkened gray. Height is the constraint — #theme_toggle's own 40px, so the signature never outgrows the light switch — and width follows the artwork's own 798:424 canvas ratio rather than being set independently. -webkit-text-stroke only ever applies to real glyphs, so the four 1px drop-shadows here are what stand in for body's own background-colored liseré against a masked shape instead of actual text */
+#signature{
+	margin: 1.5em 19.7734375px 19.7734375px auto;
+	width: calc( 40px * 798 / 424 );
+	height: 40px;
+	background-color: var( --color-fg );
+	-webkit-mask-image: url(karlssignature.svg);
+	mask-image: url(karlssignature.svg);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	filter: drop-shadow( 1px 0 0 var( --color-bg ) ) drop-shadow( -1px 0 0 var( --color-bg ) ) drop-shadow( 0 1px 0 var( --color-bg ) ) drop-shadow( 0 -1px 0 var( --color-bg ) );
+	user-select: none;
 	pointer-events: none;
 }
 #wordmark{
@@ -1557,8 +1576,14 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 	container-type: inline-size;
 	container-name: about_area;
 }
+/* container-type on gettoknowandcontact_page above contains layout, which stops margins from collapsing through it — so this section's own top margin no longer merges with #section_header's fixed 16px margin-bottom above; the two just stack. calc() tops that unavoidable 16px up to the full 1.5em .about_sidebar uses as its own row-gap below, so the gap above this section and the gap below it (plain 1.5em, nothing else contributes there) read as the same rhythm instead of the 44.8px/0px split the h2's own generic top margin and no margin at all happened to leave */
 #contact_form_section{
 	max-width: 60em;
+	margin-top: calc( 1.5em - 16px );
+	margin-bottom: 1.5em;
+}
+#contact_form_section h2{
+	margin-top: 0;
 }
 #hall_of_fame{
 	max-width: 60em;
