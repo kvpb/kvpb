@@ -1,6 +1,55 @@
 <% content_for :title, "Karl Vincent Pierre Bertin AKA Karl Thomas George West" %>
 
 <section id="gettoknowandcontact_page">
+	<section id="contact_form_section">
+		<% sent = flash[ :message_sent ].present? %>
+		<%# "Gotta contact me?" %>
+		<%# "'You've contacted me.'" %>
+		<h2 data-controller="rewrite-heading" data-rewrite-heading-sent-value="<%= sent %>">
+			<span class="heading_line" data-rewrite-heading-target="line"><span data-rewrite-heading-target="text">Wanna reach out to me?</span><span class="type_cursor"></span></span>
+		</h2>
+
+		<% if @message.errors.any? %>
+			<ul class="errors">
+				<% @message.errors.full_messages.each do |error_message| %><li><%= error_message %></li><% end %>
+			</ul>
+		<% end %>
+
+		<%= form_with model: @message, url: contact_path, scope: :message, html: { class: ( "message_sent" if sent ) } do |form| %>
+			<%= form.label :name, "What’s your name?" %>
+			<div class="text_field_glass" data-controller="squircle-dash-border">
+				<%= form.text_field :name, required: true, placeholder: "name", disabled: sent %>
+			</div>
+
+			<%= form.label :phone_number, "What’s your number?" %>
+			<div class="text_field_glass" data-controller="squircle-dash-border">
+				<%= form.telephone_field :phone_number, required: true, placeholder: "phone number", disabled: sent %>
+			</div>
+
+			<%= form.label :email_address, "What’s your email address?" %>
+			<div class="text_field_glass" data-controller="squircle-dash-border">
+				<%= form.email_field :email_address, required: true, placeholder: "email address", disabled: sent %>
+			</div>
+
+			<%# "What do you have to tell me?" %>
+			<%= form.label :body, "What do you wanna tell me?" %>
+			<div class="text_field_glass" data-controller="squircle-dash-border">
+				<%= form.text_area :body, required: true, placeholder: "message", disabled: sent %>
+			</div>
+
+			<div class="website_field" aria-hidden="true">
+				<%= form.label :website, "Leave blank" %>
+				<%= form.text_field :website, tabindex: -1, autocomplete: "off" %>
+			</div>
+
+			<% if sent %>
+				<%= form.submit "Sent", disabled: true %>
+			<% else %>
+				<%= form.submit "Send" %>
+			<% end %>
+		<% end %>
+	</section>
+
 	<div class="about_layout">
 		<div class="about_sidebar">
 			<div class="name_disc_center">
@@ -60,55 +109,6 @@
 			</div>
 		<% end %>
 	</div>
-
-	<section id="contact_form_section">
-		<% sent = flash[ :message_sent ].present? %>
-		<%# "Gotta contact me?" %>
-		<%# "'You've contacted me.'" %>
-		<h2 data-controller="rewrite-heading" data-rewrite-heading-sent-value="<%= sent %>">
-			<span class="heading_line" data-rewrite-heading-target="line"><span data-rewrite-heading-target="text">Wanna reach out to me?</span><span class="type_cursor"></span></span>
-		</h2>
-
-		<% if @message.errors.any? %>
-			<ul class="errors">
-				<% @message.errors.full_messages.each do |error_message| %><li><%= error_message %></li><% end %>
-			</ul>
-		<% end %>
-
-		<%= form_with model: @message, url: contact_path, scope: :message, html: { class: ( "message_sent" if sent ) } do |form| %>
-			<%= form.label :name, "What’s your name?" %>
-			<div class="text_field_glass">
-				<%= form.text_field :name, required: true, placeholder: "name", disabled: sent %>
-			</div>
-
-			<%= form.label :phone_number, "What’s your number?" %>
-			<div class="text_field_glass">
-				<%= form.telephone_field :phone_number, required: true, placeholder: "phone number", disabled: sent %>
-			</div>
-
-			<%= form.label :email_address, "What’s your email address?" %>
-			<div class="text_field_glass">
-				<%= form.email_field :email_address, required: true, placeholder: "email address", disabled: sent %>
-			</div>
-
-			<%# "What do you have to tell me?" %>
-			<%= form.label :body, "What do you wanna tell me?" %>
-			<div class="text_field_glass">
-				<%= form.text_area :body, required: true, placeholder: "message", disabled: sent %>
-			</div>
-
-			<div class="website_field" aria-hidden="true">
-				<%= form.label :website, "Leave blank" %>
-				<%= form.text_field :website, tabindex: -1, autocomplete: "off" %>
-			</div>
-
-			<% if sent %>
-				<%= form.submit "Sent", disabled: true %>
-			<% else %>
-				<%= form.submit "Send" %>
-			<% end %>
-		<% end %>
-	</section>
 </section>
 
 <%#
