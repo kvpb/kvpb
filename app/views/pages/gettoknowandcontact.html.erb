@@ -29,13 +29,13 @@
 				</div>
 			</div>
 
-			<% Skill.categories.keys.each do |category| %>
+			<% Skill::DISPLAYED_CATEGORIES.each do |category| %>
 				<% items = @skills_by_category[ category ] || [] %>
 				<div class="skills_group">
 					<h3><%= Skill::CATEGORY_LABELS.fetch( category ) %></h3>
 					<% if items.any? %>
 						<ul>
-							<% items.each do |skill| %><li><%= skill.name %></li><% end %>
+							<% items.each do |skill| %><li><% if skill.badge_url.present? %><%= image_tag skill.badge_url, alt: skill.name, class: "skill_badge" %><% else %><%= skill.name %><% end %></li><% end %>
 						</ul>
 					<% end %>
 				</div>
