@@ -17,7 +17,7 @@ class Milestone < ApplicationRecord
     starts_label = starts_on.strftime( "%B %Y" )
     return starts_label if !ongoing? && ends_on.strftime( "%B %Y" ) == starts_label
 
-    "#{starts_label} – #{ongoing? ? "present" : ends_on.strftime( "%B %Y" )}"
+    "from #{starts_label} to #{ongoing? ? "now" : ends_on.strftime( "%B %Y" )}"
   end
 end
 
