@@ -6,12 +6,12 @@
 	<% end %>
 
 	<%= form.label :title, "Title" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_field :title, required: true %>
 	</div>
 
 	<%= form.label :location, "Location" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_field :location %>
 	</div>
 
@@ -19,7 +19,7 @@
 	<%= form.date_field :taken_on %>
 
 	<%= form.label :description, "Description" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_area :description %>
 	</div>
 
