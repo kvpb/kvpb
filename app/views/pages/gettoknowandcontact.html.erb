@@ -47,11 +47,11 @@
 				<h2>timeline</h2>
 				<ol class="timeline">
 					<% @milestones.each do |milestone| %>
-						<% timeline_org_line = [ ( smart_quotes( milestone.organization ) if milestone.organization.present? ), ( milestone.location if milestone.location.present? ) ].compact.join( " — " ) %>
 						<li class="timeline_entry timeline_entry_<%= milestone.kind %>">
 							<p class="timeline_dates"><%= milestone.date_range_label %></p>
 							<h3 class="timeline_title"><%= smart_quotes( milestone.title ) %></h3>
-							<% if timeline_org_line.present? %><p class="timeline_organization"><%= timeline_org_line %></p><% end %>
+							<% if milestone.organization.present? %><p class="timeline_organization"><%= smart_quotes( milestone.organization ) %></p><% end %>
+							<% if milestone.location.present? %><p class="timeline_location"><%= milestone.location %></p><% end %>
 							<% if milestone.description.present? %><p class="timeline_description"><%= smart_quotes( milestone.description ) %></p><% end %>
 						</li>
 					<% end %>
