@@ -1,3 +1,4 @@
+<% content_for :title, "Karl Vincent Pierre Bertin AKA Karl Thomas George West" %>
 
 <section id="gettoknowandcontact_page">
 	<div class="about_layout">
@@ -47,7 +48,7 @@
 				<h2>timeline</h2>
 				<ol class="timeline">
 					<% @milestones.each do |milestone| %>
-						<li class="timeline_entry timeline_entry_<%= milestone.kind %>">
+						<li class="timeline_entry timeline_entry_<%= milestone.kind %><%= " timeline_entry_filler" unless milestone.persisted? %>">
 							<p class="timeline_dates"><%= milestone.date_range_label %></p>
 							<h3 class="timeline_title"><%= smart_quotes( milestone.title ) %></h3>
 							<% if milestone.organization.present? %><p class="timeline_organization"><%= smart_quotes( milestone.organization ) %></p><% end %>
