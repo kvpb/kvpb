@@ -1165,6 +1165,7 @@ form input[type="submit"]{
 	/*font-variant: small-caps;*/
 	letter-spacing: 10pt/*3.67pt*/;
 	padding-left: 3.33pt;
+	margin-left: -3.33pt;
 }
 #line_2_logotype{
 	text-transform: uppercase;
@@ -1172,21 +1173,24 @@ form input[type="submit"]{
 	/*font-variant: small-caps;*/
 	letter-spacing: -5.5pt;
 	line-height: 0.75em;
+	margin-left: -2.75pt;
 }
 #line_3_logotype{
 	font-family: /*'ヒラギノ角ゴ Pro W3', */'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', 'ＭＳ ゴシック' , 'MS Gothic', 'Noto Sans CJK JP', 'TakaoPGothic', sans-serif !important;
 	font-size: 24pt;
 	/*font-variant: small-caps;*/
-	letter-spacing: 21.34pt;
+	letter-spacing: 22.22pt;
 	line-height: 0.9em;
+	margin-left: -2.22pt;
 }
 #line_4_logotype{
 	color: var( --color-faint );
 	text-transform: uppercase;
 	font-size: 6pt;
 	/*font-variant: small-caps;*/
-	letter-spacing: 23.1pt;
+	letter-spacing: 11.33pt/*24pt*/;
 	padding-left: 3.33pt;
+	margin-left: -2.75pt;
 }
 
 /* the .1cm negative margin cancels nav's own right padding exactly, so the section name picks up right where "Karl" in the nav wordmark leaves off — bypassing the gap between the nav bar and the main column instead of sitting flush against it */
@@ -1511,15 +1515,16 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 	https://x.com/ktgwkvpb
 	https://github.com/kvpb	*/
 
-/* TEMPORARY — margin ruler for manually aligning the logotype in Firefox. Delete this whole rule once the finished CSS comes back */
+/* TEMPORARY — ruler for manually aligning the logotype in Firefox, bordering the menu items' own spans (body's 1em margin plus nav's own .1cm padding), not the outer margin itself. Delete this whole rule once the finished CSS comes back */
 body::before{
 	content: "";
 	position: fixed;
 	top: 0;
 	bottom: 0;
-	left: 1em;
+	left: calc( 1em + .1cm );
 	width: 1pt;
 	background: green;
+	opacity: 0.25;
 	pointer-events: none;
 	z-index: 9999;
 }
