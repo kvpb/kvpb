@@ -237,9 +237,29 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 	overflow: hidden;
 	isolation: isolate;
 }
-/* redrawn as spaced dashes while the user is actively typing, back to a thin solid line once they're not. A hand-drawn dash pattern (four repeating background gradients standing in for the border) was tried for exact control over dash/gap/thickness, but a background paints under the box's squircle corner only where an actual border also exists to carve that shape out of it — without one the corners render square and the straight edges get clipped away, so this stays with the real border, whose dash size is tied to border-width rather than independently settable */
+/* the real border goes transparent rather than switching to border-style:dashed, since a browser-native dashed border has no way to animate — spinning the dashes needs actual paint under CSS's control. content-box/padding-box masked against each other (mask-composite:exclude) punches the middle out of a padding-thick ring, leaving only the ring itself for repeating-conic-gradient's alternating color/transparent wedges to paint dashes onto — a technique that reads as evenly-spaced dashes on a true circle, and close enough to it on this squircle for the difference not to matter at this size. rotate(-360deg): CSS's rotation angle grows clockwise, so a decreasing (negative) one turns the dashes counterclockwise — "le sens trigonométrique" */
 .text_field_glass:focus-within{
-	border-style: dashed;
+	border-color: transparent;
+}
+.text_field_glass::after{
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	padding: 1px;
+	background: repeating-conic-gradient( from 0deg, var( --color-fg ) 0deg 8deg, transparent 8deg 16deg );
+	-webkit-mask: linear-gradient( #fff 0 0 ) content-box, linear-gradient( #fff 0 0 );
+	-webkit-mask-composite: xor;
+	mask-composite: exclude;
+	opacity: 0;
+	pointer-events: none;
+}
+.text_field_glass:focus-within::after{
+	opacity: 1;
+	animation: rotate_dashes 3s linear infinite;
+}
+@keyframes rotate_dashes{
+	to{ transform: rotate( -360deg ); }
 }
 /* the gaussian blur — frosted-glass center, strongest at the middle, masked down to nothing by the time it reaches the border */
 .text_field_glass::before{
@@ -978,6 +998,9 @@ form input[type="submit"]{
 	letter-spacing: 0.5pt;
 	margin: 0;
 }
+.resume_timeline h2{
+	text-align: center;
+}
 .skills_group ul{
 	list-style: none;
 	margin: 0.4em 0 0 0;
@@ -987,7 +1010,15 @@ form input[type="submit"]{
 .skills_group li{
 	margin: 0.15em 0 0 0;
 }
-/* Shields.io badges reused as-is from readme.md, for now — same images, same one-per-line list this section already had, not yet the wrapped, side-by-side arrangement the README itself uses */
+/* :has() rather than a class on the <ul> itself: a group is either all badges or all plain text today, so whether it contains a .skill_badge is enough to tell the two apart without touching the view. Plain-text groups (degrees, licenses) keep the one-per-line list they need for full sentences; badge groups wrap side by side like the README they're copied from */
+.skills_group ul:has( .skill_badge ){
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4em;
+}
+.skills_group ul:has( .skill_badge ) li{
+	margin: 0;
+}
 .skill_badge{
 	height: 20px;
 	vertical-align: middle;
@@ -1097,25 +1128,44 @@ form input[type="submit"]{
 	max-width: 40em;
 	margin: 0 0 2em 0;
 }
+/* position:relative here, not just on .timeline_entry below, is what makes the one continuous line further down possible: it needs one fixed pair of coordinates (the first entry's cross, the last entry's cross) to run between, not a running total of how tall every entry's own date block happened to wrap to */
 .timeline{
+	position: relative;
 	list-style: none;
 	padding: 0;
 	margin: 1em 0 0 0;
-	border-left: 2px solid var( --color-border );
+}
+/* one continuous line for the whole list rather than a segment stitched between every pair of crosses: since every cross sits on the same x, a single straight line between the first entry's cross and the last one passes directly through every cross in between regardless of exactly where each one landed, sidestepping the need to know that at all. top and bottom, not top and height: a fixed height broke the moment Milestone.chronological_with_gaps started splicing filler entries in, since the list's total height is no longer just a function of the real milestones — bottom only depends on the last entry's own layout (64.09px), which doesn't change just because entries were added or removed somewhere in between. top now reaches up past the first cross to the "timeline" heading's own vertical center (h2's center sits 30.33px above .timeline's own top edge, hence -30.33px) rather than stopping exactly at the first cross the way bottom still does, because the line needs to fade out somewhere above that cross, not stop abruptly at it. Two mask layers rather than one: the dash-tile from before still repeats the whole way, and a second, non-repeating linear-gradient — solid for everything below 85.27px from this extended top (the distance back down to where the first cross actually is) and fading to transparent above that — is layered on top of it with mask-composite:intersect so only where BOTH layers are opaque survives, i.e. dashes that fade out approaching the heading and are fully solid at and below the first cross, same as always */
+.timeline::before{
+	content: '';
+	position: absolute;
+	left: -3px;
+	top: -30.33px;
+	bottom: 64.09px;
+	width: 4px;
+	background-color: rgb( 128, 128, 128 );
+	mask-image: url( "data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%204%2012%27%3E%3Cline%20x1=%272%27%20y1=%271%27%20x2=%272%27%20y2=%277%27%20stroke=%27white%27%20stroke-width=%272%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E" ), linear-gradient( to bottom, transparent 0, black 85.27px, black 100% );
+	mask-repeat: repeat-y, no-repeat;
+	mask-size: 4px 12px, auto;
+	mask-composite: intersect, intersect;
 }
 .timeline_entry{
 	position: relative;
 	padding: 0 0 1.5em 1.5em;
 }
-.timeline_entry::before{
+/* a diagonal cross (×) rather than the literal '+' character before, drawn as an SVG mask rather than text — border-style:dashed and text glyphs can't get round caps on their own strokes, but an SVG stroke can (stroke-linecap:round), and mask-image lets that shape be filled with var(--color-fg) instead of a color baked into the SVG, so it still answers to the theme. On .timeline_title rather than .timeline_entry, and top is a fixed, small offset (6.35px = half of .timeline_title's own 24.7px line-height, minus half the cross's own 12px) — deliberately NOT tied to how tall .timeline_dates rendered above it: .timeline_title's own top always lands wherever the date above it actually ended, whether that took one line or two, the same way any two stacked block elements do in normal flow, so anchoring the cross to the title directly gets that for free, without needing dates to be forced to some fixed height (which only wasted space under the many one-line dates) or needing to know that height at all. left is -32.5px, not the -7px that centered it correctly back when this sat on .timeline_entry directly: .timeline_title sits 25.5px further right than .timeline_entry's own edge (.timeline_entry's own 1.5em left padding), and .timeline::before below is positioned from that same .timeline_entry/.timeline edge, not from .timeline_title's — so anchoring the cross to .timeline_title without correcting for that 25.5px offset pulls it off the line, which is exactly what happened. -7 - 25.5 = -32.5, landing the cross's center (its own left plus half its 12px width) back on the line's own center at x=-1px, measured from the shared .timeline_entry/.timeline edge */
+.timeline_title::before{
 	content: '';
 	position: absolute;
-	left: -5px;
-	top: 0.3em;
-	width: 8px;
-	height: 8px;
-	border-radius: 50%;
+	left: -32.5px;
+	top: 6.35px;
+	width: 12px;
+	height: 12px;
 	background-color: var( --color-fg );
+	-webkit-mask-image: url( "data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2012%2012%27%3E%3Cpath%20d=%27M2%202L10%2010M10%202L2%2010%27%20stroke=%27white%27%20stroke-width=%272%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E" );
+	mask-image: url( "data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2012%2012%27%3E%3Cpath%20d=%27M2%202L10%2010M10%202L2%2010%27%20stroke=%27white%27%20stroke-width=%272%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E" );
+	mask-size: contain;
+	mask-repeat: no-repeat;
 }
 .timeline_dates{
 	font-size: 9pt;
@@ -1125,6 +1175,7 @@ form input[type="submit"]{
 	margin: 0 0 0.15em 0;
 }
 .timeline_title{
+	position: relative;
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
 	margin: 0 0 0.15em 0;
@@ -1144,6 +1195,14 @@ form input[type="submit"]{
 /* no explicit font-size — .timeline_title doesn't set one either, so both inherit the same size from body rather than each pinning its own number that could drift apart later */
 .timeline_description{
 	margin: 0.25em 0 0 0;
+}
+/* the computed "It's a secret to everybody." entries Milestone.chronological_with_gaps splices in for unaccounted-for stretches of time — never real records, so they get no cross (the continuous line still runs behind them same as any other stretch) and a visibly different, secondary treatment on the title itself */
+.timeline_entry_filler .timeline_title::before{
+	display: none;
+}
+.timeline_entry_filler .timeline_title{
+	font-style: italic;
+	color: rgb( 128, 128, 128 );
 }
 
 /*   I D s   */
@@ -1404,10 +1463,10 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 /* the block fills the switch's own 40px height edge to edge (its own bottom offset, 19.7734375px, its own height, 40px) and lets flexbox's space-between distribute the four lines within it: the first line's top and the last line's bottom land exactly on the container's own edges by definition of space-between, with the leftover space — however tall the four lines actually render, in whatever browser renders them — split into three equal gaps automatically. That's the point of doing it this way rather than computing each line's own bottom by hand from an assumed, measured line-height: a line-height of "normal" is a font metric the browser itself resolves, not a fixed number, so hardcoding it here would only ever be correct in whichever browser it was measured in. left/max-width still use a fixed 10px/3 as the horizontal gap to the switch, matching what the vertical gaps come out to when each line is 7.5px tall, as measured in this project's own testing browser */
 #copyright_notice_block{
 	position: fixed;
-	left: calc( 19.7734375px + 20px + 10px / 3 + 2.5pt );
+	left: calc( 19.7734375px + 20px + 10px / 3 );
 	bottom: 19.7734375px;
 	height: 40px;
-	max-width: calc( 200.7421875px - 19.7734375px - 20px - 10px / 3 - 2.5pt );
+	max-width: calc( 200.7421875px - 19.7734375px - 20px - 10px / 3 );
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
