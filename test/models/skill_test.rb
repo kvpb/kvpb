@@ -17,9 +17,9 @@ class SkillTest < ActiveSupport::TestCase
   end
 
   test "category_label reads the human label for the current category" do
-    skill = Skill.new( category: :languages_programming_languages )
+    skill = Skill.new( category: :programming_languages )
 
-    assert_equal "languages & programming languages", skill.category_label
+    assert_equal "programming languages", skill.category_label
   end
 end
 
