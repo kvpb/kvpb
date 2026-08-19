@@ -1388,27 +1388,23 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 :root[data-theme="dark"] #theme_toggle_knob{
 	transform: translateY( 20px );
 }
-/* three independently positioned lines rather than one block relying on line-height to land in the right places: translateY(50%) drops each line down by half its own height, so bottom below sets each line's center, not its edge, exactly on the switch's quarter-points, immune to whatever a line-height's rounding would otherwise do. left is the switch's own 19.7734375px offset plus its 20px width plus a 10px gap — the same 10px the three lines' own bottoms are spaced apart by below, so the switch keeps that same rhythm rather than sitting cramped against the text. max-width caps at the logotype's own measured right edge (200.7421875px) so the block can never reach past it — at this size the widest line still lands over 50px short of that edge, so no letter-spacing condensing is needed to stay inside it */
-.copyright_notice{
+/* the block fills the switch's own 40px height edge to edge (its own bottom offset, 19.7734375px, its own height, 40px) and lets flexbox's space-between distribute the four lines within it: the first line's top and the last line's bottom land exactly on the container's own edges by definition of space-between, with the leftover space — however tall the four lines actually render, in whatever browser renders them — split into three equal gaps automatically. That's the point of doing it this way rather than computing each line's own bottom by hand from an assumed, measured line-height: a line-height of "normal" is a font metric the browser itself resolves, not a fixed number, so hardcoding it here would only ever be correct in whichever browser it was measured in. left/max-width still use a fixed 10px/3 as the horizontal gap to the switch, matching what the vertical gaps come out to when each line is 7.5px tall, as measured in this project's own testing browser */
+#copyright_notice_block{
 	position: fixed;
-	left: calc( 19.7734375px + 20px + 10px );
-	max-width: calc( 200.7421875px - 19.7734375px - 20px - 10px );
-	transform: translateY( 50% );
+	left: calc( 19.7734375px + 20px + 10px / 3 + 2.5pt );
+	bottom: 19.7734375px;
+	height: 40px;
+	max-width: calc( 200.7421875px - 19.7734375px - 20px - 10px / 3 - 2.5pt );
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	z-index: 40;
+}
+.copyright_notice{
 	color: var( --color-faint );
 	text-transform: uppercase;
 	font-size: 5pt;
 	white-space: nowrap;
-	z-index: 40;
-}
-/* the switch spans from its own 19.7734375px bottom offset to +40px of height; these three bottoms are that span's upper-quarter, half, and lower-quarter points — the middle of the upper half, the middle of the whole switch, and the middle of the lower half */
-#copyright_notice_1{
-	bottom: 49.7734375px;
-}
-#copyright_notice_2{
-	bottom: 39.7734375px;
-}
-#copyright_notice_3{
-	bottom: 29.7734375px;
 }
 #article{
 	display: block;
