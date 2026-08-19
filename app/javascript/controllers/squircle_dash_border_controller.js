@@ -27,10 +27,47 @@ export default class extends Controller {
 		this.resizeObserver = new ResizeObserver( this.boundUpdate )
 		this.resizeObserver.observe( this.element )
 		this.update()
+
+		this.dashOffset = 0
+		this.boundTick = this.tick.bind( this )
+		this.boundStartMarching = this.startMarching.bind( this )
+		this.boundStopMarching = this.stopMarching.bind( this )
+		this.element.addEventListener( "focusin", this.boundStartMarching )
+		this.element.addEventListener( "focusout", this.boundStopMarching )
 	}
 
 	disconnect() {
 		this.resizeObserver.disconnect()
+		this.stopMarching()
+		this.element.removeEventListener( "focusin", this.boundStartMarching )
+		this.element.removeEventListener( "focusout", this.boundStopMarching )
+	}
+
+	// CSS itself animating stroke-dashoffset — the earlier, first attempt at this — hits a genuine
+	// Chromium rendering bug once the path it's animating gets long enough (a wide field on a wide
+	// enough page): most of the dashes silently stop painting past some point along the path, confirmed
+	// by freezing that same animation, which alone made it render whole again. Stepping dashoffset by
+	// hand on every frame instead doesn't trip it, so the motion is driven from here instead
+	startMarching() {
+		if ( this.rafId ) return
+		this.lastTick = performance.now()
+		this.rafId = requestAnimationFrame( this.boundTick )
+	}
+
+	stopMarching() {
+		if ( this.rafId ) cancelAnimationFrame( this.rafId )
+		this.rafId = null
+	}
+
+	// 16px every 1000ms, the same cycle the old march_dashes @keyframes ran — dashoffset increasing,
+	// not decreasing, is what marches the dashes forward along the path's own clockwise drawing
+	// direction, "le sens trigonométrique", the same reasoning march_dashes itself was built on
+	tick( now ) {
+		const elapsed = now - this.lastTick
+		this.lastTick = now
+		this.dashOffset = ( this.dashOffset + elapsed * ( 16 / 1000 ) ) % 16
+		this.dashedPath.style.strokeDashoffset = this.dashOffset
+		this.rafId = requestAnimationFrame( this.boundTick )
 	}
 
 	// clientWidth/clientHeight stop at the padding edge, and text_field_glass clips its children there
