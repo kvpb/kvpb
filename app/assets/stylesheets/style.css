@@ -251,19 +251,15 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 .text_field_glass:focus-within .squircle_dash_border_path_solid{
 	opacity: 0;
 }
+/* no stroke override here — a fixed black, right for it to read as black in daylight, went invisible on dark appearance's own black page background. var(--color-fg) inherited from squircle_dash_border_path above is the same color the solid state already uses, so the dashes stay legible (black by day, white by night) without needing a color of their own */
 .squircle_dash_border_path_dashed{
 	opacity: 0;
-	stroke: rgb( 0, 0, 0 );
 	stroke-dasharray: 8 8;
 }
 .text_field_glass:focus-within .squircle_dash_border_path_dashed{
 	opacity: 1;
-	animation: march_dashes 1s linear infinite;
 }
-/* positive, not negative: squirclePath() above draws clockwise (top edge left-to-right, then down the right side, etc.), and a decreasing stroke-dashoffset marches dashes forward along however the path was drawn — clockwise, here. Counting up instead marches them backward against that drawing direction, i.e. counterclockwise, "le sens trigonométrique" */
-@keyframes march_dashes{
-	to{ stroke-dashoffset: 16; }
-}
+/* no @keyframes here — squircle_dash_border_controller.js steps stroke-dashoffset by hand on every animation frame instead, since animating it through CSS hits a genuine Chromium rendering bug on a long enough path (a wide field on a wide enough page): most of the dashes silently stop painting past some point along it. positive, not negative, is still the direction that increment goes for the same reason it always was: squirclePath() draws clockwise (top edge left-to-right, then down the right side, etc.), and a decreasing stroke-dashoffset marches dashes forward along however the path was drawn — clockwise, here — while counting up marches them backward against that drawing direction, i.e. counterclockwise, "le sens trigonométrique" */
 /* the gaussian blur — frosted-glass center, strongest at the middle, masked down to nothing by the time it reaches the border */
 .text_field_glass::before{
 	content: '';
@@ -275,12 +271,13 @@ form input[type="text"]:focus, form input[type="email"]:focus, form input[type="
 	-webkit-mask-image: radial-gradient( ellipse at center, black 0%, black 30%, transparent 75% );
 	pointer-events: none;
 }
-/* :not([type="hidden"]) rather than a bare `input` — the extra attribute selector, not the honeypot's own hidden state, is the point: form input[type="…"] above matches on a real type value too, so a bare `input` here loses to it on specificity and the field keeps its square 2px border instead of ever going borderless */
+/* :not([type="hidden"]) rather than a bare `input` — the extra attribute selector, not the honeypot's own hidden state, is the point: form input[type="…"] above matches on a real type value too, so a bare `input` here loses to it on specificity and the field keeps its square 2px border instead of ever going borderless. That plain rule's own 32em max-width is meant for it, not for a glass field: this one spans edge to edge between the page's own margins, so max-width:none overrides it here specifically */
 .text_field_glass input:not( [type="hidden"] ), .text_field_glass textarea{
 	position: relative;
 	z-index: 1;
 	display: block;
 	width: 100%;
+	max-width: none;
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
 	font-size: 12pt;
