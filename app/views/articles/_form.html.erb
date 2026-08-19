@@ -14,27 +14,27 @@
 	<span class="autosave_status" data-autosave-target="status"></span>
 
 	<%= form.label :kicker, "Kicker" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_field :kicker %>
 	</div>
 
 	<%= form.label :headline, "Headline" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_field :headline, required: true %>
 	</div>
 
 	<%= form.label :subheadline, "Subheadline" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_field :subheadline %>
 	</div>
 
 	<%= form.label :lede, "Lede" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_area :lede %>
 	</div>
 
 	<%= form.label :body, "Body" %>
-	<div class="text_field_glass">
+	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_area :body, rows: 20 %>
 	</div>
 
