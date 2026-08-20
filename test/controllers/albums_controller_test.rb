@@ -84,7 +84,7 @@ class AlbumsControllerTest < ActionDispatch::IntegrationTest
   test "update without new photos leaves existing photos untouched" do
     sign_in_as( users( :one ) )
     album = Album.create!( title: "With Photos" )
-    album.photos.attach( io: StringIO.new( "fake" ), filename: "a.jpg", content_type: "image/jpeg" )
+    attach_photo!( album, io: StringIO.new( "fake" ), filename: "a.jpg" )
 
     patch album_path( album ), params: { album: { title: "Renamed" } }
 
@@ -95,7 +95,7 @@ class AlbumsControllerTest < ActionDispatch::IntegrationTest
   test "update with new photos adds to the existing set" do
     sign_in_as( users( :one ) )
     album = Album.create!( title: "With Photos" )
-    album.photos.attach( io: StringIO.new( "fake" ), filename: "a.jpg", content_type: "image/jpeg" )
+    attach_photo!( album, io: StringIO.new( "fake" ), filename: "a.jpg" )
 
     patch album_path( album ), params: { album: { photos: [ fixture_file_upload( "test/fixtures/files/sample.jpg", "image/jpeg" ) ] } }
 
@@ -118,7 +118,7 @@ class AlbumsControllerTest < ActionDispatch::IntegrationTest
   test "update recomputes the captured period once new photos are attached" do
     sign_in_as( users( :one ) )
     album = Album.create!( title: "Growing Trip" )
-    album.photos.attach( io: File.open( file_fixture( "sample_early.jpg" ) ), filename: "early.jpg", content_type: "image/jpeg" )
+    attach_photo!( album, io: File.open( file_fixture( "sample_early.jpg" ) ), filename: "early.jpg" )
     album.refresh_captured_period!
 
     patch album_path( album ), params: { album: { photos: [ fixture_file_upload( "test/fixtures/files/sample_late.jpg", "image/jpeg" ) ] } }
@@ -133,6 +133,14 @@ class AlbumsControllerTest < ActionDispatch::IntegrationTest
       delete album_path( album )
     end
   end
+
+  private
+    def attach_photo!( album, io:, filename: )
+      photo = album.photos.create!( position: album.photos.maximum( :position ).to_i + 1 )
+      photo.image.attach( io: io, filename: filename, content_type: "image/jpeg" )
+      photo.refresh_from_exif!
+      photo
+    end
 end
 
 #	albums_controller_test.rb
