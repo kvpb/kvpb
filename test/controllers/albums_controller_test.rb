@@ -102,6 +102,31 @@ class AlbumsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 2, album.reload.photos.count
   end
 
+  test "create derives the captured period from the uploaded photos' own EXIF" do
+    sign_in_as( users( :one ) )
+
+    post see_path, params: { album: { title: "EXIF Trip", photos: [
+      fixture_file_upload( "test/fixtures/files/sample_early.jpg", "image/jpeg" ),
+      fixture_file_upload( "test/fixtures/files/sample_late.jpg", "image/jpeg" )
+    ] } }
+
+    album = Album.find_by!( identifier: "exif-trip" )
+    assert_equal Date.new( 2024, 3, 15 ), album.taken_from
+    assert_equal Date.new( 2024, 8, 22 ), album.taken_until
+  end
+
+  test "update recomputes the captured period once new photos are attached" do
+    sign_in_as( users( :one ) )
+    album = Album.create!( title: "Growing Trip" )
+    album.photos.attach( io: File.open( file_fixture( "sample_early.jpg" ) ), filename: "early.jpg", content_type: "image/jpeg" )
+    album.refresh_captured_period!
+
+    patch album_path( album ), params: { album: { photos: [ fixture_file_upload( "test/fixtures/files/sample_late.jpg", "image/jpeg" ) ] } }
+
+    assert_equal Date.new( 2024, 3, 15 ), album.reload.taken_from
+    assert_equal Date.new( 2024, 8, 22 ), album.taken_until
+  end
+
   test "destroy requires a signed-in superuser" do
     album = Album.create!( title: "Published", published_at: 1.day.ago )
     assert_no_difference( "Album.count" ) do
