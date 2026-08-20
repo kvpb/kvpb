@@ -1,7 +1,5 @@
-require "exifr/jpeg"
-
 class Album < ApplicationRecord
-  has_many_attached :photos
+  has_many :photos, -> { order( :position ) }, dependent: :destroy
   has_one_attached :cover_photo
 
   before_validation :assign_identifier, if: -> { identifier.blank? && title.present? }
@@ -21,14 +19,18 @@ class Album < ApplicationRecord
   end
 
   def cover
-    cover_photo.attached? ? cover_photo : photos.first
+    return cover_photo if cover_photo.attached?
+    photos.first&.image
   end
 
-  # The album's own date isn't typed in — it's the span the photos themselves already carry in
-  # their EXIF, oldest shot to most recent, so it stays honest to when the pictures were actually
-  # taken rather than whenever they happened to get uploaded here
+  # The album's own date isn't typed in — it's the span the photos themselves already carry, oldest
+  # shot to most recent, so it stays honest to when the pictures were actually taken rather than
+  # whenever they happened to get uploaded here. Each Photo's own taken_at is already resolved
+  # (EXIF-read or manually overridden, Photo#refresh_from_exif! doesn't distinguish the two here) by
+  # the time this runs, so this only ever aggregates already-computed dates, never re-reads EXIF
+  # itself
   def refresh_captured_period!
-    dates = photos.filter_map { |photo| captured_date_for( photo ) }
+    dates = photos.where.not( taken_at: nil ).pluck( :taken_at ).map( &:to_date )
     update!( taken_from: dates.min, taken_until: dates.max )
   end
 
@@ -40,17 +42,6 @@ class Album < ApplicationRecord
   end
 
   private
-    # A screenshot, a scan, a PNG export — anything without a real camera's own EXIF block behind
-    # it — has nothing to contribute here, so it's silently left out of the span rather than
-    # treated as an error
-    def captured_date_for( photo )
-      photo.blob.open do |file|
-        EXIFR::JPEG.new( file.path ).date_time_original&.to_date
-      end
-    rescue EXIFR::MalformedJPEG
-      nil
-    end
-
     def assign_identifier
       base = title.parameterize
       candidate = base
