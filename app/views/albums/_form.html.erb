@@ -15,9 +15,6 @@
 		<%= form.text_field :location %>
 	</div>
 
-	<%= form.label :taken_on, "Taken on" %>
-	<%= form.date_field :taken_on %>
-
 	<%= form.label :description, "Description" %>
 	<div class="text_field_glass" data-controller="squircle-dash-border">
 		<%= form.text_area :description %>
@@ -29,7 +26,10 @@
 
 	<%= form.label :photos, "Photos" %>
 	<%= form.file_field :photos, multiple: true, accept: "image/*" %>
-	<p class="field_hint">Newly selected photos are added to the album; existing ones stay.</p>
+	<p class="field_hint">
+		Newly selected photos are added to the album; existing ones stay. Taken on, shown on the album, is read from the photos' own EXIF automatically — oldest shot to most recent — not typed in here.
+		<%= "Currently: #{ album.captured_period_label }." if album.captured_period_label.present? %>
+	</p>
 
 	<%= form.label :published_at, "Publish at" %>
 	<%= form.datetime_field :published_at, value: album.published_at&.strftime( "%Y-%m-%dT%H:%M" ) %>
