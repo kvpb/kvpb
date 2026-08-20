@@ -34,24 +34,26 @@ export default class extends Controller {
     this.dragging = false
     this.lastScrollY = window.scrollY
     this.lastScrollVelocity = 0
+    this.frame = null
 
     this.boundPointerDown = this.onPointerDown.bind( this )
     this.boundPointerMove = this.onPointerMove.bind( this )
     this.boundPointerUp = this.onPointerUp.bind( this )
+    this.boundScroll = this.onScroll.bind( this )
     this.boundTick = this.tick.bind( this )
 
     this.element.style.touchAction = "none"
     this.element.style.cursor = "grab"
     this.element.addEventListener( "pointerdown", this.boundPointerDown )
-
-    this.frame = requestAnimationFrame( this.boundTick )
+    window.addEventListener( "scroll", this.boundScroll, { passive: true } )
   }
 
   disconnect() {
     this.element.removeEventListener( "pointerdown", this.boundPointerDown )
     window.removeEventListener( "pointermove", this.boundPointerMove )
     window.removeEventListener( "pointerup", this.boundPointerUp )
-    cancelAnimationFrame( this.frame )
+    window.removeEventListener( "scroll", this.boundScroll )
+    this.stopTicking()
   }
 
   onPointerDown( event ) {
@@ -61,6 +63,7 @@ export default class extends Controller {
     this.dragStartY = event.clientY
     window.addEventListener( "pointermove", this.boundPointerMove )
     window.addEventListener( "pointerup", this.boundPointerUp )
+    this.startTicking()
   }
 
   onPointerMove( event ) {
@@ -85,7 +88,9 @@ export default class extends Controller {
     window.removeEventListener( "pointerup", this.boundPointerUp )
   }
 
-  tick() {
+  // scroll is its own event, not something polled from inside tick(), so the spring can sit
+  // completely idle between kicks rather than reading window.scrollY every single frame forever
+  onScroll() {
     const scrollY = window.scrollY
     const scrollVelocity = scrollY - this.lastScrollY
     this.lastScrollY = scrollY
@@ -97,8 +102,21 @@ export default class extends Controller {
     if ( Math.abs( scrollAcceleration ) > this.scrollAccelerationThresholdValue ) {
       const excess = scrollAcceleration - Math.sign( scrollAcceleration ) * this.scrollAccelerationThresholdValue
       this.velocityY -= excess * this.scrollKickValue
+      this.startTicking()
     }
+  }
 
+  startTicking() {
+    if ( this.frame ) return
+    this.frame = requestAnimationFrame( this.boundTick )
+  }
+
+  stopTicking() {
+    if ( this.frame ) cancelAnimationFrame( this.frame )
+    this.frame = null
+  }
+
+  tick() {
     const forceX = ( this.targetX - this.offsetX ) * this.stiffnessValue
     const forceY = ( this.targetY - this.offsetY ) * this.stiffnessValue
     this.velocityX = ( this.velocityX + forceX ) * this.dampingValue
@@ -106,7 +124,10 @@ export default class extends Controller {
     this.offsetX += this.velocityX
     this.offsetY += this.velocityY
 
-    this.element.style.transform = `translate( ${ this.offsetX }px, ${ this.offsetY }px )`
+    // the standalone translate property, not transform's own translate() — composes with whatever
+    // static transform the element already carries (the Cover Flow side covers' own rotateY lean,
+    // in particular) instead of overwriting it
+    this.element.style.translate = `${ this.offsetX }px ${ this.offsetY }px`
 
     // the medallion alone leans in 3D off the same offset — a PS Vita LiveArea bubble tilt — while
     // the ring text above stays flat, carried only by the disc's shared 2D translation
@@ -116,7 +137,20 @@ export default class extends Controller {
       this.medallionTarget.style.transform = `translate( -50%, -50% ) perspective( ${ this.tiltPerspectiveValue }px ) rotateX( ${ tiltX }deg ) rotateY( ${ tiltY }deg )`
     }
 
-    this.frame = requestAnimationFrame( this.boundTick )
+    // once dragging has stopped and the spring has settled back to rest, within a fraction of a
+    // pixel, stop rescheduling rather than keep writing the exact same translate every frame
+    // forever — that constant per-frame style write, times four covers on one Cover Flow stage
+    // scrolling past at once, is what was tripping a Chromium compositor bug that duplicated the
+    // whole stage's paint for a few frames. onPointerDown/onScroll above wake it back up on demand
+    const atRest = !this.dragging
+      && Math.abs( this.velocityX ) < 0.01 && Math.abs( this.velocityY ) < 0.01
+      && Math.abs( this.targetX - this.offsetX ) < 0.01 && Math.abs( this.targetY - this.offsetY ) < 0.01
+
+    if ( atRest ) {
+      this.stopTicking()
+    } else {
+      this.frame = requestAnimationFrame( this.boundTick )
+    }
   }
 }
 
