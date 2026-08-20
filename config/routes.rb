@@ -46,6 +46,10 @@ Rails.application.routes.draw do
 
   get    "/see/prints/:identifier",           to: "prints#show",     as: "print"
 
+  get    "/see/:album_identifier/photos/:id/edit", to: "photos#edit",    as: "edit_photo"
+  patch  "/see/:album_identifier/photos/:id",      to: "photos#update"
+  delete "/see/:album_identifier/photos/:id",      to: "photos#destroy", as: "photo"
+
   get "/listen",                    to: "pages#listen",               as: "listen"
   get "/music",                     to: "pages#listen"
   get "/watch",                     to: "pages#watch",                as: "watch"
