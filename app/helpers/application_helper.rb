@@ -17,9 +17,9 @@ module ApplicationHelper
 
   def current_section_suffix
     if controller_name == "articles"
-      { label: "journal", empty: section_empty?( :journal ) }
+      { label: "journal", label_ja: "ジャーナル", empty: section_empty?( :journal ) }
     elsif controller_name == "albums"
-      { label: "gallery", empty: section_empty?( :gallery ) }
+      { label: "gallery", label_ja: "ギャラリー", empty: section_empty?( :gallery ) }
     elsif controller_name == "pages" && action_name == "listen"
       { label: "music", empty: section_empty?( :music ) }
     elsif controller_name == "pages" && action_name == "watch"
