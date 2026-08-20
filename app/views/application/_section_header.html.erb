@@ -6,7 +6,10 @@
 		<span class="name_header_aka_ja">トーマス・ジョージ・ウェスト</span>
 	</header>
 <% elsif ( section = current_section_suffix ) %>
-	<header id="section_header" class="<%= "section_empty" if section[ :empty ] %>"><span id="section_possessive">’s</span> <%= section[ :label ] %></header>
+	<header id="section_header" class="<%= "section_empty" if section[ :empty ] %>">
+		<span id="section_possessive">’s</span> <%= section[ :label ] %>
+		<% if section[ :label_ja ].present? %><span id="section_label_ja">の<%= section[ :label_ja ] %></span><% end %>
+	</header>
 <% end %>
 
 <%#
