@@ -3,7 +3,8 @@
 <article id="album" class="<%= "draft" unless @album.published? %>">
 	<div class="album_photos">
 		<% @album.photos.each do |photo| %>
-			<%= image_tag photo, class: "album_photo", draggable: false %>
+			<%= image_tag photo.image, class: "album_photo", draggable: false %>
+			<%= link_to "Edit photo", edit_photo_path( @album, photo ), class: "photo_edit_link" if superuser? %>
 		<% end %>
 	</div>
 
