@@ -28,6 +28,48 @@
 	--stone-text-blend: multiply; /* dark text absorbed into pale stone */
 }
 
+/* the gallery is the one section built around images rather than text, so nothing on it — nav, header, footer, background included, all the way out past #gallery/#album's own boundary — should read at the same full strength the rest of the site's own monochrome does. Redefining the tokens themselves, not a filter over the page, is what lets that reach navigation/header/footer/background at all (a filter on some wrapping element would catch the photos too, and there's no way to carve them back out of a filter afterward) while leaving actual photos untouched by construction: an <img>'s own pixels never consult a CSS custom property to begin with. Two passes bring every value here: first ordinary colors (--color-twitter, --color-github) get desaturated to their own equivalent gray — luminance, not a flat average, per the standard BT.709 weights (0.2126R + 0.7152G + 0.0722B), same as any real grayscale conversion — then every value, including fg/bg/mid which were already gray, moves 20% of its own distance from mid-gray (128) back toward it: true black lightens 10% of the full 0-255 range, true white darkens by that same 10%, exactly mirroring contrast(80%) as a formula but computed by hand here since a filter can't be scoped this way */
+body.gallery_page{
+	--color-fg: rgb( 26, 26, 26 );
+	--color-bg: rgb( 230, 230, 230 );
+	--color-muted: rgb( 94, 94, 94 );
+	--color-hover: rgba( 26, 26, 26, 0.9 );
+	--color-faint: rgb( 210, 210, 210 );
+	--color-mid: rgb( 146, 146, 146 );
+	--color-border: rgb( 186, 186, 186 );
+
+	--color-twitter: rgb( 133, 133, 133 );
+	--color-github: rgb( 58, 58, 58 );
+	--color-danger: rgb( 78, 78, 78 );
+	--color-success: rgb( 83, 83, 83 );
+}
+:root[data-theme="dark"] body.gallery_page{
+	--color-fg: rgb( 230, 230, 230 );
+	--color-bg: rgb( 26, 26, 26 );
+	--color-muted: rgb( 162, 162, 162 );
+	--color-hover: rgba( 230, 230, 230, 0.9 );
+	--color-faint: rgb( 77, 77, 77 );
+	--color-mid: rgb( 110, 110, 110 );
+	--color-border: rgb( 70, 70, 70 );
+
+	--color-danger: rgb( 139, 139, 139 );
+	--color-success: rgb( 177, 177, 177 );
+}
+@media ( prefers-color-scheme: dark ){
+	:root:not([data-theme="light"]) body.gallery_page{
+		--color-fg: rgb( 230, 230, 230 );
+		--color-bg: rgb( 26, 26, 26 );
+		--color-muted: rgb( 162, 162, 162 );
+		--color-hover: rgba( 230, 230, 230, 0.9 );
+		--color-faint: rgb( 77, 77, 77 );
+		--color-mid: rgb( 110, 110, 110 );
+		--color-border: rgb( 70, 70, 70 );
+
+		--color-danger: rgb( 139, 139, 139 );
+		--color-success: rgb( 177, 177, 177 );
+	}
+}
+
 /* every element eases between its light and dark colors instead of snapping, so flipping the theme reads as one smooth cut rather than a harsh jump; elements with their own transition (the toggle, the wordmark) override this outright rather than merging with it, which is fine since those already resolve to the same 1/4s */
 *{
 	transition: background-color .25s ease, color .25s ease, border-color .25s ease, fill .25s ease, stroke .25s ease, filter .25s ease;
