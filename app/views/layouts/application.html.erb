@@ -22,9 +22,11 @@
 		<div id="backdrop" aria-hidden="true"></div>
 		<%= render 'navigate' %>
 		<main>
-			<%= render 'section_header' %>
-			<%= render 'flash' %>
-			<%= yield %>
+			<div id="main_content">
+				<%= render 'section_header' %>
+				<%= render 'flash' %>
+				<%= yield %>
+			</div>
 			<footer id="signature" aria-hidden="true"></footer>
 		</main>
   </body>
