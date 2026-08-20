@@ -19,8 +19,9 @@ class AlbumsController < ApplicationController
   end
 
   def create
-    @album = Album.new( album_params )
+    @album = Album.new( album_params.except( :photos ) )
     if @album.save
+      attach_photos( album_params[ :photos ] )
       @album.refresh_captured_period!
       redirect_to album_path( @album ), notice: "Album created."
     else
@@ -33,7 +34,7 @@ class AlbumsController < ApplicationController
 
   def update
     if @album.update( album_params.except( :photos ) )
-      @album.photos.attach( album_params[ :photos ] ) if album_params[ :photos ].present?
+      attach_photos( album_params[ :photos ] )
       @album.refresh_captured_period!
       redirect_to album_path( @album ), notice: "Album updated."
     else
@@ -61,6 +62,21 @@ class AlbumsController < ApplicationController
 
     def album_params
       params.require( :album ).permit( :title, :location, :description, :identifier, :published_at, :cover_photo, photos: [] )
+    end
+
+    # Each newly uploaded file becomes its own Photo, positioned after whatever's already in the
+    # album, immediately read for whatever EXIF it carries — nothing here is a bare attachment
+    # anymore, so every photo has somewhere of its own to hold a manual override later
+    def attach_photos( files )
+      return if files.blank?
+      next_position = @album.photos.maximum( :position ).to_i
+      files.each do |file|
+        next unless file.respond_to?( :original_filename )
+        next_position += 1
+        photo = @album.photos.create!( position: next_position )
+        photo.image.attach( file )
+        photo.refresh_from_exif!
+      end
     end
 end
 
