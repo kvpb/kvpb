@@ -69,10 +69,27 @@ body.gallery_page{
 		--color-success: rgb( 177, 177, 177 );
 	}
 }
+/* html's own background-color (declared below, unconditionally) is what actually shows through as the page's true canvas — the one background not subject to normal stacking order at all, painted beneath even #backdrop's own negative z-index, which is exactly why #backdrop is visible over it in the first place. body itself painting var(--color-bg) directly, tried first, broke that: body is an ordinary in-flow box, so its own background paints in its own, later stacking step, ahead of #backdrop's negative one, blotting the emblem out entirely. :has() lets html read the same gallery_page state one of its own descendants carries without needing to duplicate --color-bg's redefinition down on body only to have it not reach the one element (html) that actually needs it */
+html:has( body.gallery_page ){
+	--color-bg: rgb( 230, 230, 230 );
+}
+/* :root IS html — [data-theme] and :has() both have to land on that same one element, not chained as ancestor/descendant, which would ask for an html nested inside itself */
+html[data-theme="dark"]:has( body.gallery_page ){
+	--color-bg: rgb( 26, 26, 26 );
+}
+@media ( prefers-color-scheme: dark ){
+	html:not([data-theme="light"]):has( body.gallery_page ){
+		--color-bg: rgb( 26, 26, 26 );
+	}
+}
 
 /* every element eases between its light and dark colors instead of snapping, so flipping the theme reads as one smooth cut rather than a harsh jump; elements with their own transition (the toggle, the wordmark) override this outright rather than merging with it, which is fine since those already resolve to the same 1/4s */
 *{
 	transition: background-color .25s ease, color .25s ease, border-color .25s ease, fill .25s ease, stroke .25s ease, filter .25s ease;
+}
+/* a full second here, not the sitewide quarter — gallery_theme_controller.js adds gallery_page one animation frame after this page's own first paint specifically so this duration has a real "before" state to shift the whole page's colors from, all the way out to chrome nothing else in the section otherwise touches. transition-duration alone, not the shorthand, is deliberate: redeclaring transition here would silently reset the property list/easing above back to their initial values instead of just slowing them down */
+body.gallery_page *{
+	transition-duration: 1s;
 }
 
 html{
@@ -550,6 +567,9 @@ form input[type="submit"]{
 :root[data-theme="dark"] #backdrop{
 	filter: invert( 1 );
 }
+:root[data-theme="dark"] body.gallery_page #backdrop{
+	filter: invert( 1 ) contrast( 80% );
+}
 
 /* --color-github is the fixed brand gray, day and night alike; by night that near-black text nearly vanishes against the black page, so a real outline — not a recolor — is what keeps it legible */
 :root[data-theme="dark"] #checkout_GitHub_1{
@@ -584,6 +604,9 @@ form input[type="submit"]{
 
 	:root:not([data-theme="light"]) #backdrop{
 		filter: invert( 1 );
+	}
+	:root:not([data-theme="light"]) body.gallery_page #backdrop{
+		filter: invert( 1 ) contrast( 80% );
 	}
 
 	:root:not([data-theme="light"]) #checkout_GitHub_1{
@@ -860,6 +883,10 @@ form input[type="submit"]{
 	display: block;
 	margin: 0 0 3em 0;
 }
+/* a#read/#see/etc — small text sitting on a plain background — reads as "this is blinking to get your attention" the way a:hover's own site-wide blink intends. The exact same animation on this link instead swallows three full photos and their captions into nothing once a second, since the blink is opacity on the link itself and everything inside an <a> is exactly as opaque as the <a> is: not "clickable," just broken. The color shift a:hover also sets stays, same as any other link — only the animation needs turning off here */
+.album_cover_flow:hover{
+	animation: none;
+}
 .album_cover_flow.draft, .album_solo.draft{
 	opacity: 0.6;
 }
@@ -870,17 +897,20 @@ form input[type="submit"]{
 	gap: 1em;
 	margin: 0 0 3em 0;
 }
+/* unselectable like the nav/header/footer chrome around it — the caption below is a sibling, not a descendant, of this stage, so it keeps the site's normal text selection untouched without needing an override rule of its own */
+/* sized closer to what a cover photo capped at 60% of the stage's own width actually renders at for a typical landscape photo, now that it shrink-wraps instead of stretching to fill a fixed height — the old 60vh/600px was tuned back when every cover forced itself to 100% height regardless of its own aspect ratio, and kept that same footprint after covers stopped doing that, leaving dead space below a now-shorter photo before the caption ever starts */
 .cover_flow_stage{
 	position: relative;
-	height: 60vh;
-	min-height: 320px;
-	max-height: 600px;
+	height: 40vh;
+	min-height: 220px;
+	max-height: 420px;
 	margin-right: -1em;
 	width: calc( 100% + 1em );
 	overflow: hidden;
-	perspective: 1200px;
+	perspective: 1600px;
+	user-select: none;
 }
-/* never cropped — the whole photo always shows. width is auto by default (the photo at its own natural aspect ratio, full stage height), and max-width only steps in to shrink it, never to crop it, the moment that natural width would otherwise reach into the 6% strip reserved for the side covers */
+/* never cropped — the whole photo always shows. width is auto by default (the photo at its own natural aspect ratio, capped by max-height below), and max-width only steps in to shrink it further, never to crop it, the moment that natural width would otherwise reach into the 6% strip reserved for the side covers. max-height, not a flat height, for the same reason as the width cap: a fixed height forces object-fit:contain to letterbox anything whose aspect ratio doesn't happen to match the box exactly, and that letterboxed gap is transparent, not empty — the side/tertiary covers behind show straight through it. Shrinking the box itself to match whatever the photo's own ratio actually renders at, via max-height instead, is what keeps every cover's own box exactly as big as its own visible pixels and nothing more */
 .cover_flow_cover{
 	position: absolute;
 	top: 50%;
@@ -888,47 +918,55 @@ form input[type="submit"]{
 	transform: translate( -50%, -50% );
 	width: auto;
 	max-width: 60%;
-	height: 100%;
+	height: auto;
+	max-height: 100%;
 	object-fit: contain;
 	z-index: 3;
 	display: block;
 }
 /* the side covers ride the same shared perspective as the stage itself, so both lean away at a consistent angle rather than each carrying its own vanishing point */
-/* the two outermost things in the stage — a side cover if there are only 2 or 3 photos, or the gray hint behind it if there are more — reach the true left/right edge of the stage, same as the center cover's own full-bleed edge. The side covers sit inset top and bottom (8%/84%) so the taller hint, full height behind them, still peeks out above and below even though both start at the same 0% */
+/* the two outermost things in the stage — a side cover if there are only 2 or 3 photos, or the gray hint behind it if there are more — reach the true left/right edge of the stage, same as the center cover's own full-bleed edge. Never cropped, same as the center cover: width and height are both auto, each capped by its own max- so the box always shrink-wraps its own photo at that photo's real aspect ratio instead of ever slicing one to fit a fixed box or forcing a fixed height that would just as often leave the wrong side of the photo letterboxed */
+/* full opacity, same as the center cover — real Cover Flow never dims a cover for being off to the side, depth reads off the rotation alone */
 .cover_flow_side{
 	position: absolute;
-	top: 8%;
-	height: 84%;
-	width: 28%;
-	object-fit: cover;
+	top: 50%;
+	height: auto;
+	max-height: 84%;
+	width: auto;
+	max-width: 38%;
+	object-fit: contain;
 	z-index: 2;
-	opacity: 0.88;
 }
+/* transform-origin left at its own default (center) rather than pinned to either edge — pivoting there is what makes the two halves of the same tilted card lean in opposite directions instead of one edge just sitting still while the whole card leans away from it: the lateral half (the outer edge, toward the stage's own edge) comes forward toward the viewer, the medial half (the inner edge, toward the center cover) recedes toward the background, the same way a real card fanned out from a stack would. translateY(-50%) is what the fixed top:8%/height:84% pairing used to do on its own before height went auto above — top:50% alone would pin the box's own top edge, not its center, to the stage's own vertical middle; translateY and rotateY land in the same transform property, harmlessly, since one only ever moves along Y and the other only ever rotates around Y — a wiggle from medallion-physics still lands cleanly on top of this through the separate translate property, same as before */
 .cover_flow_side_left{
 	left: 0;
-	transform-origin: left center;
-	transform: rotateY( 35deg );
+	transform: translateY( -50% ) rotateY( 60deg );
 }
 .cover_flow_side_right{
 	right: 0;
-	transform-origin: right center;
-	transform: rotateY( -35deg );
+	transform: translateY( -50% ) rotateY( -60deg );
 }
-/* a plain gray sliver, not a real photo, standing in for whatever's further back in the stack — full stage height, taller than the side cover in front of it, so it's the part that's actually visible reaching the true edge */
+/* wiggles the same way the about-me medallion does — spring physics kicked by a sudden change in scroll speed, not steady scrolling — but through element.style.translate rather than transform: the side cover's own rotateY lean above already lives in transform, and translate is its own independent CSS property precisely so this can drift the photo without overwriting that lean. The center cover never gets the controller at all, so it alone stays put while the two side covers around it wiggle */
+/* the actual 4th/5th photo, not a placeholder — a flat gray block standing in for "something's further back" read as a stray drop-shadow rather than part of the same photo stack, since it carried no photographic texture of its own to tie it to its neighbors. A real photo fixes that outright. transform-origin stays pinned to its own outer edge here, unlike the side cover's own center pivot just above: pivoting a box at center would swing its own lateral half far enough into positive z that, combined with the stage's shared perspective, it visibly outgrows and bleeds past the side cover in front of it instead of reading as a smaller, further-back card. Pinning the pivot to the edge keeps its whole box between the stage's own resting plane and the background, the same one-directional lean the side cover used before it got a center pivot of its own, just at a shallower angle — less exaggerated, per the side cover's own steeper lean below. Real Cover Flow — the actual reference this is chasing — never fades, dims, or desaturates a single cover no matter how far back it sits: every one of them stays exactly as sharp and full-color as the one in front, depth read entirely off the rotation angle and nothing else, so no opacity/saturate/mask-fade here either, same crisp hard edge the side cover already gets. Never cropped either, same as the side cover just above and the center cover before it: width and height are both auto, each capped by its own max-, so the box shrink-wraps its own photo instead of forcing a fixed height that leaves a transparent letterboxed gap the side cover's own gap could otherwise line up with and bleed a second photo's pixels through both at once. max-height stays well under the side cover's own 84%, deliberately — a tall-ish photo landing here without that ceiling renders far closer to the side cover's own size than something sitting further back in the stack ever should, and reads as oversized rather than receding. It wiggles too — same controller, in the view, with its own max-drag-fraction/scroll-kick values overridden well below the side covers' own defaults — so it drifts noticeably less than they do: real parallax has whatever's further back moving less across the same physical shake, and matching that here is what feigns the stack actually having depth instead of every layer just wiggling in lockstep */
 .cover_flow_hint{
 	position: absolute;
-	top: 0;
-	height: 100%;
-	width: 28%;
-	background-color: var( --color-mid );
-	opacity: 0.35;
+	top: 50%;
+	height: auto;
+	max-height: 40%;
+	width: auto;
+	max-width: 28%;
+	object-fit: contain;
 	z-index: 1;
 }
 .cover_flow_hint_left{
 	left: 0;
+	transform-origin: left center;
+	transform: translateY( -50% ) rotateY( 20deg );
 }
 .cover_flow_hint_right{
 	right: 0;
+	transform-origin: right center;
+	transform: translateY( -50% ) rotateY( -20deg );
 }
 .album_title{
 	font-family: 'Arial', sans-serif;
@@ -972,6 +1010,7 @@ form input[type="submit"]{
 	height: auto;
 	display: block;
 	margin-right: -1em;
+	user-select: none;
 }
 
 .pagination{
@@ -1267,6 +1306,10 @@ form input[type="submit"]{
 	opacity: 0.5;
 	pointer-events: none;
 }
+/* #signature and #theme_toggle need nothing of their own for this — both already paint off var(--color-fg)/--color-mid, which body.gallery_page above already redefines, so they pick up the same 10%-toward-mid-gray shift automatically by inheritance. #backdrop can't: it's a background-image, not a color any custom property reaches, so the same contrast(80%) the rest of the gallery gets from redefined tokens has to be applied here directly instead. Safe to do as a real filter, unlike on #gallery/#album itself, since nothing exempt from it (no photo) ever renders inside this element */
+body.gallery_page #backdrop{
+	filter: contrast( 80% );
+}
 /* appended once at the end of main's own content, in normal flow like every other element on the page — not position:fixed, so it never floats above the rest and scrolls away with the page exactly the way the header and the body's own text do, rather than staying pinned to the viewport like #theme_toggle/#copyright_notice_block do. margin-left:auto (its containing block, main, lays its children out in normal block flow, not flex, so this — not align-self — is what pushes a fixed-width box flush to the right) with the same 19.7734375px used on every other side, the one edge margin already established site-wide, is what keeps it spaced from main's own right edge the same way the header and nav are spaced from theirs. Top and bottom margins mirror #section_header's own 22px/16px instead of that constant: the header opens 22px above itself (page edge to header) and closes 16px below (header to whatever main renders next), so the footer, symmetric to it at the opposite end of the page, closes 16px above itself (whatever main rendered last to footer) and opens 22px below (footer to page edge) — top:16px, bottom:22px, the header's own pair read in reverse. mask-image + background-color, not the artwork's own #D8D8D8 fill, is what lets it read as true black by day and white by night off var(--color-fg) directly, exactly like every other glyph on the site rather than a lightened/darkened gray. Height is the constraint — #theme_toggle's own 40px, so the signature never outgrows the light switch — and width follows the artwork's own 798:424 canvas ratio rather than being set independently. -webkit-text-stroke only ever applies to real glyphs, so the four 1px drop-shadows here are what stand in for body's own background-colored liseré against a masked shape instead of actual text */
 #signature{
 	margin: 16px 19.7734375px 22px auto;
@@ -1527,7 +1570,7 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 /* the block fills the switch's own 40px height edge to edge (its own bottom offset, 19.7734375px, its own height, 40px) and lets flexbox's space-between distribute the four lines within it: the first line's top and the last line's bottom land exactly on the container's own edges by definition of space-between, with the leftover space — however tall the four lines actually render, in whatever browser renders them — split into three equal gaps automatically. That's the point of doing it this way rather than computing each line's own bottom by hand from an assumed, measured line-height: a line-height of "normal" is a font metric the browser itself resolves, not a fixed number, so hardcoding it here would only ever be correct in whichever browser it was measured in. left/max-width still use a fixed 10px/3 as the horizontal gap to the switch, matching what the vertical gaps come out to when each line is 7.5px tall, as measured in this project's own testing browser */
 #copyright_notice_block{
 	position: fixed;
-	left: calc( 19.7734375px + 20px + 10px / 3 );
+	left: calc( 19.7734375px + 20px + 10px / 3 + 1pt );
 	bottom: 19.7734375px;
 	height: 40px;
 	max-width: calc( 200.7421875px - 19.7734375px - 20px - 10px / 3 );
