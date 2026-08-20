@@ -7,7 +7,7 @@ class AlbumsController < ApplicationController
   before_action :redirect_if_section_empty, only: :index
 
   def index
-    scope = superuser? ? Album.all.order( taken_on: :desc ) : Album.published
+    scope = superuser? ? Album.all.order( taken_until: :desc ) : Album.published
     @albums = paginate( scope )
   end
 
@@ -21,6 +21,7 @@ class AlbumsController < ApplicationController
   def create
     @album = Album.new( album_params )
     if @album.save
+      @album.refresh_captured_period!
       redirect_to album_path( @album ), notice: "Album created."
     else
       render :new, status: :unprocessable_entity
@@ -33,6 +34,7 @@ class AlbumsController < ApplicationController
   def update
     if @album.update( album_params.except( :photos ) )
       @album.photos.attach( album_params[ :photos ] ) if album_params[ :photos ].present?
+      @album.refresh_captured_period!
       redirect_to album_path( @album ), notice: "Album updated."
     else
       render :edit, status: :unprocessable_entity
@@ -58,7 +60,7 @@ class AlbumsController < ApplicationController
     end
 
     def album_params
-      params.require( :album ).permit( :title, :location, :taken_on, :description, :identifier, :published_at, :cover_photo, photos: [] )
+      params.require( :album ).permit( :title, :location, :description, :identifier, :published_at, :cover_photo, photos: [] )
     end
 end
 
