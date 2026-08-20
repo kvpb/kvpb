@@ -86,19 +86,19 @@ class AlbumTest < ActiveSupport::TestCase
     assert_nil album.taken_until
   end
 
-  test "captured_period_label collapses to one month when the span doesn't cross a month" do
+  test "captured_period_label collapses to one date when the first and last shot are the same day" do
+    album = Album.create!( title: "One Day", taken_from: Date.new( 2024, 3, 5 ), taken_until: Date.new( 2024, 3, 5 ) )
+    assert_equal "March 5, 2024", album.captured_period_label
+  end
+
+  test "captured_period_label shows the actual first and last dates within the same month" do
     album = Album.create!( title: "Same Month", taken_from: Date.new( 2024, 3, 5 ), taken_until: Date.new( 2024, 3, 20 ) )
-    assert_equal "March 2024", album.captured_period_label
+    assert_equal "March 5, 2024 – March 20, 2024", album.captured_period_label
   end
 
-  test "captured_period_label spans months within the same year" do
-    album = Album.create!( title: "Same Year", taken_from: Date.new( 2024, 3, 15 ), taken_until: Date.new( 2024, 8, 22 ) )
-    assert_equal "March – August 2024", album.captured_period_label
-  end
-
-  test "captured_period_label spans years" do
+  test "captured_period_label shows the actual first and last dates across years" do
     album = Album.create!( title: "Across Years", taken_from: Date.new( 2023, 12, 1 ), taken_until: Date.new( 2024, 3, 1 ) )
-    assert_equal "December 2023 – March 2024", album.captured_period_label
+    assert_equal "December 1, 2023 – March 1, 2024", album.captured_period_label
   end
 
   test "captured_period_label is blank when the period isn't set" do
