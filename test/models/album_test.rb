@@ -36,14 +36,14 @@ class AlbumTest < ActiveSupport::TestCase
 
   test "cover defaults to the first photo when no cover photo is attached" do
     album = Album.create!( title: "With Photos" )
-    album.photos.attach( io: StringIO.new( "fake" ), filename: "a.jpg", content_type: "image/jpeg" )
+    attach_photo!( album, io: StringIO.new( "fake" ), filename: "a.jpg" )
 
-    assert_equal album.photos.first.id, album.cover.id
+    assert_equal "a.jpg", album.cover.filename.to_s
   end
 
   test "cover prefers an explicit cover photo over the first photo" do
     album = Album.create!( title: "With Cover" )
-    album.photos.attach( io: StringIO.new( "fake" ), filename: "a.jpg", content_type: "image/jpeg" )
+    attach_photo!( album, io: StringIO.new( "fake" ), filename: "a.jpg" )
     album.cover_photo.attach( io: StringIO.new( "fake" ), filename: "cover.jpg", content_type: "image/jpeg" )
 
     assert_equal "cover.jpg", album.cover.filename.to_s
@@ -56,8 +56,8 @@ class AlbumTest < ActiveSupport::TestCase
 
   test "refresh_captured_period! spans from the oldest photo's EXIF date to the most recent" do
     album = Album.create!( title: "With EXIF Photos" )
-    album.photos.attach( io: File.open( file_fixture( "sample_late.jpg" ) ), filename: "late.jpg", content_type: "image/jpeg" )
-    album.photos.attach( io: File.open( file_fixture( "sample_early.jpg" ) ), filename: "early.jpg", content_type: "image/jpeg" )
+    attach_photo!( album, io: File.open( file_fixture( "sample_late.jpg" ) ), filename: "late.jpg" )
+    attach_photo!( album, io: File.open( file_fixture( "sample_early.jpg" ) ), filename: "early.jpg" )
 
     album.refresh_captured_period!
 
@@ -67,8 +67,8 @@ class AlbumTest < ActiveSupport::TestCase
 
   test "refresh_captured_period! ignores photos with no readable EXIF date" do
     album = Album.create!( title: "Mixed Photos" )
-    album.photos.attach( io: File.open( file_fixture( "sample_late.jpg" ) ), filename: "late.jpg", content_type: "image/jpeg" )
-    album.photos.attach( io: File.open( file_fixture( "sample.jpg" ) ), filename: "no-exif.jpg", content_type: "image/jpeg" )
+    attach_photo!( album, io: File.open( file_fixture( "sample_late.jpg" ) ), filename: "late.jpg" )
+    attach_photo!( album, io: File.open( file_fixture( "sample.jpg" ) ), filename: "no-exif.jpg" )
 
     album.refresh_captured_period!
 
@@ -78,7 +78,7 @@ class AlbumTest < ActiveSupport::TestCase
 
   test "refresh_captured_period! leaves the period blank when no photo has a readable date" do
     album = Album.create!( title: "No EXIF" )
-    album.photos.attach( io: StringIO.new( "fake" ), filename: "a.jpg", content_type: "image/jpeg" )
+    attach_photo!( album, io: StringIO.new( "fake" ), filename: "a.jpg" )
 
     album.refresh_captured_period!
 
@@ -105,6 +105,14 @@ class AlbumTest < ActiveSupport::TestCase
     album = Album.create!( title: "Undated" )
     assert_nil album.captured_period_label
   end
+
+  private
+    def attach_photo!( album, io:, filename: )
+      photo = album.photos.create!( position: album.photos.maximum( :position ).to_i + 1 )
+      photo.image.attach( io: io, filename: filename, content_type: "image/jpeg" )
+      photo.refresh_from_exif!
+      photo
+    end
 end
 
 #	album_test.rb
