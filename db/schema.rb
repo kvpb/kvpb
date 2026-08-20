@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_20_172933) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_20_190428) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -126,6 +126,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_20_172933) do
     t.index ["starts_on"], name: "index_milestones_on_starts_on"
   end
 
+  create_table "photos", force: :cascade do |t|
+    t.integer "album_id", null: false
+    t.string "author"
+    t.boolean "author_overridden", default: false, null: false
+    t.string "camera"
+    t.boolean "camera_overridden", default: false, null: false
+    t.datetime "created_at", null: false
+    t.decimal "latitude", precision: 9, scale: 6
+    t.string "lens"
+    t.boolean "lens_overridden", default: false, null: false
+    t.decimal "longitude", precision: 9, scale: 6
+    t.string "place"
+    t.boolean "place_overridden", default: false, null: false
+    t.integer "position", null: false
+    t.datetime "taken_at"
+    t.boolean "taken_at_overridden", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.index ["album_id", "position"], name: "index_photos_on_album_id_and_position", unique: true
+    t.index ["album_id"], name: "index_photos_on_album_id"
+  end
+
   create_table "prints", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "identifier", null: false
@@ -179,5 +200,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_20_172933) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "articles"
   add_foreign_key "comments", "users"
+  add_foreign_key "photos", "albums"
   add_foreign_key "sessions", "users"
 end
