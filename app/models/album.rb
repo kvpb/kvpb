@@ -1,3 +1,5 @@
+require "exifr/jpeg"
+
 class Album < ApplicationRecord
   has_many_attached :photos
   has_one_attached :cover_photo
@@ -7,7 +9,7 @@ class Album < ApplicationRecord
   validates :title, presence: true
   validates :identifier, presence: true, uniqueness: true
 
-  scope :published, -> { where.not( published_at: nil ).where( published_at: ..Time.current ).order( taken_on: :desc ) }
+  scope :published, -> { where.not( published_at: nil ).where( published_at: ..Time.current ).order( taken_until: :desc ) }
   scope :draft, -> { where( published_at: nil ) }
 
   def to_param
@@ -22,7 +24,33 @@ class Album < ApplicationRecord
     cover_photo.attached? ? cover_photo : photos.first
   end
 
+  # The album's own date isn't typed in — it's the span the photos themselves already carry in
+  # their EXIF, oldest shot to most recent, so it stays honest to when the pictures were actually
+  # taken rather than whenever they happened to get uploaded here
+  def refresh_captured_period!
+    dates = photos.filter_map { |photo| captured_date_for( photo ) }
+    update!( taken_from: dates.min, taken_until: dates.max )
+  end
+
+  def captured_period_label
+    return nil if taken_from.blank? || taken_until.blank?
+    return taken_from.strftime( "%B %Y" ) if taken_from.year == taken_until.year && taken_from.month == taken_until.month
+    return "#{ taken_from.strftime( '%B' ) } – #{ taken_until.strftime( '%B %Y' ) }" if taken_from.year == taken_until.year
+    "#{ taken_from.strftime( '%B %Y' ) } – #{ taken_until.strftime( '%B %Y' ) }"
+  end
+
   private
+    # A screenshot, a scan, a PNG export — anything without a real camera's own EXIF block behind
+    # it — has nothing to contribute here, so it's silently left out of the span rather than
+    # treated as an error
+    def captured_date_for( photo )
+      photo.blob.open do |file|
+        EXIFR::JPEG.new( file.path ).date_time_original&.to_date
+      end
+    rescue EXIFR::MalformedJPEG
+      nil
+    end
+
     def assign_identifier
       base = title.parameterize
       candidate = base
