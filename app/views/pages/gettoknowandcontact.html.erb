@@ -56,7 +56,7 @@
 				<div class="name_disc" data-controller="medallion-physics">
 					<% if @profile_photo.attached? %>
 						<div class="profile_photo_medallion" data-medallion-physics-target="medallion">
-							<%= image_tag @profile_photo, class: "profile_photo_disc" %>
+							<%= image_tag @profile_photo, class: "profile_photo_disc", draggable: false %>
 						</div>
 					<% end %>
 					<div class="name_ring name_ring_latin" aria-hidden="true">
