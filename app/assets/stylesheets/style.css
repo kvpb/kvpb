@@ -58,7 +58,10 @@ body{
 	paint-order: stroke fill;
 }
 
+/* body's own flex row already stretches main to the full window height (align-items' default, "normal", behaves as stretch here) — the missing piece was main's own children still stacking in plain block flow, using only as much of that height as their content needed and leaving the rest empty below #signature instead of pushing it down. grid-template-rows does that: #main_content's row is sized at least to its own content (min-content) but grows to fill whatever height main isn't otherwise using (1fr) when that content falls short of a full window, while #signature's row stays auto — sized to itself, sitting wherever #main_content's row actually ends. On a page tall enough that #main_content's natural content already exceeds the available height, 1fr has nothing left to distribute and this behaves exactly as plain block flow did, #signature's own margin-top the only thing separating it from what came before */
 main{
+	display: grid;
+	grid-template-rows: minmax( min-content, 1fr ) auto;
 	flex: 1 1 auto;
 	min-width: 0;
 }
