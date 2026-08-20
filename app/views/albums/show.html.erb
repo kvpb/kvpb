@@ -3,7 +3,7 @@
 <article id="album" class="<%= "draft" unless @album.published? %>">
 	<div class="album_photos">
 		<% @album.photos.each do |photo| %>
-			<%= image_tag photo, class: "album_photo" %>
+			<%= image_tag photo, class: "album_photo", draggable: false %>
 		<% end %>
 	</div>
 
@@ -11,7 +11,7 @@
 		<h1 class="album_title_large"><%= smart_quotes( @album.title ) %></h1>
 		<p class="album_author">Karl</p>
 		<% if @album.location.present? %><p class="album_location"><%= @album.location %></p><% end %>
-		<% if @album.taken_on.present? %><p class="album_meta"><%= @album.taken_on.strftime( "%B %Y" ) %></p><% end %>
+		<% if @album.captured_period_label.present? %><p class="album_meta"><%= @album.captured_period_label %></p><% end %>
 	</header>
 
 	<% if @album.description.present? %>
