@@ -34,11 +34,13 @@ class Album < ApplicationRecord
     update!( taken_from: dates.min, taken_until: dates.max )
   end
 
+  # The actual first and last dates, not a month collapsed down to hide them — same %B %-d, %Y
+  # Print#exif's own original_date already displays elsewhere, so a date reads the same precision
+  # everywhere on the site rather than the gallery alone rounding off to a month
   def captured_period_label
     return nil if taken_from.blank? || taken_until.blank?
-    return taken_from.strftime( "%B %Y" ) if taken_from.year == taken_until.year && taken_from.month == taken_until.month
-    return "#{ taken_from.strftime( '%B' ) } – #{ taken_until.strftime( '%B %Y' ) }" if taken_from.year == taken_until.year
-    "#{ taken_from.strftime( '%B %Y' ) } – #{ taken_until.strftime( '%B %Y' ) }"
+    return taken_from.strftime( "%B %-d, %Y" ) if taken_from == taken_until
+    "#{ taken_from.strftime( '%B %-d, %Y' ) } – #{ taken_until.strftime( '%B %-d, %Y' ) }"
   end
 
   private
