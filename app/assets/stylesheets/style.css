@@ -968,15 +968,19 @@ form input[type="submit"]{
 	transform-origin: right center;
 	transform: translateY( -50% ) rotateY( -20deg );
 }
+/* sized like a nav entry (#see/#read/etc's own 16pt) — the gallery's own titles are meant to read with the same weight as a section of the site, not as a caption line underneath one */
 .album_title{
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
+	font-size: 16pt;
 	display: block;
 }
-/* title, then author, then date or location on their own lines — both here (the caption stacked under a Cover Flow entry) and in .album_header on the album's own page (real <p> tags there, already block on their own) */
-.album_author, .album_location, .album_date{
+/* title, then author, date, location, camera, and lens on their own lines — both here (the caption stacked under a Cover Flow entry) and in .album_header on the album's own page (real <p> tags there, already block on their own). Formatted like the timeline's own secondary metadata (.timeline_dates/.timeline_location) — muted, uppercase, letter-spaced — rather than plain body text, since this is the same kind of "when/where/by what" line the timeline already has a established look for */
+.album_author, .album_location, .album_date, .album_camera, .album_lens{
 	font-size: 9pt;
 	color: var( --color-mid );
+	text-transform: uppercase;
+	letter-spacing: 0.5pt;
 	display: block;
 	margin: 0.2em 0 0 0;
 }
@@ -1391,6 +1395,15 @@ body.gallery_page #backdrop{
 	text-transform: none;
 	font-variant: small-caps;
 	letter-spacing: normal;
+}
+/* continues the logo's own カール (#line_3_logotype) the same way its English line already sits at the exact size #section_header's own English line does — half the size, same font stack, の prepended the way an actual Japanese possessive reads */
+#section_label_ja{
+	display: block;
+	font-family: 'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', 'ＭＳ ゴシック', 'MS Gothic', 'Noto Sans CJK JP', 'TakaoPGothic', sans-serif;
+	font-size: 24pt;
+	text-transform: none;
+	letter-spacing: normal;
+	line-height: 1em;
 }
 .section_empty{
 	opacity: 0.5;
