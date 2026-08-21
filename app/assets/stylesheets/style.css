@@ -898,40 +898,37 @@ form input[type="submit"]{
 	margin: 0 0 3em 0;
 }
 /* unselectable like the nav/header/footer chrome around it — the caption below is a sibling, not a descendant, of this stage, so it keeps the site's normal text selection untouched without needing an override rule of its own */
-/* sized closer to what a cover photo capped at 60% of the stage's own width actually renders at for a typical landscape photo, now that it shrink-wraps instead of stretching to fill a fixed height — the old 60vh/600px was tuned back when every cover forced itself to 100% height regardless of its own aspect ratio, and kept that same footprint after covers stopped doing that, leaving dead space below a now-shorter photo before the caption ever starts */
+/* height is auto now, not a guessed vh/px number retuned by hand every time a cover's own aspect ratio changes — min-height only keeps an unusually wide, short cover from collapsing the whole stage down too far, well below what even the tallest side/tertiary cover (max-height:45vh) could otherwise want to use */
 .cover_flow_stage{
 	position: relative;
-	height: 40vh;
-	min-height: 220px;
-	max-height: 420px;
+	min-height: 160px;
 	margin-right: -1em;
 	width: calc( 100% + 1em );
 	overflow: hidden;
 	perspective: 1600px;
 	user-select: none;
 }
-/* never cropped — the whole photo always shows. width is auto by default (the photo at its own natural aspect ratio, capped by max-height below), and max-width only steps in to shrink it further, never to crop it, the moment that natural width would otherwise reach into the 6% strip reserved for the side covers. max-height, not a flat height, for the same reason as the width cap: a fixed height forces object-fit:contain to letterbox anything whose aspect ratio doesn't happen to match the box exactly, and that letterboxed gap is transparent, not empty — the side/tertiary covers behind show straight through it. Shrinking the box itself to match whatever the photo's own ratio actually renders at, via max-height instead, is what keeps every cover's own box exactly as big as its own visible pixels and nothing more */
+/* never cropped — the whole photo always shows, at whatever height its own aspect ratio and the 60% width cap come out to. In normal flow, unlike the side/tertiary covers below, specifically so its own rendered size is what gives the stage a real height in the first place: a stage with only absolutely positioned children collapses to zero height on its own, which is exactly what forced a guessed vh/px number here before. position:relative (not the default static) purely so z-index still applies — z-index is a no-op on a statically positioned box — letting this still paint over the absolutely positioned side/tertiary covers despite sitting in normal flow */
 .cover_flow_cover{
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate( -50%, -50% );
+	position: relative;
+	display: block;
+	margin: 0 auto;
 	width: auto;
 	max-width: 60%;
 	height: auto;
-	max-height: 100%;
+	max-height: 60vh;
 	object-fit: contain;
 	z-index: 3;
-	display: block;
 }
 /* the side covers ride the same shared perspective as the stage itself, so both lean away at a consistent angle rather than each carrying its own vanishing point */
 /* the two outermost things in the stage — a side cover if there are only 2 or 3 photos, or the gray hint behind it if there are more — reach the true left/right edge of the stage, same as the center cover's own full-bleed edge. Never cropped, same as the center cover: width and height are both auto, each capped by its own max- so the box always shrink-wraps its own photo at that photo's real aspect ratio instead of ever slicing one to fit a fixed box or forcing a fixed height that would just as often leave the wrong side of the photo letterboxed */
 /* full opacity, same as the center cover — real Cover Flow never dims a cover for being off to the side, depth reads off the rotation alone */
+/* max-height in vh, not a percentage of the stage — the stage's own height is auto now, and a percentage height only ever resolves against a containing block whose own height is explicitly set, top/left percentages further down being the one exception that still works fine against an auto-height parent */
 .cover_flow_side{
 	position: absolute;
 	top: 50%;
 	height: auto;
-	max-height: 84%;
+	max-height: 45vh;
 	width: auto;
 	max-width: 38%;
 	object-fit: contain;
@@ -947,12 +944,12 @@ form input[type="submit"]{
 	transform: translateY( -50% ) rotateY( -60deg );
 }
 /* wiggles the same way the about-me medallion does — spring physics kicked by a sudden change in scroll speed, not steady scrolling — but through element.style.translate rather than transform: the side cover's own rotateY lean above already lives in transform, and translate is its own independent CSS property precisely so this can drift the photo without overwriting that lean. The center cover never gets the controller at all, so it alone stays put while the two side covers around it wiggle */
-/* the actual 4th/5th photo, not a placeholder — a flat gray block standing in for "something's further back" read as a stray drop-shadow rather than part of the same photo stack, since it carried no photographic texture of its own to tie it to its neighbors. A real photo fixes that outright. transform-origin stays pinned to its own outer edge here, unlike the side cover's own center pivot just above: pivoting a box at center would swing its own lateral half far enough into positive z that, combined with the stage's shared perspective, it visibly outgrows and bleeds past the side cover in front of it instead of reading as a smaller, further-back card. Pinning the pivot to the edge keeps its whole box between the stage's own resting plane and the background, the same one-directional lean the side cover used before it got a center pivot of its own, just at a shallower angle — less exaggerated, per the side cover's own steeper lean below. Real Cover Flow — the actual reference this is chasing — never fades, dims, or desaturates a single cover no matter how far back it sits: every one of them stays exactly as sharp and full-color as the one in front, depth read entirely off the rotation angle and nothing else, so no opacity/saturate/mask-fade here either, same crisp hard edge the side cover already gets. Never cropped either, same as the side cover just above and the center cover before it: width and height are both auto, each capped by its own max-, so the box shrink-wraps its own photo instead of forcing a fixed height that leaves a transparent letterboxed gap the side cover's own gap could otherwise line up with and bleed a second photo's pixels through both at once. max-height stays well under the side cover's own 84%, deliberately — a tall-ish photo landing here without that ceiling renders far closer to the side cover's own size than something sitting further back in the stack ever should, and reads as oversized rather than receding. It wiggles too — same controller, in the view, with its own max-drag-fraction/scroll-kick values overridden well below the side covers' own defaults — so it drifts noticeably less than they do: real parallax has whatever's further back moving less across the same physical shake, and matching that here is what feigns the stack actually having depth instead of every layer just wiggling in lockstep */
+/* the actual 4th/5th photo, not a placeholder — a flat gray block standing in for "something's further back" read as a stray drop-shadow rather than part of the same photo stack, since it carried no photographic texture of its own to tie it to its neighbors. A real photo fixes that outright. transform-origin stays pinned to its own outer edge here, unlike the side cover's own center pivot just above: pivoting a box at center would swing its own lateral half far enough into positive z that, combined with the stage's shared perspective, it visibly outgrows and bleeds past the side cover in front of it instead of reading as a smaller, further-back card. Pinning the pivot to the edge keeps its whole box between the stage's own resting plane and the background, the same one-directional lean the side cover used before it got a center pivot of its own, just at a shallower angle — less exaggerated, per the side cover's own steeper lean below. Real Cover Flow — the actual reference this is chasing — never fades, dims, or desaturates a single cover no matter how far back it sits: every one of them stays exactly as sharp and full-color as the one in front, depth read entirely off the rotation angle and nothing else, so no opacity/saturate/mask-fade here either, same crisp hard edge the side cover already gets. Never cropped either, same as the side cover just above and the center cover before it: width and height are both auto, each capped by its own max-, so the box shrink-wraps its own photo instead of forcing a fixed height that leaves a transparent letterboxed gap the side cover's own gap could otherwise line up with and bleed a second photo's pixels through both at once. max-height stays well under the side cover's own 45vh, deliberately, and in vh for the same reason the side cover's own is (the stage's own height is auto, so a percentage wouldn't resolve at all) — a tall-ish photo landing here without that ceiling renders far closer to the side cover's own size than something sitting further back in the stack ever should, and reads as oversized rather than receding. This flat vh figure is only ever the fallback, though: it's a fixed ceiling, not a fraction of whatever the side cover in front of it actually rendered at, so a wide side cover (short) paired with a portrait tertiary (naturally tall) could still let the tertiary come out taller than the side cover despite both ceilings being what they are — cover_flow_depth_controller.js measures the side cover's real height once its image has loaded and overrides this inline with a true fraction of that, which always wins over this since an inline style beats a class selector regardless of source order. It wiggles too — same controller, in the view, with its own max-drag-fraction/scroll-kick values overridden well below the side covers' own defaults — so it drifts noticeably less than they do: real parallax has whatever's further back moving less across the same physical shake, and matching that here is what feigns the stack actually having depth instead of every layer just wiggling in lockstep */
 .cover_flow_hint{
 	position: absolute;
 	top: 50%;
 	height: auto;
-	max-height: 40%;
+	max-height: 22vh;
 	width: auto;
 	max-width: 28%;
 	object-fit: contain;
