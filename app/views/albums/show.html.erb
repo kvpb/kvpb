@@ -8,11 +8,14 @@
 		<% end %>
 	</div>
 
+	<% cover_photo = @album.photos.first %>
 	<header class="album_header">
 		<h1 class="album_title_large"><%= smart_quotes( @album.title ) %></h1>
-		<p class="album_author">Karl</p>
+		<% if cover_photo&.author.present? %><p class="album_author"><%= cover_photo.author %></p><% end %>
 		<% if @album.location.present? %><p class="album_location"><%= @album.location %></p><% end %>
 		<% if @album.captured_period_label.present? %><p class="album_meta"><%= @album.captured_period_label %></p><% end %>
+		<% if cover_photo&.lens.present? %><p class="album_lens"><%= cover_photo.lens %></p><% end %>
+		<% if cover_photo&.camera.present? %><p class="album_camera"><%= cover_photo.camera %></p><% end %>
 	</header>
 
 	<% if @album.description.present? %>
