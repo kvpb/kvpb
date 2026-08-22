@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_22_152006) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_22_172033) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -133,6 +133,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_22_152006) do
     t.string "camera"
     t.boolean "camera_overridden", default: false, null: false
     t.datetime "created_at", null: false
+    t.decimal "dwell_seconds", precision: 10, scale: 2, default: "0.0", null: false
     t.decimal "latitude", precision: 9, scale: 6
     t.string "lens"
     t.boolean "lens_overridden", default: false, null: false
