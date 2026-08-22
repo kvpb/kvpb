@@ -6,6 +6,12 @@ class AlbumTest < ActiveSupport::TestCase
     assert_equal "a-trip-somewhere", album.identifier
   end
 
+  test "is valid without a title, assigning a random identifier instead" do
+    album = Album.create!
+    assert album.persisted?
+    assert_match( /\A[a-z0-9]{8}\z/, album.identifier )
+  end
+
   test "disambiguates identifiers that would otherwise collide" do
     Album.create!( title: "A Trip Somewhere" )
     other = Album.create!( title: "A Trip Somewhere" )
