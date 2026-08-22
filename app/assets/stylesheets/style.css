@@ -986,6 +986,14 @@ form input[type="submit"]{
 	color: var( --color-mid );
 	margin: 0.75em 0 0 0;
 }
+/* each photo's own entry on the album's own page: image, its own info (read straight off that one Photo, not the album's aggregate), and its edit link, grouped tightly so .album_photos' own gap reads as space between photos rather than between an image and its own caption */
+.album_photo_entry{
+	display: block;
+}
+.photo_edit_link{
+	display: block;
+	margin: 0.75em 0 0 0;
+}
 /* overrides the generic header{display:flex;flex-direction:row} — title, author, and date need to stack, not sit in a row */
 .album_header{
 	display: block;
