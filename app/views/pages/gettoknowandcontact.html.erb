@@ -42,11 +42,13 @@
 				<%= form.text_field :website, tabindex: -1, autocomplete: "off" %>
 			</div>
 
-			<% if sent %>
-				<%= form.submit "Sent", disabled: true %>
-			<% else %>
-				<%= form.submit "Send" %>
-			<% end %>
+			<div class="submit_squircle" data-controller="squircle-fill">
+				<% if sent %>
+					<%= form.submit "Sent", disabled: true %>
+				<% else %>
+					<%= form.submit "Send" %>
+				<% end %>
+			</div>
 		<% end %>
 	</section>
 
