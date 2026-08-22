@@ -42,6 +42,14 @@ class Photo < ApplicationRecord
     refresh_from_exif!
   end
 
+  # Never trusts the value handed in — a visitor's own browser reports its own dwell time, so it's
+  # clamped to a plausible single-visit range regardless of what's claimed, before an atomic
+  # increment (not a read-modify-write) folds it into the one running total this photo keeps. No
+  # per-visitor breakdown exists anywhere; this column is the only thing dwell time ever becomes
+  def record_dwell!( seconds )
+    increment!( :dwell_seconds, seconds.to_f.clamp( 0, 300 ) )
+  end
+
   private
     def exif_data
       return nil unless image.attached?
