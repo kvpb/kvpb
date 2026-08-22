@@ -39,6 +39,7 @@ Rails.application.routes.draw do
   get    "/see",                              to: "albums#index",    as: "see"
   post   "/see",                              to: "albums#create"
   get    "/see/new",                          to: "albums#new",      as: "new_album"
+  get    "/see/stats",                        to: "photo_dwells#index", as: "photo_dwells"
   get    "/see/:identifier",                  to: "albums#show",     as: "album"
   get    "/see/:identifier/edit",             to: "albums#edit",     as: "edit_album"
   patch  "/see/:identifier",                  to: "albums#update"
@@ -49,6 +50,8 @@ Rails.application.routes.draw do
   get    "/see/:album_identifier/photos/:id/edit", to: "photos#edit",    as: "edit_photo"
   patch  "/see/:album_identifier/photos/:id",      to: "photos#update"
   delete "/see/:album_identifier/photos/:id",      to: "photos#destroy", as: "photo"
+
+  post   "/photos/:id/dwell",                      to: "photo_dwells#create", as: "photo_dwell"
 
   get "/listen",                    to: "pages#listen",               as: "listen"
   get "/music",                     to: "pages#listen"
