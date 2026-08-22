@@ -3,8 +3,13 @@
 <article id="album" class="<%= "draft" unless @album.published? %>">
 	<div class="album_photos">
 		<% @album.photos.each do |photo| %>
-			<%= image_tag photo.image, class: "album_photo", draggable: false %>
-			<%= link_to "Edit photo", edit_photo_path( @album, photo ), class: "photo_edit_link" if superuser? %>
+			<div class="album_photo_entry">
+				<%= image_tag photo.image, class: "album_photo", draggable: false %>
+				<p class="album_meta">
+					<%= render "photos/info", photo: photo %>
+				</p>
+				<%= link_to "Edit photo", edit_photo_path( @album, photo ), class: "photo_edit_link" if superuser? %>
+			</div>
 		<% end %>
 	</div>
 
@@ -14,8 +19,6 @@
 		<% if cover_photo&.author.present? %><p class="album_author"><%= cover_photo.author %></p><% end %>
 		<% if @album.location.present? %><p class="album_location"><%= @album.location %></p><% end %>
 		<% if @album.captured_period_label.present? %><p class="album_meta"><%= @album.captured_period_label %></p><% end %>
-		<% if cover_photo&.lens.present? %><p class="album_lens"><%= cover_photo.lens %></p><% end %>
-		<% if cover_photo&.camera.present? %><p class="album_camera"><%= cover_photo.camera %></p><% end %>
 	</header>
 
 	<% if @album.description.present? %>
