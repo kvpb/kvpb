@@ -364,23 +364,75 @@ form input[type="submit"]{
 	letter-spacing: 1pt;
 	padding: 0.4em 1em;
 }
-/* sober and industrial, like the search bar, not the floating liquid-marble button originally imagined — that idea didn't fit the site's typ 1 design language */
-#contact_form_section form input[type="submit"]{
+/* sober and industrial, like the search bar, not the floating liquid-marble button originally imagined — that idea didn't fit the site's typ 1 design language. squircle_fill_controller.js draws the button's own real fill and shape together as one filled SVG <path> — an actual power-5 superellipse computed at this element's own real (non-square) half-width/half-height, not a rectangle with rounded corners standing in for one — so the fill lives on that path, not as a background-color here */
+.submit_squircle{
+	position: relative;
+	isolation: isolate;
 	display: block;
+	width: fit-content;
 	margin: 1em 0 0 auto;
+}
+.squircle_fill_svg{
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+.squircle_fill_path{
+	fill: var( --color-fg );
+}
+.submit_squircle:has( input:hover ) .squircle_fill_path{
+	fill: var( --color-hover );
+}
+.submit_squircle:has( input:disabled ) .squircle_fill_path{
+	fill: var( --color-mid );
+}
+#contact_form_section form input[type="submit"]{
+	position: relative;
+	z-index: 1;
+	display: block;
+	margin: 0;
 	padding: 0.5em 1.5em;
 	border: none;
-	border-radius: 14px;
-	corner-shape: superellipse( 5 );
-	background-color: var( --color-fg );
+	background: none;
 	color: var( --color-bg );
 	cursor: pointer;
 }
+/* the same blink a:hover gives the logo and every other link, sitewide — 1s, speeding up to 0.1s held down */
 #contact_form_section form input[type="submit"]:hover{
-	background-color: var( --color-hover );
+	animation-name: blink;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: running;
+	-moz-animation-name: blink;
+	-moz-animation-duration: 1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-play-state: running;
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
+}
+#contact_form_section form input[type="submit"]:active{
+	animation-name: blink;
+	animation-duration: 0.1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: running;
+	-moz-animation-name: blink;
+	-moz-animation-duration: 0.1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-play-state: running;
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 0.1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
 }
 #contact_form_section form input[type="submit"]:disabled{
-	background-color: var( --color-mid );
 	color: var( --color-bg );
 	cursor: default;
 }
