@@ -567,14 +567,6 @@ form input[type="submit"]{
 	--stone-text-blend: screen; /* pale text absorbed into black marble */
 }
 
-/* the symbol is a monochrome SVG: invert it wholesale rather than dimming it, so it stays exactly as bold relative to the (now-inverted) page as it is by day */
-:root[data-theme="dark"] #backdrop{
-	filter: invert( 1 );
-}
-:root[data-theme="dark"] body.gallery_page #backdrop{
-	filter: invert( 1 ) contrast( 80% );
-}
-
 /* --color-github is the fixed brand gray, day and night alike; by night that near-black text nearly vanishes against the black page, so a real outline — not a recolor — is what keeps it legible */
 :root[data-theme="dark"] #checkout_GitHub_1{
 	-webkit-text-stroke: 1.5px var( --color-fg );
@@ -604,13 +596,6 @@ form input[type="submit"]{
 		--medallion-highlight: rgba( 255, 255, 255, 0.22 );
 		--medallion-shadow: rgba( 0, 0, 0, 0.09 );
 		--stone-text-blend: screen;
-	}
-
-	:root:not([data-theme="light"]) #backdrop{
-		filter: invert( 1 );
-	}
-	:root:not([data-theme="light"]) body.gallery_page #backdrop{
-		filter: invert( 1 ) contrast( 80% );
 	}
 
 	:root:not([data-theme="light"]) #checkout_GitHub_1{
@@ -894,11 +879,10 @@ form input[type="submit"]{
 .album_cover_flow.draft, .album_solo.draft{
 	opacity: 0.6;
 }
-/* a one-photo album isn't a Cover Flow — there's nothing to flow through, so it's just the photo itself, full-bleed like .album_photo already is on the album's own page, sitting here unlinked */
+/* a one-photo album isn't a Cover Flow — there's nothing to flow through, so it's just the photo itself, full-bleed like .album_photo already is on the album's own page, sitting here unlinked. No gap between the photo and .album_meta below it: .album_meta already carries its own top margin, the same one that alone spaces a real album's caption under its Cover Flow stage — adding a flex gap on top of that here doubled the space above this one, reading as room held open for a title once that title wasn't there to fill it */
 .album_solo{
 	display: flex;
 	flex-direction: column;
-	gap: 1em;
 	margin: 0 0 3em 0;
 }
 /* unselectable like the nav/header/footer chrome around it — the caption below is a sibling, not a descendant, of this stage, so it keeps the site's normal text selection untouched without needing an override rule of its own */
@@ -1309,21 +1293,22 @@ form input[type="submit"]{
 
 /*   I D s   */
 
+/* the emblem paints as a mask, not a plain background-image, so its ink is var(--color-faint) — the exact same token #line_1_logotype/#line_4_logotype already use for "kvpb.fr"/"prototyp" — rather than a color baked into the SVG file itself. mask-mode:luminance is why the file carries its own internal invert filter (id=mask-invert, wrapping the whole Artboard group): the artwork is authored as dark ink on white paper, but a luminance mask reads white as "fully shown" and black as "fully hidden" — backwards from that convention — so the file pre-inverts itself before the mask ever samples it, making dark ink (now high-luminance) the part that shows and white paper (now low-luminance) the part that doesn't. That, in turn, is what lets --color-faint's own light/dark/gallery redefinitions carry the emblem automatically, the same way #signature/#theme_toggle already ride var(--color-fg)/--color-mid — no separate invert()/contrast() filter needed here at all */
 #backdrop{
 	position: fixed;
 	inset: 0;
 	z-index: -1;
-	background-image: url(karlsemblem.svg); /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	/* the seal's circle, not the svg canvas, is what must sit equidistant from the top/left/right edges; the canvas centers the circle almost exactly, so a horizontal offset seeded from viewport width doubles as the vertical offset, deliberately leaving the leftover slack at the bottom */
-	background-position: calc( 50vw - 238.077844px ) calc( 50vw - 236.763473px );
-	opacity: 0.5;
+	background-color: var( --color-faint );
+	-webkit-mask-image: url(karlsemblem.svg); /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
+	mask-image: url(karlsemblem.svg);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-mode: luminance;
+	mask-mode: luminance;
+	/* the seal's circle, not the svg canvas, is what must sit equidistant from the top/left/right edges; reusing the same vw-seeded offset for both axes is what achieves that regardless of the canvas' own shape — the new artwork's own circle (cx/cy both 125.25, unlike the old one's merely-close pair) makes the two calc() terms come out identical here, deliberately leaving the leftover slack at the bottom */
+	-webkit-mask-position: calc( 50vw - 125.25px ) calc( 50vw - 125.25px );
+	mask-position: calc( 50vw - 125.25px ) calc( 50vw - 125.25px );
 	pointer-events: none;
-}
-/* #signature and #theme_toggle need nothing of their own for this — both already paint off var(--color-fg)/--color-mid, which body.gallery_page above already redefines, so they pick up the same 10%-toward-mid-gray shift automatically by inheritance. #backdrop can't: it's a background-image, not a color any custom property reaches, so the same contrast(80%) the rest of the gallery gets from redefined tokens has to be applied here directly instead. Safe to do as a real filter, unlike on #gallery/#album itself, since nothing exempt from it (no photo) ever renders inside this element */
-body.gallery_page #backdrop{
-	filter: contrast( 80% );
 }
 /* appended once at the end of main's own content, in normal flow like every other element on the page — not position:fixed, so it never floats above the rest and scrolls away with the page exactly the way the header and the body's own text do, rather than staying pinned to the viewport like #theme_toggle/#copyright_notice_block do. margin-left:auto (its containing block, main, lays its children out in normal block flow, not flex, so this — not align-self — is what pushes a fixed-width box flush to the right) with the same 19.7734375px used on every other side, the one edge margin already established site-wide, is what keeps it spaced from main's own right edge the same way the header and nav are spaced from theirs. Top and bottom margins mirror #section_header's own 22px/16px instead of that constant: the header opens 22px above itself (page edge to header) and closes 16px below (header to whatever main renders next), so the footer, symmetric to it at the opposite end of the page, closes 16px above itself (whatever main rendered last to footer) and opens 22px below (footer to page edge) — top:16px, bottom:22px, the header's own pair read in reverse. mask-image + background-color, not the artwork's own #D8D8D8 fill, is what lets it read as true black by day and white by night off var(--color-fg) directly, exactly like every other glyph on the site rather than a lightened/darkened gray. Height is the constraint — #theme_toggle's own 40px, so the signature never outgrows the light switch — and width follows the artwork's own 798:424 canvas ratio rather than being set independently. -webkit-text-stroke only ever applies to real glyphs, so the four 1px drop-shadows here are what stand in for body's own background-colored liseré against a masked shape instead of actual text */
 #signature{
