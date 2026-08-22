@@ -74,6 +74,31 @@ class PhotoTest < ActiveSupport::TestCase
     end
   end
 
+  test "record_dwell! adds the given seconds to the running total" do
+    photo = create_photo!( "sample.jpg" )
+
+    photo.record_dwell!( 4.5 )
+    photo.record_dwell!( 2 )
+
+    assert_equal 6.5, photo.reload.dwell_seconds.to_f
+  end
+
+  test "record_dwell! clamps a negative value to zero" do
+    photo = create_photo!( "sample.jpg" )
+
+    photo.record_dwell!( -10 )
+
+    assert_equal 0, photo.reload.dwell_seconds.to_f
+  end
+
+  test "record_dwell! clamps an implausibly large value" do
+    photo = create_photo!( "sample.jpg" )
+
+    photo.record_dwell!( 100_000 )
+
+    assert_equal 300, photo.reload.dwell_seconds.to_f
+  end
+
   private
     def create_photo!( fixture_filename )
       album = Album.create!( title: "Test Album" )
