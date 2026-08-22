@@ -1,6 +1,16 @@
 <% content_for :title, @album.title.presence %>
 
 <article id="album" class="<%= "draft" unless @album.published? %>">
+	<% if @album.title.present? %>
+		<header class="album_header">
+			<h1 class="album_title_large"><%= smart_quotes( @album.title ) %></h1>
+		</header>
+	<% end %>
+
+	<% if @album.description.present? %>
+		<div class="album_description"><%= smart_format( @album.description ) %></div>
+	<% end %>
+
 	<div class="album_photos">
 		<% @album.photos.each do |photo| %>
 			<div class="album_photo_entry">
@@ -12,18 +22,6 @@
 			</div>
 		<% end %>
 	</div>
-
-	<% cover_photo = @album.photos.first %>
-	<header class="album_header">
-		<h1 class="album_title_large"><%= smart_quotes( @album.title ) %></h1>
-		<% if cover_photo&.author.present? %><p class="album_author"><%= cover_photo.author %></p><% end %>
-		<% if @album.location.present? %><p class="album_location"><%= @album.location %></p><% end %>
-		<% if @album.captured_period_label.present? %><p class="album_meta"><%= @album.captured_period_label %></p><% end %>
-	</header>
-
-	<% if @album.description.present? %>
-		<div class="album_description"><%= smart_format( @album.description ) %></div>
-	<% end %>
 </article>
 
 <%#
