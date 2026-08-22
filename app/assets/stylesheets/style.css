@@ -4,6 +4,7 @@
 	color-scheme: light dark;
 
 	--color-fg: rgb( 0, 0, 0 );
+	--color-title: rgb( 0, 0, 0 );
 	--color-bg: rgb( 255, 255, 255 );
 	--color-muted: rgb( 85, 85, 85 );
 	--color-hover: rgba( 0, 0, 0, 0.9 );
@@ -28,9 +29,10 @@
 	--stone-text-blend: multiply; /* dark text absorbed into pale stone */
 }
 
-/* the gallery is the one section built around images rather than text, so nothing on it — nav, header, footer, background included, all the way out past #gallery/#album's own boundary — should read at the same full strength the rest of the site's own monochrome does. Redefining the tokens themselves, not a filter over the page, is what lets that reach navigation/header/footer/background at all (a filter on some wrapping element would catch the photos too, and there's no way to carve them back out of a filter afterward) while leaving actual photos untouched by construction: an <img>'s own pixels never consult a CSS custom property to begin with. Two passes bring every value here: first ordinary colors (--color-twitter, --color-github) get desaturated to their own equivalent gray — luminance, not a flat average, per the standard BT.709 weights (0.2126R + 0.7152G + 0.0722B), same as any real grayscale conversion — then every value, including fg/bg/mid which were already gray, moves 20% of its own distance from mid-gray (128) back toward it: true black lightens 10% of the full 0-255 range, true white darkens by that same 10%, exactly mirroring contrast(80%) as a formula but computed by hand here since a filter can't be scoped this way */
+/* the gallery is the one section built around images rather than text, so nothing on it — nav, header, footer, background included, all the way out past #gallery/#album's own boundary — should read at the same full strength the rest of the site's own monochrome does. Redefining the tokens themselves, not a filter over the page, is what lets that reach navigation/header/footer/background at all (a filter on some wrapping element would catch the photos too, and there's no way to carve them back out of a filter afterward) while leaving actual photos untouched by construction: an <img>'s own pixels never consult a CSS custom property to begin with. Two passes bring every value here: first ordinary colors (--color-twitter, --color-github) get desaturated to their own equivalent gray — luminance, not a flat average, per the standard BT.709 weights (0.2126R + 0.7152G + 0.0722B), same as any real grayscale conversion — then every value, including fg/bg/mid which were already gray, moves 20% of its own distance from mid-gray (128) back toward it: true black lightens 10% of the full 0-255 range, true white darkens by that same 10%, exactly mirroring contrast(80%) as a formula but computed by hand here since a filter can't be scoped this way. --color-title is the one exception, mirroring contrast(90%) instead — half that shift — so a photo's or album's own title (like an article's own headline outside the gallery entirely) still reads close to true black against the rest of this section's own de-contrasted chrome, rather than fading to the same reduced strength as everything around it */
 body.gallery_page{
 	--color-fg: rgb( 26, 26, 26 );
+	--color-title: rgb( 13, 13, 13 );
 	--color-bg: rgb( 230, 230, 230 );
 	--color-muted: rgb( 94, 94, 94 );
 	--color-hover: rgba( 26, 26, 26, 0.9 );
@@ -45,6 +47,7 @@ body.gallery_page{
 }
 :root[data-theme="dark"] body.gallery_page{
 	--color-fg: rgb( 230, 230, 230 );
+	--color-title: rgb( 242, 242, 242 );
 	--color-bg: rgb( 26, 26, 26 );
 	--color-muted: rgb( 162, 162, 162 );
 	--color-hover: rgba( 230, 230, 230, 0.9 );
@@ -540,6 +543,7 @@ form input[type="submit"]{
 :root[data-theme="dark"]{
 	/* exact inverse (v -> 255-v) of the day theme's grays */
 	--color-fg: rgb( 255, 255, 255 );
+	--color-title: rgb( 255, 255, 255 );
 	--color-bg: rgb( 0, 0, 0 );
 	--color-muted: rgb( 170, 170, 170 );
 	--color-hover: rgba( 255, 255, 255, 0.9 );
@@ -965,11 +969,12 @@ form input[type="submit"]{
 	transform-origin: right center;
 	transform: translateY( -50% ) rotateY( -20deg );
 }
-/* sized like a nav entry (#see/#read/etc's own 16pt) — the gallery's own titles are meant to read with the same weight as a section of the site, not as a caption line underneath one */
+/* sized like a nav entry (#see/#read/etc's own 16pt) — the gallery's own titles are meant to read with the same weight as a section of the site, not as a caption line underneath one. color is explicit, not inherited, because its parent .album_meta sets its own color to --color-mid for the author/date/location line beneath — without an override here the title would fade to that same muted gray instead of standing out from it */
 .album_title{
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
 	font-size: 16pt;
+	color: var( --color-title );
 	display: block;
 }
 /* title, then author, date, location, camera, and lens on their own lines — both here (the caption stacked under a Cover Flow entry) and in .album_header on the album's own page (real <p> tags there, already block on their own). Formatted like the timeline's own secondary metadata (.timeline_dates/.timeline_location) — muted, uppercase, letter-spaced — rather than plain body text, since this is the same kind of "when/where/by what" line the timeline already has a established look for */
@@ -1001,6 +1006,7 @@ form input[type="submit"]{
 }
 .album_title_large{
 	font-size: 36pt;
+	color: var( --color-title );
 	margin: 0;
 }
 .album_description{
