@@ -10,7 +10,7 @@
 			<div class="album_solo <%= "draft" unless album.published? %>">
 				<%= image_tag photos[ 0 ].image, class: "album_photo", draggable: false %>
 				<p class="album_meta">
-					<span class="album_title"><%= smart_quotes( album.title ) %></span>
+					<% if album.title.present? %><span class="album_title"><%= smart_quotes( album.title ) %></span><% end %>
 					<%= render "photos/info", photo: photos[ 0 ] %>
 				</p>
 			</div>
