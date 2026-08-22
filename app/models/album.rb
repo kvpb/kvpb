@@ -2,9 +2,8 @@ class Album < ApplicationRecord
   has_many :photos, -> { order( :position ) }, dependent: :destroy
   has_one_attached :cover_photo
 
-  before_validation :assign_identifier, if: -> { identifier.blank? && title.present? }
+  before_validation :assign_identifier, if: -> { identifier.blank? }
 
-  validates :title, presence: true
   validates :identifier, presence: true, uniqueness: true
 
   scope :published, -> { where.not( published_at: nil ).where( published_at: ..Time.current ).order( taken_until: :desc ) }
@@ -45,7 +44,7 @@ class Album < ApplicationRecord
 
   private
     def assign_identifier
-      base = title.parameterize
+      base = title.present? ? title.parameterize : SecureRandom.alphanumeric( 8 ).downcase
       candidate = base
       suffix = 1
       while Album.where( identifier: candidate ).where.not( id: id ).exists?
