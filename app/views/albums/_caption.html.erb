@@ -1,6 +1,6 @@
 <% cover_photo = album.photos.first %>
 <p class="album_meta">
-	<span class="album_title"><%= smart_quotes( album.title ) %></span>
+	<% if album.title.present? %><span class="album_title"><%= smart_quotes( album.title ) %></span><% end %>
 	<% if cover_photo&.author.present? %><span class="album_author"><%= cover_photo.author %></span><% end %>
 	<% if album.location.present? %><span class="album_location"><%= album.location %></span><% end %>
 	<% if album.captured_period_label.present? %><span class="album_date"><%= album.captured_period_label %></span><% end %>
