@@ -7,6 +7,11 @@ module ApplicationHelper
     simple_format( RubyPants.new( text.to_s ).to_html )
   end
 
+  def format_dwell( seconds )
+    total = seconds.to_i
+    "%dm %02ds" % [ total / 60, total % 60 ]
+  end
+
   def section_empty?( section )
     case section
     when :journal then !Article.published.exists?
@@ -24,7 +29,7 @@ module ApplicationHelper
       { label: "music", empty: section_empty?( :music ) }
     elsif controller_name == "pages" && action_name == "watch"
       { label: "films", empty: section_empty?( :films ) }
-    elsif %w[messages milestones skills].include?( controller_name )
+    elsif %w[messages milestones skills photo_dwells].include?( controller_name )
       { label: "back end", empty: false }
     end
   end
