@@ -112,6 +112,31 @@ class AlbumTest < ActiveSupport::TestCase
     assert_nil album.captured_period_label
   end
 
+  test "sequence runs photos and passages down one column, in position order" do
+    album = Album.create!( title: "Essay" )
+    first = attach_photo!( album, io: StringIO.new( "fake" ), filename: "a.jpg" )
+    second = attach_photo!( album, io: StringIO.new( "fake" ), filename: "b.jpg" )
+    passage = album.passages.create!( position: 2, body: "Between the two." )
+
+    assert_equal [ first, passage, second ], album.sequence
+  end
+
+  test "sequence puts a passage before the photo it shares a position with" do
+    album = Album.create!( title: "Essay" )
+    photo = attach_photo!( album, io: StringIO.new( "fake" ), filename: "a.jpg" )
+    passage = album.passages.create!( position: 1, heading: "6 February 2025, Thursday" )
+
+    assert_equal [ passage, photo ], album.sequence
+  end
+
+  test "sequence lands a passage numbered past the last photo at the end, closing the album" do
+    album = Album.create!( title: "Essay" )
+    photo = attach_photo!( album, io: StringIO.new( "fake" ), filename: "a.jpg" )
+    passage = album.passages.create!( position: 99, body: "And that was that." )
+
+    assert_equal [ photo, passage ], album.sequence
+  end
+
   private
     def attach_photo!( album, io:, filename: )
       photo = album.photos.create!( position: album.photos.maximum( :position ).to_i + 1 )
