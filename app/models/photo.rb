@@ -3,6 +3,7 @@ require "exifr/jpeg"
 class Photo < ApplicationRecord
   belongs_to :album
   has_one_attached :image
+  has_many :dwell_events, class_name: "PhotoDwellEvent", dependent: :destroy
 
   validates :position, presence: true
 
@@ -44,10 +45,14 @@ class Photo < ApplicationRecord
 
   # Never trusts the value handed in — a visitor's own browser reports its own dwell time, so it's
   # clamped to a plausible single-visit range regardless of what's claimed, before an atomic
-  # increment (not a read-modify-write) folds it into the one running total this photo keeps. No
-  # per-visitor breakdown exists anywhere; this column is the only thing dwell time ever becomes
+  # increment (not a read-modify-write) folds it into the one running total this photo keeps. The
+  # same clamped number is also logged as its own anonymous PhotoDwellEvent — still no visitor
+  # identity, just a photo/seconds/timestamp row — so an implausible burst can be spotted and, if
+  # it turns out to be a bot, deleted by hand later without touching anything else
   def record_dwell!( seconds )
-    increment!( :dwell_seconds, seconds.to_f.clamp( 0, 300 ) )
+    clamped = seconds.to_f.clamp( 0, 300 )
+    increment!( :dwell_seconds, clamped )
+    dwell_events.create!( seconds: clamped )
   end
 
   private
