@@ -1,5 +1,21 @@
 import { Controller } from "@hotwired/stimulus"
 
+// A tab left open and merely visible isn't the same as someone actually still there — mousemove,
+// scroll, keydown, click, and touchstart are the real signal, kept as one shared timestamp at
+// module scope rather than duplicated per tracked photo, since the module itself only ever loads
+// once no matter how many photos on a page get their own controller instance. IDLE_MS is how long
+// a page can go without any of those before every instance's own tick() stops accumulating despite
+// the tab still being "visible" — the same "gate on a real threshold, not a passive state" principle
+// the rest of the site's own physics already follows
+const IDLE_MS = 30_000
+let lastActivityAt = Date.now()
+{
+	const markActive = () => { lastActivityAt = Date.now() }
+	;[ "mousemove", "scroll", "keydown", "click", "touchstart" ].forEach( ( type ) => {
+		document.addEventListener( type, markActive, { passive: true } )
+	} )
+}
+
 // Attention retained on this one photo, weighted by how much of it is actually in the viewport —
 // never per visitor, never stored anywhere but folded once into the photo's own single running
 // total server-side. No periodic pings: everything accumulates locally in this.accumulated and is
@@ -40,7 +56,8 @@ export default class extends Controller {
 	}
 
 	tick( now ) {
-		if ( this.lastTick !== null && document.visibilityState === "visible" && this.ratio > 0 ) {
+		const idle = Date.now() - lastActivityAt > IDLE_MS
+		if ( this.lastTick !== null && document.visibilityState === "visible" && this.ratio > 0 && !idle ) {
 			this.accumulated += ( ( now - this.lastTick ) / 1000 ) * this.ratio
 		}
 		this.lastTick = now
