@@ -17,6 +17,23 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
     assert_match articles( :draft ).headline, response.body
   end
 
+  test "index gives the splash to the article ranked by hand, not the most recent one" do
+    Article.destroy_all
+    Article.create!( headline: "Most recent", body: "Body", published_at: 1.hour.ago )
+    Article.create!( headline: "Placed by hand", body: "Body", published_at: 1.year.ago, front_page_rank: 1 )
+
+    get read_path
+
+    assert_response :success
+    assert_operator response.body.index( "Placed by hand" ), :<, response.body.index( "Most recent" )
+  end
+
+  test "index carries a dateline" do
+    get read_path
+
+    assert_match "Late Edition", response.body
+  end
+
   test "index redirects guests to root when the journal is empty" do
     Article.published.destroy_all
 

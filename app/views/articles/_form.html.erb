@@ -45,6 +45,10 @@
 		<%= form.check_box :comments_locked %> Lock comments
 	<% end %>
 
+	<%= form.label :front_page_rank, "Front page rank" %>
+	<%= form.number_field :front_page_rank %>
+	<p class="field_hint">Where this sits on the front page. 1 takes the splash, the next two run as features, the rest as briefs. Blank leaves it to chronology, behind everything ranked by hand.</p>
+
 	<%= form.label :published_at, "Publish at" %>
 	<%= form.datetime_field :published_at, value: article.published_at&.strftime( "%Y-%m-%dT%H:%M" ) %>
 	<p class="field_hint">Blank stays a draft. A future date schedules it. Now or the past publishes it immediately.</p>

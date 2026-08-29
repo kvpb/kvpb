@@ -1,21 +1,19 @@
 
 <section id="journal">
+	<p class="dateline"><%= journal_dateline %></p>
+
 	<% if @articles.empty? %>
 		<p>Nothing published yet.</p>
 	<% end %>
 
-	<% @articles.each do |article| %>
-		<article class="<%= article.published? ? "published" : "draft" %>">
-			<% unless article.published? %><p class="status_badge">Draft</p><% end %>
-			<% if article.cover_image.attached? %>
-				<%= link_to article_path( article ), data: { controller: "blink-on-press" } do %><%= image_tag article.cover_image, class: "cover_image" %><% end %>
-			<% end %>
-			<% if article.kicker.present? %><p class="kicker"><%= smart_quotes( article.kicker ) %></p><% end %>
-			<h2 class="headline"><%= link_to smart_quotes( article.headline ), article_path( article ), data: { controller: "blink-on-press" } %></h2>
-			<% if article.subheadline.present? %><p class="subheadline"><%= smart_quotes( article.subheadline ) %></p><% end %>
-			<% if article.lede.present? %><p class="lede"><%= smart_quotes( article.lede ) %></p><% end %>
-		</article>
-	<% end %>
+	<div class="front_page">
+		<%# rank comes from where an article lands in the ordered list, not from the number typed into
+		    it, so the page keeps a proper hierarchy however many articles there are and Karl never has
+		    to match a rank number against a headline size %>
+		<% @articles.each_with_index do |article, index| %>
+			<%= render "story", article: article, rank: ( index.zero? ? "splash" : index < 3 ? "feature" : "brief" ) %>
+		<% end %>
+	</div>
 
 	<% if @total_pages > 1 %>
 		<nav class="pagination">

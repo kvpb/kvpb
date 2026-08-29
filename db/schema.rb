@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_29_075629) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_29_141627) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -58,6 +58,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_29_075629) do
     t.text "body"
     t.boolean "comments_locked", default: false, null: false
     t.datetime "created_at", null: false
+    t.integer "front_page_rank"
     t.string "headline", null: false
     t.string "identifier", null: false
     t.string "kicker"
@@ -65,6 +66,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_29_075629) do
     t.datetime "published_at"
     t.string "subheadline"
     t.datetime "updated_at", null: false
+    t.index ["front_page_rank"], name: "index_articles_on_front_page_rank"
     t.index ["identifier"], name: "index_articles_on_identifier", unique: true
     t.index ["published_at"], name: "index_articles_on_published_at"
   end

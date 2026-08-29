@@ -8,8 +8,8 @@ class ArticlesController < ApplicationController
   before_action :redirect_if_section_empty, only: :index
 
   def index
-    scope = superuser? ? Article.all.order( created_at: :desc ) : Article.published
-    @articles = paginate( scope )
+    scope = superuser? ? Article.all : Article.published.unscope( :order )
+    @articles = paginate( scope.front_page_ordered )
   end
 
   def show
@@ -81,7 +81,7 @@ class ArticlesController < ApplicationController
     end
 
     def article_params
-      params.require( :article ).permit( :kicker, :headline, :subheadline, :lede, :body, :identifier, :published_at, :comments_locked, :cover_image )
+      params.require( :article ).permit( :kicker, :headline, :subheadline, :lede, :body, :identifier, :published_at, :comments_locked, :cover_image, :front_page_rank )
     end
 end
 

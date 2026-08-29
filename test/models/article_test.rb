@@ -47,6 +47,30 @@ class ArticleTest < ActiveSupport::TestCase
     assert_not article.published?
     assert_not_includes Article.published, article
   end
+
+  test "front_page_ordered puts a ranked article ahead of a more recent unranked one" do
+    Article.destroy_all
+    recent = Article.create!( headline: "Newest", body: "Body", published_at: 1.hour.ago )
+    ranked = Article.create!( headline: "Placed by hand", body: "Body", published_at: 1.year.ago, front_page_rank: 1 )
+
+    assert_equal [ ranked, recent ], Article.front_page_ordered.to_a
+  end
+
+  test "front_page_ordered ranks by hand first, in the order given" do
+    Article.destroy_all
+    second = Article.create!( headline: "Second", body: "Body", published_at: 1.hour.ago, front_page_rank: 2 )
+    first = Article.create!( headline: "First", body: "Body", published_at: 1.year.ago, front_page_rank: 1 )
+
+    assert_equal [ first, second ], Article.front_page_ordered.to_a
+  end
+
+  test "front_page_ordered falls back to newest-first when nothing is ranked" do
+    Article.destroy_all
+    older = Article.create!( headline: "Older", body: "Body", published_at: 2.days.ago )
+    newer = Article.create!( headline: "Newer", body: "Body", published_at: 1.hour.ago )
+
+    assert_equal [ newer, older ], Article.front_page_ordered.to_a
+  end
 end
 
 #	article_test.rb
