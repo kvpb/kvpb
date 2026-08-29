@@ -1,4 +1,6 @@
 <section id="photo_dwells_page">
+	<p><%= link_to "Recent activity log", photo_dwell_events_path %></p>
+
 	<% if @photos.empty? %>
 		<p>No photos yet.</p>
 	<% end %>
@@ -6,10 +8,13 @@
 	<% @photos.each do |photo| %>
 		<div class="photo_dwell_entry">
 			<%= image_tag photo.image, class: "photo_dwell_thumb" %>
-			<p class="photo_dwell_meta">
-				<%= link_to smart_quotes( photo.album.title.presence || photo.album.identifier ), album_path( photo.album ) %>
-				— <%= format_dwell( photo.dwell_seconds ) %>
-			</p>
+			<div class="photo_dwell_bar_wrapper">
+				<p class="photo_dwell_meta">
+					<%= link_to smart_quotes( photo.album.title.presence || photo.album.identifier ), album_path( photo.album ) %>
+					— <%= format_dwell( photo.dwell_seconds ) %>
+				</p>
+				<div class="photo_dwell_bar" style="width: <%= @max_dwell_seconds.zero? ? 0 : ( photo.dwell_seconds.to_f / @max_dwell_seconds * 100 ) %>%;"></div>
+			</div>
 		</div>
 	<% end %>
 </section>
