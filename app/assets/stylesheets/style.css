@@ -1054,6 +1054,30 @@ form input[type="submit"]{
 	flex-direction: column;
 	gap: 1em;
 }
+/* written passages sit in the same single column the photos run down, so the album reads as one
+continuous piece rather than prose and pictures in separate zones. The extra top margin is what
+separates a new stretch of writing from the photo it follows, .album_photos' own 1em gap being tuned
+for the space between two photographs instead */
+.album_passage{
+	max-width: 40em;
+	margin: 1.5em 0 0.5em 0;
+}
+/* a section opening — the dated chapter heading of a long album. Sized and weighted off .subheadline,
+the journal's own equivalent rank, rather than a size picked independently here */
+.album_passage_heading{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	font-size: 20px;
+	line-height: 1.3;
+	margin: 0 0 0.5em 0;
+	color: var( --color-title );
+}
+/* no max-width of its own — .album_passage above already holds the whole block to a reading measure,
+the same 40em .album_description is held to */
+.album_passage_body{
+	margin: 0;
+}
 /* full-bleed: the 1em cancels out body's own padding on the right, the same distance the nav already keeps main clear of on the left, so the photo reaches the true window edge on both sides without needing to know the nav's own width */
 .album_photo{
 	width: calc( 100% + 1em );
