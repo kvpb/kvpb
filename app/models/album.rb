@@ -1,5 +1,6 @@
 class Album < ApplicationRecord
   has_many :photos, -> { order( :position ) }, dependent: :destroy
+  has_many :passages, -> { order( :position ) }, dependent: :destroy
   has_one_attached :cover_photo
 
   before_validation :assign_identifier, if: -> { identifier.blank? }
@@ -20,6 +21,17 @@ class Album < ApplicationRecord
   def cover
     return cover_photo if cover_photo.attached?
     photos.first&.image
+  end
+
+  # The album read as one continuous piece, the way a photo essay actually runs: photos and written
+  # passages in a single top-to-bottom flow rather than a block of prose followed by a contact
+  # sheet. Both share one position space instead of each keeping its own, so a passage needs no
+  # renumbering of the photos around it to slot between them — and at equal position the passage
+  # comes first, which is what makes "passage at 3" mean "what introduces photo 3". A passage
+  # numbered past the last photo simply lands at the end, closing the album, with no special case
+  # needed for it
+  def sequence
+    ( passages.to_a + photos.to_a ).sort_by { |item| [ item.position, item.is_a?( Passage ) ? 0 : 1, item.id ] }
   end
 
   # The album's own date isn't typed in — it's the span the photos themselves already carry, oldest
