@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_28_114252) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_29_075629) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -126,6 +126,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_114252) do
     t.index ["starts_on"], name: "index_milestones_on_starts_on"
   end
 
+  create_table "passages", force: :cascade do |t|
+    t.integer "album_id", null: false
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.string "heading"
+    t.integer "position", null: false
+    t.datetime "updated_at", null: false
+    t.index ["album_id", "position"], name: "index_passages_on_album_id_and_position"
+    t.index ["album_id"], name: "index_passages_on_album_id"
+  end
+
   create_table "photo_dwell_events", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "photo_id", null: false
@@ -209,6 +220,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_114252) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "articles"
   add_foreign_key "comments", "users"
+  add_foreign_key "passages", "albums"
   add_foreign_key "photo_dwell_events", "photos"
   add_foreign_key "photos", "albums"
   add_foreign_key "sessions", "users"
