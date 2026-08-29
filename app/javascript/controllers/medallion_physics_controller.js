@@ -32,8 +32,10 @@ export default class extends Controller {
     this.targetX = 0
     this.targetY = 0
     this.dragging = false
+    this.lastScrollX = window.scrollX
     this.lastScrollY = window.scrollY
-    this.lastScrollVelocity = 0
+    this.lastScrollVelocityX = 0
+    this.lastScrollVelocityY = 0
     this.frame = null
 
     this.boundPointerDown = this.onPointerDown.bind( this )
@@ -91,17 +93,30 @@ export default class extends Controller {
   // scroll is its own event, not something polled from inside tick(), so the spring can sit
   // completely idle between kicks rather than reading window.scrollY every single frame forever
   onScroll() {
+    const scrollX = window.scrollX
     const scrollY = window.scrollY
-    const scrollVelocity = scrollY - this.lastScrollY
+    const scrollVelocityX = scrollX - this.lastScrollX
+    const scrollVelocityY = scrollY - this.lastScrollY
+    this.lastScrollX = scrollX
     this.lastScrollY = scrollY
-    const scrollAcceleration = scrollVelocity - this.lastScrollVelocity
-    this.lastScrollVelocity = scrollVelocity
+    const accelerationX = scrollVelocityX - this.lastScrollVelocityX
+    const accelerationY = scrollVelocityY - this.lastScrollVelocityY
+    this.lastScrollVelocityX = scrollVelocityX
+    this.lastScrollVelocityY = scrollVelocityY
 
     // only a jump in scroll speed — a sudden start or stop — kicks the spring; steady scrolling at
-    // any speed has near-zero frame-to-frame acceleration and leaves the disc at perfect rest
-    if ( Math.abs( scrollAcceleration ) > this.scrollAccelerationThresholdValue ) {
-      const excess = scrollAcceleration - Math.sign( scrollAcceleration ) * this.scrollAccelerationThresholdValue
-      this.velocityY -= excess * this.scrollKickValue
+    // any speed has near-zero frame-to-frame acceleration and leaves the disc at perfect rest. Both
+    // axes are read, and the threshold is checked against the acceleration vector's own magnitude
+    // rather than one axis at a time, so a diagonal jolt too gentle on either axis alone still
+    // counts for what it actually is. The impulse then lands along that vector's own direction —
+    // scroll sideways and the covers swing sideways, diagonally and they swing diagonally — rather
+    // than always straight along Y the way it did when only scrollY was ever read
+    const magnitude = Math.hypot( accelerationX, accelerationY )
+    if ( magnitude > this.scrollAccelerationThresholdValue ) {
+      const excess = magnitude - this.scrollAccelerationThresholdValue
+      const kick = -excess * this.scrollKickValue
+      this.velocityX += kick * ( accelerationX / magnitude )
+      this.velocityY += kick * ( accelerationY / magnitude )
       this.startTicking()
     }
   }
