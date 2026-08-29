@@ -53,6 +53,12 @@ Rails.application.routes.draw do
   patch  "/see/:album_identifier/photos/:id",      to: "photos#update"
   delete "/see/:album_identifier/photos/:id",      to: "photos#destroy", as: "photo"
 
+  get    "/see/:album_identifier/passages/new",      to: "passages#new",     as: "new_passage"
+  post   "/see/:album_identifier/passages",          to: "passages#create",  as: "passages"
+  get    "/see/:album_identifier/passages/:id/edit", to: "passages#edit",    as: "edit_passage"
+  patch  "/see/:album_identifier/passages/:id",      to: "passages#update"
+  delete "/see/:album_identifier/passages/:id",      to: "passages#destroy", as: "passage"
+
   post   "/photos/:id/dwell",                      to: "photo_dwells#create", as: "photo_dwell"
 
   get "/listen",                    to: "pages#listen",               as: "listen"
