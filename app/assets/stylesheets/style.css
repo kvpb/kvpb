@@ -1762,7 +1762,7 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 .message_actions form{
 	margin: 0;
 }
-#photo_dwells_page{
+#photo_dwells_page, #photo_dwell_events_page{
 	max-width: 60em;
 	margin: 0 auto;
 }
@@ -1783,6 +1783,15 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
 	font-size: 10pt;
+}
+/* the ranking's own graphical half — each bar's width is that photo's own dwell_seconds relative to the top photo's, so the whole list reads as one chart at a glance rather than requiring the numbers themselves to be compared by eye */
+.photo_dwell_bar_wrapper{
+	flex: 1;
+}
+.photo_dwell_bar{
+	height: 8px;
+	margin-top: 0.5em;
+	background-color: var( --color-fg );
 }
 #honoree{
 	max-width: 60em;
