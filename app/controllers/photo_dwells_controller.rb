@@ -13,6 +13,7 @@ class PhotoDwellsController < ApplicationController
 
   def index
     @photos = Photo.includes( :album ).order( dwell_seconds: :desc ).limit( 50 )
+    @max_dwell_seconds = @photos.first&.dwell_seconds.to_f
   end
 end
 
