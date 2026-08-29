@@ -83,6 +83,15 @@ class PhotoTest < ActiveSupport::TestCase
     assert_equal 6.5, photo.reload.dwell_seconds.to_f
   end
 
+  test "record_dwell! logs its own clamped seconds as an anonymous event" do
+    photo = create_photo!( "sample.jpg" )
+
+    photo.record_dwell!( 100_000 )
+
+    assert_equal 1, photo.dwell_events.count
+    assert_equal 300, photo.dwell_events.last.seconds.to_f
+  end
+
   test "record_dwell! clamps a negative value to zero" do
     photo = create_photo!( "sample.jpg" )
 
