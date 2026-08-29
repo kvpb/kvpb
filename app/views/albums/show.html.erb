@@ -12,16 +12,22 @@
 	<% end %>
 
 	<div class="album_photos">
-		<% @album.photos.each do |photo| %>
-			<div class="album_photo_entry">
-				<%= image_tag photo.image, class: "album_photo", draggable: false, data: ( superuser? ? {} : { controller: "dwell-tracker", dwell_tracker_photo_id_value: photo.id } ) %>
-				<p class="album_meta">
-					<%= render "photos/info", photo: photo %>
-				</p>
-				<%= link_to "Edit photo", edit_photo_path( @album, photo ), class: "photo_edit_link" if superuser? %>
-			</div>
+		<% @album.sequence.each do |item| %>
+			<% if item.is_a?( Passage ) %>
+				<%= render "passages/passage", passage: item %>
+			<% else %>
+				<div class="album_photo_entry">
+					<%= image_tag item.image, class: "album_photo", draggable: false, data: ( superuser? ? {} : { controller: "dwell-tracker", dwell_tracker_photo_id_value: item.id } ) %>
+					<p class="album_meta">
+						<%= render "photos/info", photo: item %>
+					</p>
+					<%= link_to "Edit photo", edit_photo_path( @album, item ), class: "photo_edit_link" if superuser? %>
+				</div>
+			<% end %>
 		<% end %>
 	</div>
+
+	<%= link_to "Add passage", new_passage_path( @album ), class: "photo_edit_link" if superuser? %>
 </article>
 
 <%#
