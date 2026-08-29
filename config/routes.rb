@@ -40,6 +40,8 @@ Rails.application.routes.draw do
   post   "/see",                              to: "albums#create"
   get    "/see/new",                          to: "albums#new",      as: "new_album"
   get    "/see/stats",                        to: "photo_dwells#index", as: "photo_dwells"
+  get    "/see/stats/events",                 to: "photo_dwell_events#index",   as: "photo_dwell_events"
+  delete "/see/stats/events/:id",             to: "photo_dwell_events#destroy", as: "photo_dwell_event"
   get    "/see/:identifier",                  to: "albums#show",     as: "album"
   get    "/see/:identifier/edit",             to: "albums#edit",     as: "edit_album"
   patch  "/see/:identifier",                  to: "albums#update"
