@@ -1,0 +1,46 @@
+<% content_for :title, @album.title %>
+
+<article id="album" class="<%= "draft" unless @album.published? %>">
+	<% if superuser? %>
+		<div class="superuser_controls">
+			<% unless @album.published? %><span class="status_badge">Draft</span><% end %>
+			<%= link_to "Edit", edit_album_path( @album ) %>
+			<% if @album.published? %>
+				<%= button_to "Unpublish", album_path( @album ), method: :patch, params: { album: { published_at: "" } } %>
+			<% else %>
+				<%= button_to "Publish now", album_path( @album ), method: :patch, params: { album: { published_at: Time.current } } %>
+			<% end %>
+			<%= button_to "Delete", album_path( @album ), method: :delete, data: { turbo_confirm: "Delete this album?" } %>
+		</div>
+	<% end %>
+
+	<header class="album_header">
+		<h1 class="album_title_large"><%= @album.title %></h1>
+		<% if @album.location.present? || @album.taken_on.present? %>
+			<p class="album_meta"><%= [ @album.location, @album.taken_on&.strftime( "%B %Y" ) ].select( &:present? ).join( ", " ) %></p>
+		<% end %>
+	</header>
+
+	<% if @album.description.present? %>
+		<div class="album_description"><%= simple_format @album.description %></div>
+	<% end %>
+
+	<div class="album_photos">
+		<% @album.photos.each do |photo| %>
+			<%= image_tag photo, class: "album_photo" %>
+		<% end %>
+	</div>
+</article>
+
+<%#
+	show.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

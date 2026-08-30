@@ -1,2 +1,24 @@
 module ApplicationHelper
+  def current_section_suffix
+    if controller_name == "articles"
+      { label: "journal", empty: !Article.published.exists? }
+    elsif controller_name == "albums"
+      { label: "gallery", empty: !Album.published.exists? }
+    elsif controller_name == "pages" && action_name == "listen"
+      { label: "music", empty: true }
+    elsif controller_name == "pages" && action_name == "watch"
+      { label: "films", empty: true }
+    end
+  end
 end
+
+#	application_helper.rb
+#	kvpb.fr
+#
+#	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+#	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+#	local-part@domain
+#
+#	Copyright 2026 by Karl Vincent Pierre Bertin
+#
+#	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
