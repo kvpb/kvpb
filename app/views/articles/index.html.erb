@@ -1,0 +1,37 @@
+<% content_for :title, "Read" %>
+
+<section id="read">
+	<% if superuser? %>
+		<p class="superuser_controls"><%= link_to "New article", new_article_path %></p>
+	<% end %>
+
+	<% if @articles.empty? %>
+		<p>Nothing published yet.</p>
+	<% end %>
+
+	<% @articles.each do |article| %>
+		<article class="<%= article.published? ? "published" : "draft" %>">
+			<% unless article.published? %><p class="status_badge">Draft</p><% end %>
+			<% if article.cover_image.attached? %>
+				<%= link_to article_path( article ) do %><%= image_tag article.cover_image, class: "cover_image" %><% end %>
+			<% end %>
+			<% if article.kicker.present? %><p class="kicker"><%= article.kicker %></p><% end %>
+			<h2 class="headline"><%= link_to article.headline, article_path( article ) %></h2>
+			<% if article.subheadline.present? %><p class="subheadline"><%= article.subheadline %></p><% end %>
+			<% if article.lede.present? %><p class="lede"><%= article.lede %></p><% end %>
+		</article>
+	<% end %>
+</section>
+
+<%#
+	index.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

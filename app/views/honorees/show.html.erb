@@ -1,0 +1,59 @@
+<% content_for :title, @honoree.name %>
+
+<article id="honoree" class="stone_surface <%= "draft" unless @honoree.published? %>" data-controller="pantheon-door">
+	<div class="pantheon_content">
+		<% if superuser? %>
+			<div class="superuser_controls">
+				<% unless @honoree.published? %><span class="status_badge">Draft</span><% end %>
+				<%= link_to "Edit", edit_honoree_path( @honoree ) %>
+				<% if @honoree.published? %>
+					<%= button_to "Unpublish", honoree_path( @honoree ), method: :patch, params: { honoree: { published_at: "" } } %>
+				<% else %>
+					<%= button_to "Publish now", honoree_path( @honoree ), method: :patch, params: { honoree: { published_at: Time.current } } %>
+				<% end %>
+				<%= button_to "Delete", honoree_path( @honoree ), method: :delete, data: { turbo_confirm: "Delete this honoree?" } %>
+			</div>
+		<% end %>
+
+		<% if @honoree.hero_image.attached? %>
+			<div class="honoree_hero">
+				<%= image_tag @honoree.hero_image, class: "honoree_hero_image" %>
+			</div>
+		<% end %>
+
+		<h1 class="engraved honoree_name_large"><%= @honoree.name %></h1>
+
+		<p class="honoree_dates painted">
+			<% if @honoree.birth_date.present? || @honoree.death_date.present? %>
+				<span><%= @honoree.birth_date&.strftime( "%Y" ) %>&ndash;<%= @honoree.death_date&.strftime( "%Y" ) %></span>
+			<% end %>
+			<% if @honoree.known_from.present? %>
+				<span>known since <%= @honoree.known_from.strftime( "%Y" ) %><% if @honoree.known_until.present? %>&ndash;<%= @honoree.known_until.strftime( "%Y" ) %><% end %></span>
+			<% end %>
+			<% if @honoree.helped_from.present? %>
+				<span>helped <%= @honoree.helped_from.strftime( "%Y" ) %><% if @honoree.helped_until.present? %>&ndash;<%= @honoree.helped_until.strftime( "%Y" ) %><% end %></span>
+			<% end %>
+		</p>
+
+		<% if @honoree.honor_inscription.present? %>
+			<p class="engraved honoree_inscription">&ldquo;<%= @honoree.honor_inscription %>&rdquo;</p>
+		<% end %>
+
+		<div class="honoree_body painted"><%= simple_format @honoree.body %></div>
+	</div>
+
+	<%= render "pantheon_door" %>
+</article>
+
+<%#
+	show.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

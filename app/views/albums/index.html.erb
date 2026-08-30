@@ -1,0 +1,42 @@
+<% content_for :title, "See" %>
+
+<section id="see">
+	<% if superuser? %>
+		<p class="superuser_controls"><%= link_to "New album", new_album_path %></p>
+	<% end %>
+
+	<% if @albums.empty? %>
+		<p>Nothing here yet.</p>
+	<% end %>
+
+	<div class="album_gallery">
+		<% @albums.each do |album| %>
+			<%= link_to album_path( album ), class: "album_tile" do %>
+				<span class="album_cover <%= "draft" unless album.published? %>">
+					<% if album.cover %>
+						<%= image_tag album.cover, class: "album_cover_image" %>
+					<% end %>
+				</span>
+				<span class="album_title"><%= album.title %></span>
+				<% if album.location.present? || album.taken_on.present? %>
+					<span class="album_meta">
+						<%= [ album.location, album.taken_on&.strftime( "%B %Y" ) ].select( &:present? ).join( ", " ) %>
+					</span>
+				<% end %>
+			<% end %>
+		<% end %>
+	</div>
+</section>
+
+<%#
+	index.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
