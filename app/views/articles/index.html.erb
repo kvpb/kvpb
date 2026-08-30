@@ -1,0 +1,37 @@
+
+<section id="journal">
+	<p class="dateline"><%= journal_dateline %></p>
+
+	<% if @articles.empty? %>
+		<p>Nothing published yet.</p>
+	<% end %>
+
+	<div class="front_page">
+		<%# rank comes from where an article lands in the ordered list, not from the number typed into
+		    it, so the page keeps a proper hierarchy however many articles there are and Karl never has
+		    to match a rank number against a headline size %>
+		<% @articles.each_with_index do |article, index| %>
+			<%= render "story", article: article, rank: ( index.zero? ? "splash" : index < 3 ? "feature" : "brief" ) %>
+		<% end %>
+	</div>
+
+	<% if @total_pages > 1 %>
+		<nav class="pagination">
+			<% if @page < @total_pages %><%= link_to "Older", read_path( page: @page + 1 ), data: { controller: "blink-on-press" } %><% end %>
+			<% if @page > 1 %><%= link_to "Newer", read_path( page: @page - 1 ), data: { controller: "blink-on-press" } %><% end %>
+		</nav>
+	<% end %>
+</section>
+
+<%#
+	index.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

@@ -1,9 +1,105 @@
 /*   t y p e s   */
 
+:root{
+	color-scheme: light dark;
+
+	--color-fg: rgb( 0, 0, 0 );
+	--color-title: rgb( 0, 0, 0 );
+	--color-bg: rgb( 255, 255, 255 );
+	--color-muted: rgb( 85, 85, 85 );
+	--color-hover: rgba( 0, 0, 0, 0.9 );
+	--color-faint: rgb( 230, 230, 230 );
+	--color-mid: rgb( 150, 150, 150 );
+	--color-border: rgb( 200, 200, 200 );
+
+	--color-twitter: rgb( 29, 155, 240 );
+	--color-github: rgb( 37, 41, 46 );
+	--color-danger: rgb( 178, 34, 34 );
+	--color-success: rgb( 0, 100, 0 );
+	--color-pending-bg: rgb( 255, 255, 224 );
+
+	/* Karl's Hall of Fame — limestone by day */
+	--stone-bg: rgb( 214, 210, 201 );
+	--stone-grain-dark: rgba( 0, 0, 0, 0.035 );
+	--stone-grain-light: rgba( 255, 255, 255, 0.05 );
+	--engrave-shadow: rgba( 0, 0, 0, 0.4 );
+	--engrave-highlight: rgba( 255, 255, 255, 0.65 );
+	--medallion-highlight: rgba( 255, 255, 255, 0.6 );
+	--medallion-shadow: rgba( 0, 0, 0, 0.08 );
+	--stone-text-blend: multiply; /* dark text absorbed into pale stone */
+}
+
+/* the gallery is the one section built around images rather than text, so nothing on it — nav, header, footer, background included, all the way out past #gallery/#album's own boundary — should read at the same full strength the rest of the site's own monochrome does. Redefining the tokens themselves, not a filter over the page, is what lets that reach navigation/header/footer/background at all (a filter on some wrapping element would catch the photos too, and there's no way to carve them back out of a filter afterward) while leaving actual photos untouched by construction: an <img>'s own pixels never consult a CSS custom property to begin with. Two passes bring every value here: first ordinary colors (--color-twitter, --color-github) get desaturated to their own equivalent gray — luminance, not a flat average, per the standard BT.709 weights (0.2126R + 0.7152G + 0.0722B), same as any real grayscale conversion — then every value, including fg/bg/mid which were already gray, moves 20% of its own distance from mid-gray (128) back toward it: true black lightens 10% of the full 0-255 range, true white darkens by that same 10%, exactly mirroring contrast(80%) as a formula but computed by hand here since a filter can't be scoped this way. --color-title is the one exception, mirroring contrast(90%) instead — half that shift — so a photo's or album's own title (like an article's own headline outside the gallery entirely) still reads close to true black against the rest of this section's own de-contrasted chrome, rather than fading to the same reduced strength as everything around it */
+body.gallery_page{
+	--color-fg: rgb( 26, 26, 26 );
+	--color-title: rgb( 13, 13, 13 );
+	--color-bg: rgb( 230, 230, 230 );
+	--color-muted: rgb( 94, 94, 94 );
+	--color-hover: rgba( 26, 26, 26, 0.9 );
+	--color-faint: rgb( 210, 210, 210 );
+	--color-mid: rgb( 146, 146, 146 );
+	--color-border: rgb( 186, 186, 186 );
+
+	--color-twitter: rgb( 133, 133, 133 );
+	--color-github: rgb( 58, 58, 58 );
+	--color-danger: rgb( 78, 78, 78 );
+	--color-success: rgb( 83, 83, 83 );
+}
+:root[data-theme="dark"] body.gallery_page{
+	--color-fg: rgb( 230, 230, 230 );
+	--color-title: rgb( 242, 242, 242 );
+	--color-bg: rgb( 26, 26, 26 );
+	--color-muted: rgb( 162, 162, 162 );
+	--color-hover: rgba( 230, 230, 230, 0.9 );
+	--color-faint: rgb( 77, 77, 77 );
+	--color-mid: rgb( 110, 110, 110 );
+	--color-border: rgb( 70, 70, 70 );
+
+	--color-danger: rgb( 139, 139, 139 );
+	--color-success: rgb( 177, 177, 177 );
+}
+@media ( prefers-color-scheme: dark ){
+	:root:not([data-theme="light"]) body.gallery_page{
+		--color-fg: rgb( 230, 230, 230 );
+		--color-bg: rgb( 26, 26, 26 );
+		--color-muted: rgb( 162, 162, 162 );
+		--color-hover: rgba( 230, 230, 230, 0.9 );
+		--color-faint: rgb( 77, 77, 77 );
+		--color-mid: rgb( 110, 110, 110 );
+		--color-border: rgb( 70, 70, 70 );
+
+		--color-danger: rgb( 139, 139, 139 );
+		--color-success: rgb( 177, 177, 177 );
+	}
+}
+/* html's own background-color (declared below, unconditionally) is what actually shows through as the page's true canvas — the one background not subject to normal stacking order at all, painted beneath even #backdrop's own negative z-index, which is exactly why #backdrop is visible over it in the first place. body itself painting var(--color-bg) directly, tried first, broke that: body is an ordinary in-flow box, so its own background paints in its own, later stacking step, ahead of #backdrop's negative one, blotting the emblem out entirely. :has() lets html read the same gallery_page state one of its own descendants carries without needing to duplicate --color-bg's redefinition down on body only to have it not reach the one element (html) that actually needs it */
+html:has( body.gallery_page ){
+	--color-bg: rgb( 230, 230, 230 );
+}
+/* :root IS html — [data-theme] and :has() both have to land on that same one element, not chained as ancestor/descendant, which would ask for an html nested inside itself */
+html[data-theme="dark"]:has( body.gallery_page ){
+	--color-bg: rgb( 26, 26, 26 );
+}
+@media ( prefers-color-scheme: dark ){
+	html:not([data-theme="light"]):has( body.gallery_page ){
+		--color-bg: rgb( 26, 26, 26 );
+	}
+}
+
+/* every element eases between its light and dark colors instead of snapping, so flipping the theme reads as one smooth cut rather than a harsh jump; elements with their own transition (the toggle, the wordmark) override this outright rather than merging with it, which is fine since those already resolve to the same 1/4s */
+*{
+	transition: background-color .25s ease, color .25s ease, border-color .25s ease, fill .25s ease, stroke .25s ease, filter .25s ease;
+}
+/* a full second here, not the sitewide quarter — gallery_theme_controller.js adds gallery_page one animation frame after this page's own first paint specifically so this duration has a real "before" state to shift the whole page's colors from, all the way out to chrome nothing else in the section otherwise touches. transition-duration alone, not the shorthand, is deliberate: redeclaring transition here would silently reset the property list/easing above back to their initial values instead of just slowing them down */
+body.gallery_page *{
+	transition-duration: 1s;
+}
+
 html{
-	color: rgb( 0, 0, 0 );
-	background-color: rgb( 255, 255, 255 );
-	background: url(karlsemblem.svg) no-repeat fixed center; /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
+	height: 100%;
+	margin: 0;
+	color: var( --color-fg );
+	background-color: var( --color-bg );
 }
 
 body{
@@ -11,16 +107,25 @@ body{
 	/*background-color: rgb( 255, 255, 255 );*/
 	/*background: url(https://camo.githubusercontent.com/c30ec0405c5e8bb19e19cf20836b2d036130f6b55598843f66c50365d50e0d09/68747470733a2f2f6769737463646e2e6769746861636b2e636f6d2f6b7670622f63383035393465393037396538353763353563333664656334396131613264372f7261772f656563353464353832316463303932616439313036333531343163346534666565626630373536352f6b7670627373796d626f6c2e737667) no-repeat fixed center;*/
 	width: 100%;
-	height: 100%;
-	float: left;
-	font-family: 'Times New Roman', serif;
+	min-height: 100vh;
+	min-height: 100dvh;
+	margin: 0;
+	font-family: 'Arial', sans-serif;
 	font-size: 12pt;
-	margin: 0 auto 0 auto;
-	padding: 0;
-	width: 100%;
+	padding: 1em;
+	box-sizing: border-box;
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
+	flex-direction: row;
+	-webkit-text-stroke: 1px var( --color-bg );
+	paint-order: stroke fill;
+}
+
+/* body's own flex row already stretches main to the full window height (align-items' default, "normal", behaves as stretch here) — the missing piece was main's own children still stacking in plain block flow, using only as much of that height as their content needed and leaving the rest empty below #signature instead of pushing it down. grid-template-rows does that: #main_content's row is sized at least to its own content (min-content) but grows to fill whatever height main isn't otherwise using (1fr) when that content falls short of a full window, while #signature's row stays auto — sized to itself, sitting wherever #main_content's row actually ends. On a page tall enough that #main_content's natural content already exceeds the available height, 1fr has nothing left to distribute and this behaves exactly as plain block flow did, #signature's own margin-top the only thing separating it from what came before */
+main{
+	display: grid;
+	grid-template-rows: minmax( min-content, 1fr ) auto;
+	flex: 1 1 auto;
+	min-width: 0;
 }
 
 article{
@@ -29,6 +134,9 @@ article{
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: flex-start;
+}
+article.draft{
+	opacity: 0.6;
 }
 
 header{
@@ -47,13 +155,13 @@ a{
 	text-decoration: none;
 }
 a:link{
-	color: rgb( 85, 85, 85 ); /* default values: `color: rgb( 0, 0, 93 );`; */
+	color: var( --color-muted ); /* default values: `color: rgb( 0, 0, 93 );`; */
 }
 a:visited{
-	color: rgb( 85, 85, 85 ); /* default values: `color: rgb( 85, 26, 139 );`; */
+	color: var( --color-muted ); /* default values: `color: rgb( 85, 26, 139 );`; */
 }
 a:hover{
-	color: rgba( 0, 0, 0, 0.9 );
+	color: var( --color-hover );
 	animation-name: blink;
 	animation-duration: 1s;
 	animation-timing-function: linear;
@@ -71,7 +179,7 @@ a:hover{
 	-webkit-animation-play-state: running;
 }
 a:active{
-	color: rgba( 0, 0, 0, 0.9 );
+	color: var( --color-hover );
 	animation-name: blink;
 	animation-duration: 0.1s;
 	animation-timing-function: linear;
@@ -96,16 +204,269 @@ hr{
 	border: none;
 }
 
+/* font sizes borrowed from The New York Times' own body copy scale — the family stays Arial, not their Cheltenham/Georgia, and colors/weights stay the site's own monochrome, only the size relationships are theirs. #article and #comments are excluded: the journal is getting its own front-page, multi-column "une" treatment later and is left alone until then. That exclusion is wrapped in :where() specifically so it costs nothing specificity-wise — :not() otherwise inherits the specificity of its most specific argument, and an ID in there would make every rule below outrank .headline, .pantheon_title, .album_title_large and the rest of this site's own titles instead of yielding to them. A bare element selector, :where()'s zero cost included, never outweighs a class one, so this only ever fills in what nothing more specific already claims */
+:is( h1, h2, h3, p, ul, ol, li, blockquote ):not( :where( #article, #article *, #comments, #comments * ) ){
+	font-family: 'Arial', sans-serif;
+}
+h1:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-weight: 900;
+	font-size: 34px;
+	line-height: 1.15;
+	margin: 0.3em 0 0.4em 0;
+}
+h2:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-weight: 900;
+	font-size: 24px;
+	line-height: 1.25;
+	margin: 1.2em 0 0.4em 0;
+}
+h3:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-weight: 900;
+	font-size: 19px;
+	line-height: 1.3;
+	margin: 1em 0 0.3em 0;
+}
+p:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-size: 17px;
+	line-height: 1.7;
+	margin: 0 0 1em 0;
+}
+ul:not( :where( #article, #article *, #comments, #comments * ) ), ol:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-size: 17px;
+	line-height: 1.7;
+	margin: 0 0 1em 0;
+	padding-left: 1.5em;
+}
+li:not( :where( #article, #article *, #comments, #comments * ) ){
+	margin: 0.3em 0;
+}
+blockquote:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-size: 22px;
+	font-style: italic;
+	line-height: 1.5;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid var( --color-fg );
+}
+
 span.highlight{
-	background-color: rgb( 255, 255, 0 );
+	background-color: rgb( 255, 255, 0 ); /* pure yellow is already mid-lightness, so it doesn't need inverting; the text on top of it is forced black in both themes instead, below */
+	color: rgb( 0, 0, 0 );
 }
 span.black{
-	color: rgb( 0, 0, 0 );
+	color: rgb( 0, 0, 0 ); /* named for literal black, so it does not follow the theme */
 }
 
 ::selection{
-	background-color: black;
-	color: white;
+	background-color: var( --color-fg );
+	color: var( --color-bg );
+}
+
+form label{
+	display: block;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 9pt;
+	text-transform: uppercase;
+	letter-spacing: 1pt;
+	margin: 0.75em 0 0.15em 0;
+}
+form input[type="text"], form input[type="email"], form input[type="password"], form textarea{
+	display: block;
+	width: 100%;
+	max-width: 32em;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 12pt;
+	padding: 0.5em 0.6em;
+	box-sizing: border-box;
+	border: 2px solid var( --color-fg );
+	border-radius: 0;
+	color: var( --color-fg );
+	background-color: var( --color-bg );
+}
+form input[type="text"]:focus, form input[type="email"]:focus, form input[type="password"]:focus, form textarea:focus{
+	outline: 2px solid var( --color-fg );
+	outline-offset: 2px;
+}
+
+/* every real text field site-wide gets this squircle frosted-glass treatment; only the honeypot field keeps the plain square style above untouched, since it has to look unremarkable to a bot */
+.text_field_glass{
+	position: relative;
+	width: 100%;
+	border-radius: 14px;
+	corner-shape: superellipse( 5 );
+	isolation: isolate;
+}
+/* no overflow:hidden here, and no native border either, not even a static one made transparent on focus — browsers that don't understand corner-shape:superellipse(5) (Firefox, at least for now) fall back to a plain circular-arc border-radius for anything clipped to this element's own shape, and a squircle corner draws noticeably closer to the true rectangular corner than a circle of the same radius does, so an overflow:hidden here would clip away exactly the corners (and the short straight run beside them) of the SVG-drawn border in any such browser, while Chrome, which resolves the clip as the same superellipse it's drawn against, shows the whole thing intact. The border is always that SVG path below, solid and dashed alike: squircle_dash_border_path_solid and _dashed share one d/transform computed once in squircle_dash_border_controller.js, traced to this exact element's own current width and height along the same power-5 superellipse corner-shape:superellipse(5) draws, so the two states are pixel-identical and only differ in dasharray/animation — crossfading via opacity is then a true like-for-like swap. Dashes flowing continuously along the border, through the squircle corners, is also the only reason SVG is here at all: a first attempt at just the motion (a rotating conic-gradient ring) spun like a clock hand, not the marching-ants look actually wanted, and only an SVG path's stroke-dashoffset can animate that around a curve */
+.squircle_dash_border_svg{
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+.squircle_dash_border_path{
+	fill: none;
+	stroke: var( --color-fg );
+	stroke-width: 1px;
+	transition: opacity 0.3s ease;
+}
+.squircle_dash_border_path_solid{
+	opacity: 1;
+}
+.text_field_glass:focus-within .squircle_dash_border_path_solid{
+	opacity: 0;
+}
+/* no stroke override here — a fixed black, right for it to read as black in daylight, went invisible on dark appearance's own black page background. var(--color-fg) inherited from squircle_dash_border_path above is the same color the solid state already uses, so the dashes stay legible (black by day, white by night) without needing a color of their own */
+.squircle_dash_border_path_dashed{
+	opacity: 0;
+	stroke-dasharray: 8 8;
+}
+.text_field_glass:focus-within .squircle_dash_border_path_dashed{
+	opacity: 1;
+}
+/* no @keyframes here — squircle_dash_border_controller.js steps stroke-dashoffset by hand on every animation frame instead, since animating it through CSS hits a genuine Chromium rendering bug on a long enough path (a wide field on a wide enough page): most of the dashes silently stop painting past some point along it. positive, not negative, is still the direction that increment goes for the same reason it always was: squirclePath() draws clockwise (top edge left-to-right, then down the right side, etc.), and a decreasing stroke-dashoffset marches dashes forward along however the path was drawn — clockwise, here — while counting up marches them backward against that drawing direction, i.e. counterclockwise, "le sens trigonométrique" */
+/* the gaussian blur — frosted-glass center, strongest at the middle, masked down to nothing by the time it reaches the border */
+.text_field_glass::before{
+	content: '';
+	position: absolute;
+	inset: 0;
+	backdrop-filter: blur( 12px );
+	-webkit-backdrop-filter: blur( 12px );
+	mask-image: radial-gradient( ellipse at center, black 0%, black 30%, transparent 75% );
+	-webkit-mask-image: radial-gradient( ellipse at center, black 0%, black 30%, transparent 75% );
+	pointer-events: none;
+}
+/* :not([type="hidden"]) rather than a bare `input` — the extra attribute selector, not the honeypot's own hidden state, is the point: form input[type="…"] above matches on a real type value too, so a bare `input` here loses to it on specificity and the field keeps its square 2px border instead of ever going borderless. That plain rule's own 32em max-width is meant for it, not for a glass field: this one spans edge to edge between the page's own margins, so max-width:none overrides it here specifically */
+.text_field_glass input:not( [type="hidden"] ), .text_field_glass textarea{
+	position: relative;
+	z-index: 1;
+	display: block;
+	width: 100%;
+	max-width: none;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 12pt;
+	padding: 0.5em 0.6em;
+	box-sizing: border-box;
+	border: none;
+	color: var( --color-fg );
+	background: color-mix( in srgb, var( --color-bg ) 45%, transparent );
+}
+/* no focus outline here — the marching-ants squircle border is already the focus indicator, and this rule's own rectangular outline drawn on top of that rounded border reads as a second, unrelated selection box around the field */
+.text_field_glass input:not( [type="hidden"] ):focus, .text_field_glass textarea:focus{
+	outline: none;
+}
+form input[type="submit"]{
+	margin-top: 1em;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 1pt;
+	padding: 0.4em 1em;
+}
+/* sober and industrial, like the search bar, not the floating liquid-marble button originally imagined — that idea didn't fit the site's typ 1 design language. squircle_fill_controller.js draws the button's own real fill and shape together as one filled SVG <path> — an actual power-5 superellipse computed at this element's own real (non-square) half-width/half-height, not a rectangle with rounded corners standing in for one — so the fill lives on that path, not as a background-color here */
+.submit_squircle{
+	position: relative;
+	isolation: isolate;
+	display: block;
+	width: fit-content;
+	margin: 1em 0 0 auto;
+}
+.squircle_fill_svg{
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+.squircle_fill_path{
+	fill: var( --color-fg );
+}
+.submit_squircle:has( input:hover ) .squircle_fill_path{
+	fill: var( --color-hover );
+}
+.submit_squircle:has( input:disabled ) .squircle_fill_path{
+	fill: var( --color-mid );
+}
+#contact_form_section form input[type="submit"]{
+	position: relative;
+	z-index: 1;
+	display: block;
+	margin: 0;
+	padding: 0.5em 1.5em;
+	border: none;
+	background: none;
+	color: var( --color-bg );
+	cursor: pointer;
+}
+/* the same blink a:hover gives the logo and every other link, sitewide — 1s, speeding up to 0.1s held down */
+#contact_form_section form input[type="submit"]:hover{
+	animation-name: blink;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: running;
+	-moz-animation-name: blink;
+	-moz-animation-duration: 1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-play-state: running;
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
+}
+#contact_form_section form input[type="submit"]:active{
+	animation-name: blink;
+	animation-duration: 0.1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: running;
+	-moz-animation-name: blink;
+	-moz-animation-duration: 0.1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-play-state: running;
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 0.1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
+}
+#contact_form_section form input[type="submit"]:disabled{
+	color: var( --color-bg );
+	cursor: default;
+}
+/* once the message is sent, every label and field reads as done, not just the button — border, placeholder, and typed-in text alike fade to the same muted gray */
+#contact_form_section form.message_sent label,
+#contact_form_section form.message_sent .text_field_glass input,
+#contact_form_section form.message_sent .text_field_glass textarea{
+	color: var( --color-mid );
+}
+#contact_form_section form.message_sent .text_field_glass{
+	border-color: var( --color-mid );
+}
+#contact_form_section form.message_sent .text_field_glass input::placeholder,
+#contact_form_section form.message_sent .text_field_glass textarea::placeholder{
+	color: var( --color-mid );
+}
+/* the line itself, not the heading, carries the motion — margin-left is set from JS: once after erasing, to throw the empty cursor over to the right in one snap, then again on every keystroke of typing, to keep the growing text pinned to that same right edge */
+#contact_form_section .heading_line{
+	display: inline-block;
+	white-space: nowrap;
+	transition: margin-left 0.15s ease;
+}
+#contact_form_section .heading_line.heading_replacement{
+	color: var( --color-mid );
+}
+/* a real text cursor: a hard on/off blink, not the fade the rest of the site's blink keyframe does */
+#contact_form_section .type_cursor{
+	display: inline-block;
+	width: 2px;
+	height: 0.85em;
+	margin-left: 2px;
+	vertical-align: -0.1em;
+	background-color: currentColor;
+	animation: cursor_blink 1s steps( 1 ) infinite;
 }
 
 /*   a t - r u l e s   */
@@ -121,6 +482,15 @@ span.black{
 	}
 	100%{
 		opacity: 1.0;
+	}
+}
+
+@keyframes cursor_blink{
+	0%, 49%{
+		opacity: 1;
+	}
+	50%, 100%{
+		opacity: 0;
 	}
 }
 
@@ -162,6 +532,15 @@ span.black{
 	}
 	100%{
 		opacity: 1;
+	}
+}
+
+@keyframes spin_counterclockwise{
+	from{
+		transform: rotate( 0deg );
+	}
+	to{
+		transform: rotate( -360deg );
 	}
 }
 
@@ -210,30 +589,960 @@ span.black{
 	}
 }
 
+/* Dark tokens live twice: once for the OS preference (media query, can be overridden by
+   an explicit data-theme), once for data-theme="dark" forced by the sunset controller
+   regardless of OS preference. Plain CSS has no shared mixin, so the values are repeated. */
+:root[data-theme="dark"]{
+	/* exact inverse (v -> 255-v) of the day theme's grays */
+	--color-fg: rgb( 255, 255, 255 );
+	--color-title: rgb( 255, 255, 255 );
+	--color-bg: rgb( 0, 0, 0 );
+	--color-muted: rgb( 170, 170, 170 );
+	--color-hover: rgba( 255, 255, 255, 0.9 );
+	--color-faint: rgb( 64, 64, 64 ); /* 25% of the way from the background to the text — a straight numeric mirror of the day theme's 10% reads as near-invisible against black, since dark grays compress perceptually */
+	--color-mid: rgb( 105, 105, 105 );
+	--color-border: rgb( 55, 55, 55 );
+
+	/* --color-twitter and --color-github are deliberately absent here: brand colors, never touched by theme */
+	--color-danger: rgb( 248, 113, 113 );
+	--color-success: rgb( 110, 220, 110 );
+	--color-pending-bg: rgb( 45, 40, 10 );
+
+	/* Karl's Hall of Fame — black marble by night */
+	--stone-bg: rgb( 24, 24, 26 );
+	--stone-grain-dark: rgba( 0, 0, 0, 0.3 );
+	--stone-grain-light: rgba( 255, 255, 255, 0.035 );
+	--engrave-shadow: rgba( 0, 0, 0, 0.65 );
+	--engrave-highlight: rgba( 255, 255, 255, 0.4 );
+	--medallion-highlight: rgba( 255, 255, 255, 0.22 );
+	--medallion-shadow: rgba( 0, 0, 0, 0.09 );
+	--stone-text-blend: screen; /* pale text absorbed into black marble */
+}
+
+/* --color-github is the fixed brand gray, day and night alike; by night that near-black text nearly vanishes against the black page, so a real outline — not a recolor — is what keeps it legible */
+:root[data-theme="dark"] #checkout_GitHub_1{
+	-webkit-text-stroke: 1.5px var( --color-fg );
+	paint-order: stroke fill;
+}
+
+@media ( prefers-color-scheme: dark ){
+	/* :not([data-theme="light"]) lets the sunset controller force day colors even when the OS is set to dark */
+	:root:not([data-theme="light"]){
+		--color-fg: rgb( 255, 255, 255 );
+		--color-bg: rgb( 0, 0, 0 );
+		--color-muted: rgb( 170, 170, 170 );
+		--color-hover: rgba( 255, 255, 255, 0.9 );
+		--color-faint: rgb( 64, 64, 64 );
+		--color-mid: rgb( 105, 105, 105 );
+		--color-border: rgb( 55, 55, 55 );
+
+		--color-danger: rgb( 248, 113, 113 );
+		--color-success: rgb( 110, 220, 110 );
+		--color-pending-bg: rgb( 45, 40, 10 );
+
+		--stone-bg: rgb( 24, 24, 26 );
+		--stone-grain-dark: rgba( 0, 0, 0, 0.3 );
+		--stone-grain-light: rgba( 255, 255, 255, 0.035 );
+		--engrave-shadow: rgba( 0, 0, 0, 0.65 );
+		--engrave-highlight: rgba( 255, 255, 255, 0.4 );
+		--medallion-highlight: rgba( 255, 255, 255, 0.22 );
+		--medallion-shadow: rgba( 0, 0, 0, 0.09 );
+		--stone-text-blend: screen;
+	}
+
+	:root:not([data-theme="light"]) #checkout_GitHub_1{
+		-webkit-text-stroke: 1.5px var( --color-fg );
+		paint-order: stroke fill;
+	}
+
+	:root:not([data-theme="light"]) #theme_toggle_knob{
+		transform: translateY( 20px );
+	}
+}
+
 /*   c l a s s e s   */
 
+.kicker{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 2pt;
+	font-size: 14px;
+	margin: 1em 0 0 0;
+}
+.headline{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-style: italic;
+	font-size: 48px;
+	line-height: 1.1;
+	margin: 0.2em 0;
+}
+.subheadline{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	font-size: 20px;
+	line-height: 1.3;
+	margin: 0 0 0.5em 0;
+}
+.lede{
+	font-size: 24px;
+	line-height: 1.4;
+	letter-spacing: 0.3px;
+	margin: 0.5em 0 1em 0;
+}
+.cover_image{
+	max-width: 100%;
+	height: auto;
+	display: block;
+	margin: 1em 0;
+}
+/* the strip a newspaper runs under its flag. The section header (KARL 's JOURNAL / のジャーナル) is
+this page's own flag, so the dateline sits beneath it, ruled top and bottom the way a printed one is */
+.dateline{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 1pt;
+	font-size: 9pt;
+	color: var( --color-muted );
+	border-top: 1px solid var( --color-fg );
+	border-bottom: 1px solid var( --color-fg );
+	padding: 0.4em 0;
+	margin: 0 0 1.5em 0;
+}
+/* the front page proper. Explicit grid rather than CSS columns: a une places its blocks — the splash
+holding the full measure, a feature holding two columns — and a multi-column flow, which pours one
+continuous stream through equal columns, cannot express that at all. Four columns wide, dropping to
+two and then one as the measure narrows */
+.front_page{
+	display: grid;
+	grid-template-columns: repeat( 4, 1fr );
+	column-gap: 2em;
+	row-gap: 1.5em;
+}
+/* overrides the generic article{display:flex;flex-direction:row} the site sets on every article —
+a story on the front page stacks its kicker, headline, subheadline and lede, it doesn't lay them in a
+row, the same override .album_header already needs for the same reason */
+.story{
+	display: block;
+	min-width: 0;
+	border-top: 1px solid var( --color-fg );
+	padding-top: 0.75em;
+}
+/* the lead story, running the full measure the way a splash does */
+.story_splash{
+	grid-column: 1 / -1;
+}
+.story_feature{
+	grid-column: span 2;
+}
+.story_brief{
+	grid-column: span 1;
+}
+/* the column rules. Painted as a border on each story that doesn't begin a row, pulled a full gutter
+to the left so the line lands in the middle of the gutter rather than hard against its own text, with
+the padding putting that text back where it was. Which stories those are is deterministic rather than
+guessed: the page always sets one splash, then two features, then briefs, so the splash spans the
+whole measure and needs none, the second feature is always the third story, and a brief begins a row
+every fourth story */
+.story_feature:nth-of-type( 3 ),
+.story_brief{
+	border-left: 1px solid var( --color-border );
+	margin-left: -1em;
+	padding-left: 1em;
+}
+.story_brief:nth-of-type( 4n ){
+	border-left: none;
+	margin-left: 0;
+	padding-left: 0;
+}
+/* the hierarchy itself: one headline scale stepping down by rank, so the page reads at a glance the
+way a front page is meant to. Sizes step off .headline's own 48px rather than being picked anew */
+.story_splash .headline{
+	font-size: 48px;
+}
+.story_feature .headline{
+	font-size: 30px;
+}
+.story_brief .headline{
+	font-size: 20px;
+	font-style: normal;
+}
+.story_feature .lede, .story_brief .lede{
+	font-size: 17px;
+	line-height: 1.5;
+}
+.story_brief .subheadline{
+	font-size: 14px;
+}
+.story_brief .kicker, .story_feature .kicker{
+	font-size: 11px;
+	letter-spacing: 1.5pt;
+}
+/* two columns: the splash still spans the measure, everything else takes one column each, so a story
+begins a row whenever it is an even-numbered one — the second story, the fourth, and so on */
+@media ( max-width: 1100px ){
+	.front_page{
+		grid-template-columns: repeat( 2, 1fr );
+	}
+	.story_feature, .story_brief{
+		grid-column: span 1;
+	}
+	.story_feature:nth-of-type( odd ),
+	.story_brief:nth-of-type( odd ){
+		border-left: 1px solid var( --color-border );
+		margin-left: -1em;
+		padding-left: 1em;
+	}
+	.story_feature:nth-of-type( even ),
+	.story_brief:nth-of-type( even ){
+		border-left: none;
+		margin-left: 0;
+		padding-left: 0;
+	}
+}
+/* one column: every story begins its own row, so no rule is ever between anything */
+@media ( max-width: 700px ){
+	.front_page{
+		grid-template-columns: 1fr;
+	}
+	.story_splash, .story_feature, .story_brief{
+		grid-column: 1 / -1;
+	}
+	.story_feature, .story_brief{
+		border-left: none;
+		margin-left: 0;
+		padding-left: 0;
+	}
+	.story_splash .headline{
+		font-size: 34px;
+	}
+}
+.status_badge{
+	display: inline-block;
+	color: var( --color-danger );
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	font-size: 9pt;
+	letter-spacing: 1pt;
+	border: 1px solid var( --color-danger );
+	padding: 0.1em 0.4em;
+	margin: 0 0.5em 0.5em 0;
+}
+.comment{
+	border-top: 1px solid var( --color-faint );
+	padding: 0.75em 0;
+}
+.comment_author{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 10pt;
+}
+.comment_date{
+	color: var( --color-mid );
+	font-weight: normal;
+}
+.comment.pending .comment_author{
+	color: var( --color-danger );
+}
+.comments_locked{
+	color: var( --color-mid );
+	font-style: italic;
+}
+.website_field{
+	display: none;
+}
+.errors{
+	color: var( --color-danger );
+}
+.comment_moderation_notice{
+	color: var( --color-mid );
+	font-size: 9pt;
+	font-style: italic;
+}
+.autosave_status{
+	display: block;
+	color: var( --color-mid );
+	font-size: 9pt;
+	font-style: italic;
+	min-height: 1.5em;
+}
+.field_hint{
+	color: var( --color-mid );
+	font-size: 9pt;
+	font-style: italic;
+	margin: 0.15em 0 0.75em 0;
+}
+.flash_notice{
+	color: var( --color-success );
+}
+.flash_alert{
+	color: var( --color-danger );
+}
+.stone_surface{
+	background-color: var( --stone-bg );
+	background-image:
+		repeating-linear-gradient( 115deg, var( --stone-grain-dark ) 0px, var( --stone-grain-dark ) 1px, transparent 1px, transparent 3px ),
+		repeating-linear-gradient( 25deg, var( --stone-grain-light ) 0px, var( --stone-grain-light ) 2px, transparent 2px, transparent 5px ),
+		radial-gradient( ellipse at 25% 15%, var( --stone-grain-dark ), transparent 60% ),
+		radial-gradient( ellipse at 80% 70%, var( --stone-grain-dark ), transparent 55% );
+	padding: 2em;
+}
+.engraved{
+	font-family: 'Didot', 'Times New Roman', serif;
+	color: var( --engrave-shadow );
+	text-shadow: 0 1px 0 var( --engrave-highlight ), 0 -1px 1px var( --engrave-shadow );
+}
+.painted{
+	font-family: 'Didot', 'Times New Roman', serif;
+	mix-blend-mode: var( --stone-text-blend, multiply );
+}
+.pantheon_door{
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.5em;
+	padding: 3em 1em;
+	text-align: center;
+}
+.pantheon_door_illustration{
+	width: 100%;
+	max-width: 320px;
+	height: auto;
+	color: var( --color-fg );
+}
+.pantheon_door_notice{
+	font-family: 'Arial', sans-serif;
+	font-size: 11pt;
+	max-width: 28em;
+	color: var( --color-mid );
+}
+.doors_closed .pantheon_content{
+	display: none;
+}
+.doors_closed .pantheon_door{
+	display: flex;
+}
+.pantheon_facade{
+	display: block;
+	text-align: center;
+	margin: 0 0 2em 0;
+}
+.pantheon_title{
+	font-size: 32pt;
+	letter-spacing: 2pt;
+	margin: 0;
+}
+.pantheon_subtitle{
+	font-size: 14pt;
+	font-style: italic;
+	letter-spacing: 3pt;
+	text-transform: uppercase;
+	margin: .5em 0 0 0;
+}
+.pantheon_gallery{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2em;
+	justify-content: center;
+}
+.honoree_tile{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: .75em;
+	width: 180px;
+	text-align: center;
+}
+.medallion{
+	position: relative;
+	width: 160px;
+	height: 160px;
+	border-radius: 50%;
+	overflow: hidden;
+	background-color: var( --color-border );
+	/* no offset on either shadow: the light comes from the viewer straight ahead of the screen, not from any one side */
+	box-shadow: inset 0 0 16px var( --medallion-shadow ), 0 0 14px var( --medallion-shadow );
+}
+.medallion.draft{
+	opacity: 0.5;
+}
+.medallion img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+/* a bright, tight band standing in for the rim-light on a flat water droplet — most of the ellipse falls outside the circle, so only a crescent near the edge actually shows through */
+.medallion::before{
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background: radial-gradient( ellipse 95% 30% at 50% 25%, rgba( 255, 255, 255, 0.9 ), transparent 65% );
+	mix-blend-mode: screen;
+	pointer-events: none;
+	transition: background .2s ease-in-out;
+}
+.medallion::after{
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	box-shadow: inset 0 0 24px var( --medallion-shadow );
+	pointer-events: none;
+}
+.honoree_tile:hover .medallion::before{
+	background: radial-gradient( ellipse 95% 30% at 50% 75%, rgba( 255, 255, 255, 0.9 ), transparent 65% );
+}
+.honoree_name{
+	font-size: 12pt;
+}
+.honoree_hero{
+	width: 100%;
+	max-height: 70vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0 0 1em 0;
+}
+.honoree_hero_image{
+	max-width: 100%;
+	max-height: 70vh;
+	object-fit: contain;
+}
+.honoree_name_large{
+	font-size: 36pt;
+	text-align: center;
+	margin: 0;
+}
+.honoree_dates{
+	text-align: center;
+	font-size: 11pt;
+	display: flex;
+	justify-content: center;
+	gap: 1em;
+	flex-wrap: wrap;
+	margin: .5em 0;
+}
+.honoree_inscription{
+	text-align: center;
+	font-size: 18pt;
+	font-style: italic;
+	margin: 1em auto;
+	max-width: 30em;
+}
+.honoree_body{
+	max-width: 40em;
+	margin: 2em auto 0;
+	font-size: 13pt;
+}
 
+/* one Cover Flow stage per album, stacked down the page — only the stage itself goes full-bleed, the same -1em/+1em pair that cancels body's right padding on the album's own page. The caption below stays put, subject to the ordinary margins like everything else */
+.album_cover_flow{
+	display: block;
+	margin: 0 0 3em 0;
+}
+/* a#read/#see/etc — small text sitting on a plain background — reads as "this is blinking to get your attention" the way a:hover's own site-wide blink intends. The exact same animation on this link instead swallows three full photos and their captions into nothing once a second, since the blink is opacity on the link itself and everything inside an <a> is exactly as opaque as the <a> is: not "clickable," just broken. The color shift a:hover also sets stays, same as any other link — only the animation needs turning off here */
+.album_cover_flow:hover{
+	animation: none;
+}
+.album_cover_flow.draft, .album_solo.draft{
+	opacity: 0.6;
+}
+/* a one-photo album isn't a Cover Flow — there's nothing to flow through, so it's just the photo itself, full-bleed like .album_photo already is on the album's own page, sitting here unlinked. No gap between the photo and .album_meta below it: .album_meta already carries its own top margin, the same one that alone spaces a real album's caption under its Cover Flow stage — adding a flex gap on top of that here doubled the space above this one, reading as room held open for a title once that title wasn't there to fill it */
+.album_solo{
+	display: flex;
+	flex-direction: column;
+	margin: 0 0 3em 0;
+}
+/* unselectable like the nav/header/footer chrome around it — the caption below is a sibling, not a descendant, of this stage, so it keeps the site's normal text selection untouched without needing an override rule of its own */
+/* height is auto now, not a guessed vh/px number retuned by hand every time a cover's own aspect ratio changes — min-height only keeps an unusually wide, short cover from collapsing the whole stage down too far, well below what even the tallest side/tertiary cover (max-height:45vh) could otherwise want to use */
+.cover_flow_stage{
+	position: relative;
+	min-height: 160px;
+	margin-right: -1em;
+	width: calc( 100% + 1em );
+	overflow: hidden;
+	perspective: 1600px;
+	user-select: none;
+}
+/* never cropped — the whole photo always shows, at whatever height its own aspect ratio and the 60% width cap come out to. In normal flow, unlike the side/tertiary covers below, specifically so its own rendered size is what gives the stage a real height in the first place: a stage with only absolutely positioned children collapses to zero height on its own, which is exactly what forced a guessed vh/px number here before. position:relative (not the default static) purely so z-index still applies — z-index is a no-op on a statically positioned box — letting this still paint over the absolutely positioned side/tertiary covers despite sitting in normal flow */
+.cover_flow_cover{
+	position: relative;
+	display: block;
+	margin: 0 auto;
+	width: auto;
+	max-width: 60%;
+	height: auto;
+	max-height: 60vh;
+	object-fit: contain;
+	z-index: 3;
+}
+/* the side covers ride the same shared perspective as the stage itself, so both lean away at a consistent angle rather than each carrying its own vanishing point */
+/* the two outermost things in the stage — a side cover if there are only 2 or 3 photos, or the gray hint behind it if there are more — reach the true left/right edge of the stage, same as the center cover's own full-bleed edge. Never cropped, same as the center cover: width and height are both auto, each capped by its own max- so the box always shrink-wraps its own photo at that photo's real aspect ratio instead of ever slicing one to fit a fixed box or forcing a fixed height that would just as often leave the wrong side of the photo letterboxed */
+/* full opacity, same as the center cover — real Cover Flow never dims a cover for being off to the side, depth reads off the rotation alone */
+/* max-height in vh, not a percentage of the stage — the stage's own height is auto now, and a percentage height only ever resolves against a containing block whose own height is explicitly set, top/left percentages further down being the one exception that still works fine against an auto-height parent */
+.cover_flow_side{
+	position: absolute;
+	top: 50%;
+	height: auto;
+	max-height: 45vh;
+	width: auto;
+	max-width: 38%;
+	object-fit: contain;
+	z-index: 2;
+}
+/* transform-origin left at its own default (center) rather than pinned to either edge — pivoting there is what makes the two halves of the same tilted card lean in opposite directions instead of one edge just sitting still while the whole card leans away from it: the lateral half (the outer edge, toward the stage's own edge) comes forward toward the viewer, the medial half (the inner edge, toward the center cover) recedes toward the background, the same way a real card fanned out from a stack would. translateY(-50%) is what the fixed top:8%/height:84% pairing used to do on its own before height went auto above — top:50% alone would pin the box's own top edge, not its center, to the stage's own vertical middle; translateY and rotateY land in the same transform property, harmlessly, since one only ever moves along Y and the other only ever rotates around Y — a wiggle from medallion-physics still lands cleanly on top of this through the separate translate property, same as before */
+.cover_flow_side_left{
+	left: 0;
+	transform: translateY( -50% ) rotateY( 60deg );
+}
+.cover_flow_side_right{
+	right: 0;
+	transform: translateY( -50% ) rotateY( -60deg );
+}
+/* wiggles the same way the about-me medallion does — spring physics kicked by a sudden change in scroll speed, not steady scrolling — but through element.style.translate rather than transform: the side cover's own rotateY lean above already lives in transform, and translate is its own independent CSS property precisely so this can drift the photo without overwriting that lean. The center cover never gets the controller at all, so it alone stays put while the two side covers around it wiggle */
+/* the actual 4th/5th photo, not a placeholder — a flat gray block standing in for "something's further back" read as a stray drop-shadow rather than part of the same photo stack, since it carried no photographic texture of its own to tie it to its neighbors. A real photo fixes that outright. transform-origin stays pinned to its own outer edge here, unlike the side cover's own center pivot just above: pivoting a box at center would swing its own lateral half far enough into positive z that, combined with the stage's shared perspective, it visibly outgrows and bleeds past the side cover in front of it instead of reading as a smaller, further-back card. Pinning the pivot to the edge keeps its whole box between the stage's own resting plane and the background, the same one-directional lean the side cover used before it got a center pivot of its own, just at a shallower angle — less exaggerated, per the side cover's own steeper lean below. Real Cover Flow — the actual reference this is chasing — never fades, dims, or desaturates a single cover no matter how far back it sits: every one of them stays exactly as sharp and full-color as the one in front, depth read entirely off the rotation angle and nothing else, so no opacity/saturate/mask-fade here either, same crisp hard edge the side cover already gets. Never cropped either, same as the side cover just above and the center cover before it: width and height are both auto, each capped by its own max-, so the box shrink-wraps its own photo instead of forcing a fixed height that leaves a transparent letterboxed gap the side cover's own gap could otherwise line up with and bleed a second photo's pixels through both at once. max-height stays well under the side cover's own 45vh, deliberately, and in vh for the same reason the side cover's own is (the stage's own height is auto, so a percentage wouldn't resolve at all) — a tall-ish photo landing here without that ceiling renders far closer to the side cover's own size than something sitting further back in the stack ever should, and reads as oversized rather than receding. This flat vh figure is only ever the fallback, though: it's a fixed ceiling, not a fraction of whatever the side cover in front of it actually rendered at, so a wide side cover (short) paired with a portrait tertiary (naturally tall) could still let the tertiary come out taller than the side cover despite both ceilings being what they are — cover_flow_depth_controller.js measures the side cover's real height once its image has loaded and overrides this inline with a true fraction of that, which always wins over this since an inline style beats a class selector regardless of source order. It wiggles too — same controller, in the view, with its own max-drag-fraction/scroll-kick values overridden well below the side covers' own defaults — so it drifts noticeably less than they do: real parallax has whatever's further back moving less across the same physical shake, and matching that here is what feigns the stack actually having depth instead of every layer just wiggling in lockstep */
+.cover_flow_hint{
+	position: absolute;
+	top: 50%;
+	height: auto;
+	max-height: 22vh;
+	width: auto;
+	max-width: 28%;
+	object-fit: contain;
+	z-index: 1;
+}
+.cover_flow_hint_left{
+	left: 0;
+	transform-origin: left center;
+	transform: translateY( -50% ) rotateY( 20deg );
+}
+.cover_flow_hint_right{
+	right: 0;
+	transform-origin: right center;
+	transform: translateY( -50% ) rotateY( -20deg );
+}
+/* sized like a nav entry (#see/#read/etc's own 16pt) — the gallery's own titles are meant to read with the same weight as a section of the site, not as a caption line underneath one. color is explicit, not inherited, because its parent .album_meta sets its own color to --color-mid for the author/date/location line beneath — without an override here the title would fade to that same muted gray instead of standing out from it */
+.album_title{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 16pt;
+	color: var( --color-title );
+	display: block;
+}
+/* title, then author, date, location, camera, and lens on their own lines — both here (the caption stacked under a Cover Flow entry) and in .album_header on the album's own page (real <p> tags there, already block on their own). Formatted like the timeline's own secondary metadata (.timeline_dates/.timeline_location) — muted, uppercase, letter-spaced — rather than plain body text, since this is the same kind of "when/where/by what" line the timeline already has a established look for */
+.album_author, .album_location, .album_date, .album_camera, .album_lens{
+	font-size: 9pt;
+	color: var( --color-mid );
+	text-transform: uppercase;
+	letter-spacing: 0.5pt;
+	display: block;
+	margin: 0.2em 0 0 0;
+}
+.album_meta{
+	font-size: 9pt;
+	color: var( --color-mid );
+	margin: 0.75em 0 0 0;
+}
+/* each photo's own entry on the album's own page: image, its own info (read straight off that one Photo, not the album's aggregate), and its edit link, grouped tightly so .album_photos' own gap reads as space between photos rather than between an image and its own caption */
+.album_photo_entry{
+	display: block;
+}
+.photo_edit_link{
+	display: block;
+	margin: 0.75em 0 0 0;
+}
+/* overrides the generic header{display:flex;flex-direction:row} — title, author, and date need to stack, not sit in a row */
+.album_header{
+	display: block;
+	margin: 1em 0;
+}
+.album_title_large{
+	font-size: 36pt;
+	color: var( --color-title );
+	margin: 0;
+}
+.album_description{
+	max-width: 40em;
+	margin: 1em 0;
+}
+.album_photos{
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+}
+/* written passages sit in the same single column the photos run down, so the album reads as one
+continuous piece rather than prose and pictures in separate zones. The extra top margin is what
+separates a new stretch of writing from the photo it follows, .album_photos' own 1em gap being tuned
+for the space between two photographs instead */
+.album_passage{
+	max-width: 40em;
+	margin: 1.5em 0 0.5em 0;
+}
+/* a section opening — the dated chapter heading of a long album. Sized and weighted off .subheadline,
+the journal's own equivalent rank, rather than a size picked independently here */
+.album_passage_heading{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	font-size: 20px;
+	line-height: 1.3;
+	margin: 0 0 0.5em 0;
+	color: var( --color-title );
+}
+/* no max-width of its own — .album_passage above already holds the whole block to a reading measure,
+the same 40em .album_description is held to */
+.album_passage_body{
+	margin: 0;
+}
+/* full-bleed: the 1em cancels out body's own padding on the right, the same distance the nav already keeps main clear of on the left, so the photo reaches the true window edge on both sides without needing to know the nav's own width */
+.album_photo{
+	width: calc( 100% + 1em );
+	max-width: calc( 100% + 1em );
+	height: auto;
+	display: block;
+	margin-right: -1em;
+	user-select: none;
+}
+
+.pagination{
+	display: flex;
+	justify-content: space-between;
+	margin: 2em 0;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 1pt;
+	font-size: 10pt;
+}
+#print{
+	max-width: 50em;
+	margin: 0 auto;
+}
+.print_image{
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+.print_caption{
+	margin: 1em 0 0 0;
+}
+.print_title{
+	font-size: 20pt;
+	margin: 0 0 0.5em 0;
+}
+.print_exif{
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 0.25em 0.75em;
+	margin: 0;
+	font-size: 10pt;
+}
+.print_exif dt{
+	color: var( --color-mid );
+	text-transform: uppercase;
+	letter-spacing: 0.5pt;
+}
+.print_exif dd{
+	margin: 0;
+}
+
+.about_layout{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	column-gap: 2em;
+	/* matches the gap between the section header's last line and the disc above it, so the timeline sits exactly as close beneath the disc once it wraps underneath */
+	row-gap: 16.164px;
+}
+/* flex-basis is 200px — the medallion's own hard floor, same number as min-width just below — not the viewport-scaled preferred size that lives in max-width instead. That split matters specifically because flex-wrap decides whether a line breaks using each item's flex-basis clamped to its min/max, not its final shrunk size: a basis already sitting above the floor, like the preferred size was here before, gets used as-is for that decision, so two columns were judged to "not fit" by their preferred widths rather than their minimums, giving up on parallel earlier than the floor actually required. With basis pinned to the floor, the wrap decision is always made against the floor, while flex-grow still lets the column expand up to its viewport-scaled max-width whenever there's room for that. container-type turns this column into a query container, so --disc below can read cqw units: a percentage that consistently means "percent of this column," in every property and at every nesting depth, unlike a bare % which means something different in a translateY() than it does in a width */
+.about_sidebar{
+	flex: 1 1 200px;
+	min-width: 200px;
+	max-width: clamp( 200px, calc( 100vw / 3 ), 480px );
+	container-type: inline-size;
+	display: flex;
+	flex-direction: column;
+	row-gap: 1.5em;
+}
+/* timeline and the four skill group names sit at the same visual rank — the timeline only lives under its own h2, in a separate column, because it needs a column of its own, not because it outranks these. Sized to match the nav's own menu entries (16pt small-caps, e.g. #read/#see/#listen/#watch below), since these are section labels in the same sense those are, not body headings */
+.resume_timeline h2, .skills_group h3{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 16pt;
+	font-variant: small-caps;
+	letter-spacing: 0.5pt;
+	margin: 0;
+}
+.resume_timeline h2{
+	text-align: center;
+}
+.skills_group ul{
+	list-style: none;
+	margin: 0.4em 0 0 0;
+	padding: 0;
+	font-size: 10pt;
+}
+.skills_group li{
+	margin: 0.15em 0 0 0;
+}
+/* :has() rather than a class on the <ul> itself: a group is either all badges or all plain text today, so whether it contains a .skill_badge is enough to tell the two apart without touching the view. Plain-text groups (degrees, licenses) keep the one-per-line list they need for full sentences; badge groups wrap side by side like the README they're copied from */
+.skills_group ul:has( .skill_badge ){
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4em;
+}
+.skills_group ul:has( .skill_badge ) li{
+	margin: 0;
+}
+.skill_badge{
+	height: 20px;
+	vertical-align: middle;
+}
+/* --disc is the one true size: the photo, both rings, and their type are all defined as a fraction of it below, so the whole medallion scales as one coherent object instead of drifting apart at different rates. 100cqw — not 100vw/3 directly, and not a bare % — is what makes it track the sidebar's own actual (possibly squeezed) width: cqw always means "percent of the nearest container-type ancestor," the same in a width as in a translateY() ten elements deep, so the rings can read it too without the mismatch a plain % caused before. Bound by clamp() so it can't shrink past legible ring type on a phone or balloon past a sensible badge size on an ultra-wide */
+.name_disc_center{
+	align-self: center;
+}
+/* below the same 432px (200px + 2em column-gap + 200px) that makes .about_sidebar and .resume_timeline wrap off of each other, the sidebar is alone on its row with the full row's width to itself — like .resume_timeline (which has no max-width tight enough to ever hit this ceiling), it should widen to fill that row rather than stay pinned to the vw/3 cap that only exists to keep the two columns from crowding each other side by side. Dropping the cap here doesn't reopen "c'est exagéré": --disc's own clamp above already hard-ceilings the medallion at 480px directly, independent of how wide .about_sidebar itself gets to be, so only the skill-group text around it gains the extra room. The medallion still reads better centered than left-hung once nothing shares the row — name_disc_center's align-self:center already does that within whatever width .about_sidebar ends up with, so no extra centering rule is needed here now that the sidebar's own box is the one growing instead of staying narrow within a centered margin */
+@container about_area ( max-width: 432px ){
+	.about_sidebar{
+		max-width: none;
+	}
+}
+.name_disc{
+	position: relative;
+	--disc: clamp( 200px, 100cqw, 480px );
+	width: var( --disc );
+	height: var( --disc );
+	margin: 0;
+}
+/* box-shadow for the convex curvature. The shake/lag transform itself lives on .name_disc, not here — the rings orbit the photo, so the whole disc has to move as one object, not just the photo underneath it */
+.profile_photo_medallion{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate( -50%, -50% );
+	width: calc( var( --disc ) * 180 / 237 );
+	height: calc( var( --disc ) * 180 / 237 );
+	border-radius: 50%;
+	overflow: hidden;
+	user-select: none;
+	/* no offset on either shadow: the light comes from the viewer straight ahead of the screen, not from any one side */
+	box-shadow: inset 0 0 20px var( --medallion-shadow ), 0 0 14px var( --medallion-shadow );
+}
+.profile_photo_disc{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+.name_ring{
+	position: absolute;
+	inset: 0;
+	user-select: none;
+	animation: spin_counterclockwise 20s linear infinite;
+}
+.name_ring_japanese{
+	animation-direction: reverse;
+}
+.name_ring span{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	letter-spacing: 0.5px;
+}
+.name_ring_latin span{
+	font-size: calc( var( --disc ) * 12 / 237 );
+	text-transform: uppercase;
+}
+.name_ring_japanese span{
+	font-size: calc( var( --disc ) * 11 / 237 );
+}
+.name_ring span .ring_char{
+	display: inline-block;
+	transform: rotate( 180deg );
+}
+.name_ring span .ring_char.ring_code{
+	font-family: 'Courier New', Courier, monospace;
+	text-transform: none;
+}
+#section_header.name_header{
+	display: flex;
+	flex-direction: column;
+}
+.name_header_primary, .name_header_aka{
+	display: block;
+	text-transform: uppercase;
+	font-size: 21pt;
+	letter-spacing: -0.5pt;
+	line-height: 0.85em;
+}
+.name_header_aka{
+	color: var( --color-mid );
+}
+.name_header_primary_ja, .name_header_aka_ja{
+	display: block;
+	font-family: 'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+	font-size: 11pt;
+	letter-spacing: normal;
+	line-height: 1em;
+}
+.name_header_primary_ja{
+	margin-top: 0.2px;
+}
+.name_header_aka_ja{
+	color: var( --color-mid );
+}
+
+/* min-width, not just flex-basis, is what actually forces a clean wrap: without it a flex item happily shrinks below its basis down toward its content's own minimum before ever wrapping, squeezing the timeline instead of moving it below the sidebar the way flex-wrap on .about_layout intends */
+/* 200px, not an em value picked independently — the same floor as --disc's own minimum below, so neither column is ever asked to be narrower than the medallion itself is allowed to get. Long lines (a milestone title, a section name) just wrap inside that width rather than forcing the column wider */
+/* no trailing margin of its own anymore — #signature's own margin-top is what now opens the gap beneath whichever column runs longer, the timeline usually, and a second margin stacked on top of that would only pull the two apart further than the 1.5em rhythm calls for */
+.resume_timeline{
+	flex: 1 1 200px;
+	min-width: 200px;
+	max-width: 40em;
+	margin: 0;
+}
+/* position:relative here, not just on .timeline_entry below, is what makes the one continuous line further down possible: it needs one fixed pair of coordinates (the first entry's cross, the last entry's cross) to run between, not a running total of how tall every entry's own date block happened to wrap to */
+.timeline{
+	position: relative;
+	list-style: none;
+	padding: 0;
+	margin: 1em 0 0 0;
+}
+/* one continuous line for the whole list rather than a segment stitched between every pair of crosses: since every cross sits on the same x, a single straight line between the first entry's cross and the last one passes directly through every cross in between regardless of exactly where each one landed, sidestepping the need to know that at all. top and bottom, not top and height: a fixed height broke the moment Milestone.chronological_with_gaps started splicing filler entries in, since the list's total height is no longer just a function of the real milestones — bottom only depends on the last entry's own layout (64.09px), which doesn't change just because entries were added or removed somewhere in between. top now reaches up past the first cross to the "timeline" heading's own vertical center (h2's center sits 30.33px above .timeline's own top edge, hence -30.33px) rather than stopping exactly at the first cross the way bottom still does, because the line needs to fade out somewhere above that cross, not stop abruptly at it. Two mask layers rather than one: the dash-tile from before still repeats the whole way, and a second, non-repeating linear-gradient — solid for everything below 85.27px from this extended top (the distance back down to where the first cross actually is) and fading to transparent above that — is layered on top of it with mask-composite:intersect so only where BOTH layers are opaque survives, i.e. dashes that fade out approaching the heading and are fully solid at and below the first cross, same as always */
+.timeline::before{
+	content: '';
+	position: absolute;
+	left: -3px;
+	top: -30.33px;
+	bottom: 64.09px;
+	width: 4px;
+	background-color: rgb( 128, 128, 128 );
+	mask-image: url( "data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%204%2012%27%3E%3Cline%20x1=%272%27%20y1=%271%27%20x2=%272%27%20y2=%277%27%20stroke=%27white%27%20stroke-width=%272%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E" ), linear-gradient( to bottom, transparent 0, black 85.27px, black 100% );
+	mask-repeat: repeat-y, no-repeat;
+	mask-size: 4px 12px, auto;
+	mask-composite: intersect, intersect;
+}
+/* margin:0 overrides the sitewide NYT-typography li rule (0.3em top and bottom) — spacing between entries is already this padding's own job, so that generic margin only ever adds redundant, collapsed space between entries, and on the last entry, whose bottom margin nothing follows to collapse with, it doesn't collapse away at all: .resume_timeline is a flex item of .about_layout, and flex items don't let a child's margin escape through their own edge, so it was quietly padding out .resume_timeline's own height by exactly that 0.3em past the timeline's actual last pixel */
+.timeline_entry{
+	position: relative;
+	padding: 0 0 1.5em 1.5em;
+	margin: 0;
+}
+/* a diagonal cross (×) rather than the literal '+' character before, drawn as an SVG mask rather than text — border-style:dashed and text glyphs can't get round caps on their own strokes, but an SVG stroke can (stroke-linecap:round), and mask-image lets that shape be filled with var(--color-fg) instead of a color baked into the SVG, so it still answers to the theme. On .timeline_title rather than .timeline_entry, and top is a fixed, small offset (6.35px = half of .timeline_title's own 24.7px line-height, minus half the cross's own 12px) — deliberately NOT tied to how tall .timeline_dates rendered above it: .timeline_title's own top always lands wherever the date above it actually ended, whether that took one line or two, the same way any two stacked block elements do in normal flow, so anchoring the cross to the title directly gets that for free, without needing dates to be forced to some fixed height (which only wasted space under the many one-line dates) or needing to know that height at all. left is -32.5px, not the -7px that centered it correctly back when this sat on .timeline_entry directly: .timeline_title sits 25.5px further right than .timeline_entry's own edge (.timeline_entry's own 1.5em left padding), and .timeline::before below is positioned from that same .timeline_entry/.timeline edge, not from .timeline_title's — so anchoring the cross to .timeline_title without correcting for that 25.5px offset pulls it off the line, which is exactly what happened. -7 - 25.5 = -32.5, landing the cross's center (its own left plus half its 12px width) back on the line's own center at x=-1px, measured from the shared .timeline_entry/.timeline edge */
+.timeline_title::before{
+	content: '';
+	position: absolute;
+	left: -32.5px;
+	top: 6.35px;
+	width: 12px;
+	height: 12px;
+	background-color: var( --color-fg );
+	-webkit-mask-image: url( "data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2012%2012%27%3E%3Cpath%20d=%27M2%202L10%2010M10%202L2%2010%27%20stroke=%27white%27%20stroke-width=%272%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E" );
+	mask-image: url( "data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2012%2012%27%3E%3Cpath%20d=%27M2%202L10%2010M10%202L2%2010%27%20stroke=%27white%27%20stroke-width=%272%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E" );
+	mask-size: contain;
+	mask-repeat: no-repeat;
+}
+.timeline_dates{
+	font-size: 9pt;
+	color: var( --color-mid );
+	text-transform: uppercase;
+	letter-spacing: 0.5pt;
+	margin: 0 0 0.15em 0;
+}
+.timeline_title{
+	position: relative;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	margin: 0 0 0.15em 0;
+}
+.timeline_organization, .timeline_location{
+	margin: 0 0 0.25em 0;
+}
+.timeline_organization{
+	font-size: 10pt;
+	font-variant: small-caps;
+}
+.timeline_location{
+	font-size: 9pt;
+	color: var( --color-mid );
+	text-transform: uppercase;
+}
+/* no explicit font-size — .timeline_title doesn't set one either, so both inherit the same size from body rather than each pinning its own number that could drift apart later */
+.timeline_description{
+	margin: 0.25em 0 0 0;
+}
+/* the computed "It's a secret to everybody." entries Milestone.chronological_with_gaps splices in for unaccounted-for stretches of time — never real records, so they get no cross (the continuous line still runs behind them same as any other stretch) and a visibly different, secondary treatment on the title itself */
+.timeline_entry_filler .timeline_title::before{
+	display: none;
+}
+.timeline_entry_filler .timeline_title{
+	font-style: italic;
+	color: rgb( 128, 128, 128 );
+}
 
 /*   I D s   */
 
+/* the emblem paints as a mask, not a plain background-image, so its ink is var(--color-faint) — the exact same token #line_1_logotype/#line_4_logotype already use for "kvpb.fr"/"prototyp" — rather than a color baked into the SVG file itself. mask-mode:luminance is why the file carries its own internal invert filter (id=mask-invert, wrapping the whole Artboard group): the artwork is authored as dark ink on white paper, but a luminance mask reads white as "fully shown" and black as "fully hidden" — backwards from that convention — so the file pre-inverts itself before the mask ever samples it, making dark ink (now high-luminance) the part that shows and white paper (now low-luminance) the part that doesn't. That, in turn, is what lets --color-faint's own light/dark/gallery redefinitions carry the emblem automatically, the same way #signature/#theme_toggle already ride var(--color-fg)/--color-mid — no separate invert()/contrast() filter needed here at all */
+#backdrop{
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	background-color: var( --color-faint );
+	-webkit-mask-image: url(karlsemblem.svg); /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
+	mask-image: url(karlsemblem.svg);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-mode: luminance;
+	mask-mode: luminance;
+	/* the seal's circle, not the svg canvas, is what must sit equidistant from the top/left/right edges; reusing the same vw-seeded offset for both axes is what achieves that regardless of the canvas' own shape — the new artwork's own circle (cx/cy both 125.25, unlike the old one's merely-close pair) makes the two calc() terms come out identical here, deliberately leaving the leftover slack at the bottom */
+	-webkit-mask-position: calc( 50vw - 125.25px ) calc( 50vw - 125.25px );
+	mask-position: calc( 50vw - 125.25px ) calc( 50vw - 125.25px );
+	pointer-events: none;
+}
+/* appended once at the end of main's own content, in normal flow like every other element on the page — not position:fixed, so it never floats above the rest and scrolls away with the page exactly the way the header and the body's own text do, rather than staying pinned to the viewport like #theme_toggle/#copyright_notice_block do. margin-left:auto (its containing block, main, lays its children out in normal block flow, not flex, so this — not align-self — is what pushes a fixed-width box flush to the right) with the same 19.7734375px used on every other side, the one edge margin already established site-wide, is what keeps it spaced from main's own right edge the same way the header and nav are spaced from theirs. Top and bottom margins mirror #section_header's own 22px/16px instead of that constant: the header opens 22px above itself (page edge to header) and closes 16px below (header to whatever main renders next), so the footer, symmetric to it at the opposite end of the page, closes 16px above itself (whatever main rendered last to footer) and opens 22px below (footer to page edge) — top:16px, bottom:22px, the header's own pair read in reverse. mask-image + background-color, not the artwork's own #D8D8D8 fill, is what lets it read as true black by day and white by night off var(--color-fg) directly, exactly like every other glyph on the site rather than a lightened/darkened gray. Height is the constraint — #theme_toggle's own 40px, so the signature never outgrows the light switch — and width follows the artwork's own 798:424 canvas ratio rather than being set independently. -webkit-text-stroke only ever applies to real glyphs, so the four 1px drop-shadows here are what stand in for body's own background-colored liseré against a masked shape instead of actual text */
+#signature{
+	margin: 16px 19.7734375px 22px auto;
+	width: calc( 40px * 798 / 424 );
+	height: 40px;
+	background-color: var( --color-fg );
+	-webkit-mask-image: url(karlssignature.svg);
+	mask-image: url(karlssignature.svg);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	filter: drop-shadow( 1px 0 0 var( --color-bg ) ) drop-shadow( -1px 0 0 var( --color-bg ) ) drop-shadow( 0 1px 0 var( --color-bg ) ) drop-shadow( 0 -1px 0 var( --color-bg ) );
+	user-select: none;
+	pointer-events: none;
+}
 #wordmark{
-	color: rgb( 0, 0, 0 );
+	color: var( --color-fg );
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
 	text-align: left !important;
 	padding: 0;
 	display: flex;
 	flex-direction: column;
-	transition: color .1s ease-in-out;
+	transition: color .25s ease-in-out;
 	/*-webkit-animation: fadein .5s 1;*/
 }
 #line_1_logotype{
-	color: rgb( 230, 230, 230 );
+	color: var( --color-faint );
 	text-transform: uppercase;
 	font-size: 12pt;
 	/*font-variant: small-caps;*/
 	letter-spacing: 10pt/*3.67pt*/;
 	padding-left: 3.33pt;
+	margin-left: -3.33pt;
 }
 #line_2_logotype{
 	text-transform: uppercase;
@@ -241,26 +1550,71 @@ span.black{
 	/*font-variant: small-caps;*/
 	letter-spacing: -5.5pt;
 	line-height: 0.75em;
+	margin-left: -2.75pt;
 }
 #line_3_logotype{
 	font-family: /*'ヒラギノ角ゴ Pro W3', */'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', 'ＭＳ ゴシック' , 'MS Gothic', 'Noto Sans CJK JP', 'TakaoPGothic', sans-serif !important;
 	font-size: 24pt;
 	/*font-variant: small-caps;*/
-	letter-spacing: 21.34pt;
+	letter-spacing: 22.22pt;
 	line-height: 0.9em;
+	margin-left: -2.22pt;
 }
 #line_4_logotype{
-	color: rgb( 230, 230, 230 );
+	color: var( --color-faint );
 	text-transform: uppercase;
 	font-size: 6pt;
 	/*font-variant: small-caps;*/
-	letter-spacing: 6.50pt;
+	letter-spacing: 11.33pt/*24pt*/;
 	padding-left: 3.33pt;
+	margin-left: -2.75pt;
 }
 
+/* the .1cm negative margin cancels nav's own right padding exactly, so the section name picks up right where "Karl" in the nav wordmark leaves off — bypassing the gap between the nav bar and the main column instead of sitting flush against it */
+#section_header{
+	display: block;
+	color: var( --color-fg );
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	font-size: 48pt;
+	letter-spacing: -5.5pt;
+	line-height: 0.75em;
+	text-align: left;
+	padding: 0;
+	margin: 22px 0 16px -.1cm;
+	user-select: none;
+}
+#section_possessive{
+	text-transform: none;
+	font-variant: small-caps;
+	letter-spacing: normal;
+}
+/* continues the logo's own カール (#line_3_logotype) the same way its English line already sits at the exact size #section_header's own English line does — half the size, same font stack, の prepended the way an actual Japanese possessive reads */
+#section_label_ja{
+	display: block;
+	font-family: 'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', 'ＭＳ ゴシック', 'MS Gothic', 'Noto Sans CJK JP', 'TakaoPGothic', sans-serif;
+	font-size: 24pt;
+	text-transform: none;
+	letter-spacing: normal;
+	line-height: 1em;
+}
+.section_empty{
+	opacity: 0.5;
+}
+
+#nav_wrapper{
+	position: sticky;
+	top: 1em;
+	align-self: flex-start;
+	z-index: 40;
+	flex: 0 0 auto;
+	user-select: none;
+}
 /*#*/nav{
-	color: rgb( 0, 0, 0 );
-	text-shadow: .3px 0 rgb( 255, 255, 255 ), -.3px 0 rgb( 255, 255, 255 ), 0 .3px rgb( 255, 255, 255 ), 0 -.3px rgb( 255, 255, 255 ), .3px .3px rgb( 255, 255, 255 ), -.3px -.3px rgb( 255, 255, 255 ), .3px -.3px rgb( 255, 255, 255 ), -3px .3px rgb( 255, 255, 255 ); /*-webkit-text-stroke: .1pt rgb( 255, 255, 255 );*/
+	color: var( --color-fg );
+	-webkit-text-stroke: 1px var( --color-bg );
+	paint-order: stroke fill;
 	font-size: 16px !important;
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
@@ -270,34 +1624,34 @@ span.black{
 	align-items: right;
 	padding: .1cm;
 	border: .1cm;
-	margin: .1cm auto auto .1cm;
+	margin: 0;
 }
 #watch{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #see{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #read{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #listen{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #gettoknowandcontact{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 }
 /*#gettoknowandcontact_0{
 	text-align: right;
@@ -314,16 +1668,16 @@ span.black{
 	text-align: left;
 }
 #search{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #checkout_TwitterX{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 }
 #checkout_TwitterX_1{
-	color: rgb( 29, 155, 240 ) !important;
+	color: var( --color-twitter ) !important;
 	font-size: 16pt !important;
 	text-align: left;
 }
@@ -333,10 +1687,10 @@ span.black{
 	text-align: right;
 }
 #checkout_GitHub{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 }
 #checkout_GitHub_1{
-	color: rgb( 37, 41, 46 ) !important;
+	color: var( --color-github ) !important;
 	font-size: 16pt !important;
 	text-align: left;
 }
@@ -345,11 +1699,250 @@ span.black{
 	font-variant: small-caps;
 	text-align: right;
 }
+/* checkout_TwitterX/checkout_GitHub are menu options too — the hr above them is just an inert divider, the same as the one above read/see/listen/watch, not a boundary between categories */
 #search:hover, #gettoknowandcontact:hover, #watch:hover, #listen:hover, #see:hover, #read:hover, #checkout_TwitterX:hover, #checkout_GitHub:hover{
 	transform-origin: top left;
 	margin: -4pt 0 16pt 0;
 	transform: scale( 1.5 );
 	animation: none !important;
+}
+/* held down, though, they blink again — faster, same as any link's :active state — which needs !important and higher specificity than :hover above to win the cascade while both states are true at once; the `a` qualifier keeps this off the bare, unlinked .section_empty span, since a dead option can't actually be clicked */
+a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, a#see:active, a#read:active, a#checkout_TwitterX:active, a#checkout_GitHub:active{
+	animation-name: blink !important;
+	animation-duration: 0.1s !important;
+	animation-timing-function: linear !important;
+	animation-iteration-count: infinite !important;
+	animation-play-state: running !important;
+	-moz-animation-name: blink !important;
+	-moz-animation-duration: 0.1s !important;
+	-moz-animation-timing-function: linear !important;
+	-moz-animation-iteration-count: infinite !important;
+	-moz-animation-play-state: running !important;
+	-webkit-animation-name: blink !important;
+	-webkit-animation-duration: 0.1s !important;
+	-webkit-animation-timing-function: linear !important;
+	-webkit-animation-iteration-count: infinite !important;
+	-webkit-animation-play-state: running !important;
+}
+/* the same held-down blink as the nav, so article previews read as clickable the same unmistakable way — driven by blink_on_press_controller.js rather than :active, which wasn't reliably engaging on these elements. Photos and the Cover Flow deliberately don't get this: only the nav blinks */
+.headline a.pressed, .cover_image.pressed{
+	animation-name: blink;
+	animation-duration: 0.1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: running;
+	-moz-animation-name: blink;
+	-moz-animation-duration: 0.1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-play-state: running;
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 0.1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
+}
+#theme_toggle{
+	/* offset from the window's left and bottom edges exactly mirrors the logo's offset from the window's left and top edges */
+	position: fixed;
+	left: 19.7734375px;
+	bottom: 19.7734375px;
+	box-sizing: border-box;
+	width: 20px;
+	height: 40px;
+	margin: 0;
+	padding: 0;
+	border: none;
+	border-radius: 10px;
+	background: var( --color-mid );
+	cursor: pointer;
+	appearance: none;
+	z-index: 40;
+	transition: background-color .25s ease;
+}
+#theme_toggle_knob{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: var( --color-fg );
+	transition: transform .25s ease, background-color .25s ease;
+}
+/* light theme: the knob sits in the top half (light on) — dark theme slides it to the bottom half (light off) */
+:root[data-theme="dark"] #theme_toggle_knob{
+	transform: translateY( 20px );
+}
+/* the block fills the switch's own 40px height edge to edge (its own bottom offset, 19.7734375px, its own height, 40px) and lets flexbox's space-between distribute the four lines within it: the first line's top and the last line's bottom land exactly on the container's own edges by definition of space-between, with the leftover space — however tall the four lines actually render, in whatever browser renders them — split into three equal gaps automatically. That's the point of doing it this way rather than computing each line's own bottom by hand from an assumed, measured line-height: a line-height of "normal" is a font metric the browser itself resolves, not a fixed number, so hardcoding it here would only ever be correct in whichever browser it was measured in. left/max-width still use a fixed 10px/3 as the horizontal gap to the switch, matching what the vertical gaps come out to when each line is 7.5px tall, as measured in this project's own testing browser */
+#copyright_notice_block{
+	position: fixed;
+	left: calc( 19.7734375px + 20px + 10px / 3 + 1pt );
+	bottom: 19.7734375px;
+	height: 40px;
+	max-width: calc( 200.7421875px - 19.7734375px - 20px - 10px / 3 );
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	z-index: 40;
+}
+.copyright_notice{
+	color: var( --color-faint );
+	text-transform: uppercase;
+	font-size: 5pt;
+	white-space: nowrap;
+}
+#article{
+	display: block;
+	max-width: 700px;
+	margin: 0 auto;
+}
+#article .body p{
+	font-size: 32px;
+	line-height: 1.2;
+	letter-spacing: 0.4px;
+	margin: 0 0 32px 0;
+}
+#article header{
+	display: flex;
+	flex-direction: column;
+	padding: 0;
+}
+#comments{
+	margin: 2em 0;
+}
+#pending_comments{
+	background-color: var( --color-pending-bg );
+	padding: 0.5em 1em;
+	margin: 1em 0;
+}
+#flash{
+	padding: 0.5em 1%;
+}
+#search_overlay{
+	position: fixed;
+	top: var( --search_origin_y, 0px );
+	left: 0;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.4em 1em;
+	background-color: var( --color-bg );
+	color: var( --color-fg );
+	/* currentColor already is the inverse of this element's own background-color: .search_open swaps color and background-color between --color-fg and --color-bg */
+	border-top: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
+	box-shadow: 0 8px 24px rgba( 0, 0, 0, 0.35 );
+	clip-path: inset( 0 calc( 100% - var( --search_origin_x, 50% ) ) 0 var( --search_origin_x, 50% ) );
+	pointer-events: none;
+	transition: clip-path .3s ease, background-color .3s ease, color .3s ease;
+	z-index: 30;
+}
+.search_open #search{
+	visibility: hidden;
+}
+.search_open #search_overlay{
+	clip-path: inset( 0 0 0 0 );
+	pointer-events: auto;
+	background-color: var( --color-fg );
+	color: var( --color-bg );
+}
+#search_overlay input{
+	box-sizing: border-box;
+	width: 100%;
+	padding: 0.3em 0.5em;
+	background: transparent;
+	border: none;
+	outline: none;
+	font: inherit;
+	color: inherit;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 18px;
+	user-select: text;
+	/* the overlay's own background is opaque, so the site-wide halo against #backdrop is pointless here and only dulls the glyph edges */
+	-webkit-text-stroke-width: 0;
+}
+/* no max-width/auto-centering here anymore — that used to leave an auto margin wider than .about_layout's own 2em column-gap between the sidebar and the timeline, so the sidebar never quite reached flush against main's edge the way every other section does. The contact form keeps its own cap below instead. Named as a container so .name_disc_center's @container rule below can query this element's own width specifically, rather than whichever container-type ancestor happens to be nearest (.about_sidebar is one too, for --disc's cqw, but its width is the wrong number for this question) */
+#gettoknowandcontact_page{
+	display: block;
+	container-type: inline-size;
+	container-name: about_area;
+}
+/* container-type on gettoknowandcontact_page above contains layout, which stops margins from collapsing through it — so this section's own top margin no longer merges with #section_header's fixed 16px margin-bottom above; the two just stack. calc() tops that unavoidable 16px up to the full 1.5em .about_sidebar uses as its own row-gap below, so the gap above this section and the gap below it (plain 1.5em, nothing else contributes there) read as the same rhythm instead of the 44.8px/0px split the h2's own generic top margin and no margin at all happened to leave */
+#contact_form_section{
+	max-width: 60em;
+	margin-top: calc( 1.5em - 16px );
+	margin-bottom: 1.5em;
+}
+#contact_form_section h2{
+	margin-top: 0;
+}
+#hall_of_fame{
+	max-width: 60em;
+	margin: 0 auto;
+}
+#messages_page{
+	max-width: 60em;
+	margin: 0 auto;
+}
+.message_entry{
+	border-top: 1px solid var( --color-faint );
+	padding: 0.75em 0;
+}
+.message_entry.unread{
+	background-color: var( --color-pending-bg );
+	padding: 0.75em 1em;
+}
+.message_meta{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 10pt;
+}
+.message_body{
+	white-space: pre-line;
+}
+.message_actions{
+	display: flex;
+	column-gap: 0.5em;
+}
+.message_actions form{
+	margin: 0;
+}
+#photo_dwells_page, #photo_dwell_events_page{
+	max-width: 60em;
+	margin: 0 auto;
+}
+.photo_dwell_entry{
+	display: flex;
+	align-items: center;
+	column-gap: 1em;
+	border-top: 1px solid var( --color-faint );
+	padding: 0.75em 0;
+}
+.photo_dwell_thumb{
+	width: 96px;
+	height: 96px;
+	object-fit: cover;
+	flex-shrink: 0;
+}
+.photo_dwell_meta{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 10pt;
+}
+/* the ranking's own graphical half — each bar's width is that photo's own dwell_seconds relative to the top photo's, so the whole list reads as one chart at a glance rather than requiring the numbers themselves to be compared by eye */
+.photo_dwell_bar_wrapper{
+	flex: 1;
+}
+.photo_dwell_bar{
+	height: 8px;
+	margin-top: 0.5em;
+	background-color: var( --color-fg );
+}
+#honoree{
+	max-width: 60em;
+	margin: 0 auto;
+	display: block;
 }
 
 /*	style.css
@@ -362,3 +1955,30 @@ span.black{
 	kvpb.fr
 	https://x.com/ktgwkvpb
 	https://github.com/kvpb	*/
+
+/* disabled — the green ruler for manually aligning the logotype in Firefox, bordering the menu items' own spans (body's 1em margin plus nav's own .1cm padding), not the outer margin itself. Kept, not deleted, in case a future alignment pass needs it again
+body::before{
+	content: "";
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: calc( 1em + .1cm );
+	width: 1pt;
+	background: green;
+	opacity: 0.25;
+	pointer-events: none;
+	z-index: 9999;
+}
+*/
+
+/*//	style.css
+////	kvpb.fr
+////
+////	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+////	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+////	local-part@domain
+////
+////	Copyright 2026 by Karl Vincent Pierre Bertin
+////
+////	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+*/

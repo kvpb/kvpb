@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+pending_guest:
+  article: published
+  user:
+  author_name: A visitor
+  author_email: visitor@example.com
+  body: A pending guest comment awaiting moderation.
+  status: pending
+
+approved_guest:
+  article: published
+  user:
+  author_name: Another visitor
+  author_email: another@example.com
+  body: An approved guest comment.
+  status: approved
+
+user_authored:
+  article: published
+  user: one
+  author_name:
+  author_email:
+  body: A comment signed by a registered account.
+  status: approved
