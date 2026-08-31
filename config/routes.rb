@@ -14,7 +14,33 @@ Rails.application.routes.draw do
 
   resource :registration, only: %i[new create]
 
+  # the old primary — read_path and friends keep their own name below, only the literal URL they
+  # generate changes, so nothing that calls read_path/article_path/article_comments_path etc.
+  # anywhere else in the app needs to change
+  # get    "/journal",                          to: "articles#index"
+  # get    "/read",                             to: "articles#index",  as: "read"
+  # post   "/read",                             to: "articles#create"
+  # get    "/read/new",                         to: "articles#new",    as: "new_article"
+  # get    "/read/:identifier",                 to: "articles#show",   as: "article"
+  # get    "/read/:identifier/edit",            to: "articles#edit",   as: "edit_article"
+  # patch  "/read/:identifier",                 to: "articles#update"
+  # delete "/read/:identifier",                 to: "articles#destroy"
+  #
+  # post   "/read/:article_identifier/comments",             to: "comments#create",  as: "article_comments"
+  # patch  "/read/:article_identifier/comments/:id/approve", to: "comments#approve", as: "approve_article_comment"
+  # delete "/read/:article_identifier/comments/:id/reject",  to: "comments#reject",  as: "reject_article_comment"
+  get    "/read",                             to: "articles#index",  as: "old_read"
+  get    "/journal",                          to: "articles#index",  as: "read"
+  post   "/journal",                          to: "articles#create"
+  get    "/journal/new",                      to: "articles#new",    as: "new_article"
+  get    "/journal/:identifier",              to: "articles#show",   as: "article"
+  get    "/journal/:identifier/edit",         to: "articles#edit",   as: "edit_article"
+  patch  "/journal/:identifier",              to: "articles#update"
+  delete "/journal/:identifier",              to: "articles#destroy"
 
+  post   "/journal/:article_identifier/comments",             to: "comments#create",  as: "article_comments"
+  patch  "/journal/:article_identifier/comments/:id/approve", to: "comments#approve", as: "approve_article_comment"
+  delete "/journal/:article_identifier/comments/:id/reject",  to: "comments#reject",  as: "reject_article_comment"
 
   # the old primary — hall_of_fame_path and friends keep their own name below, only the literal URL changes
   # get    "/hall-of-fame",                     to: "honorees#index",  as: "hall_of_fame"

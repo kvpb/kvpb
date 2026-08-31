@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+published:
+  kicker: Notebook
+  headline: A published article
+  subheadline: With a subheadline
+  lede: A short lede paragraph.
+  body: The full body of a published article.
+  identifier: a-published-article
+  published_at: 2026-08-01 12:00:00
+  comments_locked: false
+
+draft:
+  kicker: Notebook
+  headline: A draft article
+  subheadline: Not yet public
+  lede: A short lede paragraph.
+  body: The full body of a draft article.
+  identifier: a-draft-article
+  published_at:
+  comments_locked: false
+
+locked:
+  kicker: Notebook
+  headline: An article with comments locked
+  subheadline: No new comments allowed
+  lede: A short lede paragraph.
+  body: The full body of a locked article.
+  identifier: an-article-with-comments-locked
+  published_at: 2026-08-02 12:00:00
+  comments_locked: true
