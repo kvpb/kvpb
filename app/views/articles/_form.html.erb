@@ -1,0 +1,70 @@
+<%= form_with model: article, url: ( article.persisted? ? article_path( article ) : read_path ), scope: :article,
+	data: {
+		controller: "autosave",
+		action: "input->autosave#scheduleSave",
+		autosave_url_value: ( article.persisted? ? article_path( article, format: :json ) : read_path( format: :json ) ),
+		autosave_method_value: ( article.persisted? ? "patch" : "post" )
+	} do |form| %>
+	<% if article.errors.any? %>
+		<ul class="errors">
+			<% article.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+		</ul>
+	<% end %>
+
+	<span class="autosave_status" data-autosave-target="status"></span>
+
+	<%= form.label :kicker, "Kicker" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_field :kicker %>
+	</div>
+
+	<%= form.label :headline, "Headline" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_field :headline, required: true %>
+	</div>
+
+	<%= form.label :subheadline, "Subheadline" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_field :subheadline %>
+	</div>
+
+	<%= form.label :lede, "Lede" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_area :lede %>
+	</div>
+
+	<%= form.label :body, "Body" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_area :body, rows: 20 %>
+	</div>
+
+	<%= form.label :cover_image, "Cover image" %>
+	<%= form.file_field :cover_image, accept: "image/*" %>
+
+	<%= form.label :comments_locked do %>
+		<%= form.check_box :comments_locked %> Lock comments
+	<% end %>
+
+	<%= form.label :front_page_rank, "Front page rank" %>
+	<%= form.number_field :front_page_rank %>
+	<p class="field_hint">Where this sits on the front page. 1 takes the splash, the next two run as features, the rest as briefs. Blank leaves it to chronology, behind everything ranked by hand.</p>
+
+	<%= form.label :published_at, "Publish at" %>
+	<%= form.datetime_field :published_at, value: article.published_at&.strftime( "%Y-%m-%dT%H:%M" ) %>
+	<p class="field_hint">Blank stays a draft. A future date schedules it. Now or the past publishes it immediately.</p>
+
+	<%= form.submit article.persisted? ? "Save changes" : "Create article" %>
+<% end %>
+
+<%#
+	_form.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
