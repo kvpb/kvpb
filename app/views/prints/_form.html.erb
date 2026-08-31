@@ -1,0 +1,36 @@
+<%= form_with model: print, url: ( print.persisted? ? backend_print_path( print ) : backend_prints_path ), scope: :print do |form| %>
+	<% if print.errors.any? %>
+		<ul class="errors">
+			<% print.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+		</ul>
+	<% end %>
+
+	<%= form.label :title, "Title" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_field :title %>
+	</div>
+
+	<%= form.label :image, "Photo" %>
+	<%= form.file_field :image, accept: "image/*" %>
+	<p class="field_hint"><%= print.image.attached? ? "Currently: #{ print.image.filename }. Choosing another replaces it." : "A JPEG, PNG, GIF, WebP, HEIC or RAW — anything else Active Storage or a RAW converts is shown as a JPEG made from it, on first request." %></p>
+
+	<%= form.label :published_at, "Publish at" %>
+	<%= form.datetime_field :published_at, value: print.published_at&.strftime( "%Y-%m-%dT%H:%M" ) %>
+	<p class="field_hint">Blank stays a draft. A future date schedules it. Now or the past publishes it immediately.</p>
+
+	<%= form.submit print.persisted? ? "Save changes" : "Create print" %>
+<% end %>
+
+<%#
+	_form.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
+
