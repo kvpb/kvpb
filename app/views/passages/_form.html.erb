@@ -1,0 +1,38 @@
+<%= form_with model: passage, url: ( passage.persisted? ? passage_path( album, passage ) : passages_path( album ) ), scope: :passage do |form| %>
+	<% if passage.errors.any? %>
+		<ul class="errors">
+			<% passage.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+		</ul>
+	<% end %>
+
+	<%= form.label :position, "Position" %>
+	<%= form.number_field :position %>
+	<p class="field_hint">Where this sits in the album. A passage shares its numbering with the photos and comes before the photo of the same number, so 3 puts it just above photo 3. Past the last photo closes the album.</p>
+
+	<%= form.label :heading, "Heading" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_field :heading %>
+	</div>
+	<p class="field_hint">Optional. On its own, it opens a section — a date, a place, a leg of the trip.</p>
+
+	<%= form.label :body, "Body" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_area :body %>
+	</div>
+	<p class="field_hint">Optional. The prose itself. One or the other has to be filled in.</p>
+
+	<%= form.submit passage.persisted? ? "Save changes" : "Add passage" %>
+<% end %>
+
+<%#
+	_form.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
