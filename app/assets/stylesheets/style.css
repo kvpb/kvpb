@@ -641,6 +641,55 @@ form input[type="submit"]{
 	font-family: 'Didot', 'Times New Roman', serif;
 	mix-blend-mode: var( --stone-text-blend, multiply );
 }
+.pantheon_door{
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.5em;
+	padding: 3em 1em;
+	text-align: center;
+}
+.pantheon_door_illustration{
+	width: 100%;
+	max-width: 320px;
+	height: auto;
+	color: var( --color-fg );
+}
+.pantheon_door_notice{
+	font-family: 'Arial', sans-serif;
+	font-size: 11pt;
+	max-width: 28em;
+	color: var( --color-mid );
+}
+.doors_closed .pantheon_content{
+	display: none;
+}
+.doors_closed .pantheon_door{
+	display: flex;
+}
+.pantheon_facade{
+	display: block;
+	text-align: center;
+	margin: 0 0 2em 0;
+}
+.pantheon_title{
+	font-size: 32pt;
+	letter-spacing: 2pt;
+	margin: 0;
+}
+.pantheon_subtitle{
+	font-size: 14pt;
+	font-style: italic;
+	letter-spacing: 3pt;
+	text-transform: uppercase;
+	margin: .5em 0 0 0;
+}
+.pantheon_gallery{
+	display: flex;
+	flex-wrap: wrap;
+	gap: 2em;
+	justify-content: center;
+}
 .honoree_tile{
 	display: flex;
 	flex-direction: column;
@@ -1330,6 +1379,15 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 }
 #contact_form_section h2{
 	margin-top: 0;
+}
+#hall_of_fame{
+	max-width: 60em;
+	margin: 0 auto;
+}
+#honoree{
+	max-width: 60em;
+	margin: 0 auto;
+	display: block;
 }
 
 /*	style.css

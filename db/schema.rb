@@ -42,6 +42,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_19_185609) do
 
 
 
+  create_table "honorees", force: :cascade do |t|
+    t.date "birth_date"
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.date "death_date"
+    t.date "helped_from"
+    t.date "helped_until"
+    t.text "honor_inscription"
+    t.string "identifier", null: false
+    t.integer "kind", default: 0, null: false
+    t.date "known_from"
+    t.date "known_until"
+    t.string "name", null: false
+    t.datetime "published_at"
+    t.datetime "updated_at", null: false
+    t.index ["identifier"], name: "index_honorees_on_identifier", unique: true
+    t.index ["published_at"], name: "index_honorees_on_published_at"
+  end
 
 
   create_table "milestones", force: :cascade do |t|
