@@ -1,14 +1,12 @@
-class ApplicationController < ActionController::Base
-  include Authentication
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  # allow_browser's own default block renders public/406-unsupported-browser.html directly, by file, never
-  # raising anything — so it never reaches config.exceptions_app on its own, unlike every other status this
-  # site answers with. This block is the site's own page instead, rendered the same way ErrorsController
-  # renders it for anyone who does reach it that way
-  allow_browser versions: :modern, block: -> { @status = 406; render "errors/show", layout: "error", status: :not_acceptable }
+# what the visitors write to me lives in a database of its own, so it can be read from the back end and thrown away in one go
+# — the file, or the table — without ever touching the rest of the web app
+class MessagesRecord < ApplicationRecord
+  self.abstract_class = true
+
+  connects_to database: { writing: :messages, reading: :messages }
 end
 
-#	application_controller.rb
+#	messages_record.rb
 #	kvpb.fr
 #
 #	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`

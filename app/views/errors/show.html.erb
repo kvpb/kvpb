@@ -1,17 +1,16 @@
-<div id="nav_wrapper" data-controller="search-overlay">
-<nav><!--<nav id="nav">-->
-	<%= render "wordmark" %>
-	<hr>
-	<%= render "nav_links" %>
-	<button type="button" id="theme_toggle" role="switch" aria-checked="false" aria-label="Toggle light and dark appearance" data-controller="theme-toggle" data-action="click->theme-toggle#toggle"><span id="theme_toggle_knob"></span></button>
-	<%= render "copyright_notice" %>
-</nav>
-<%= render "search_overlay" %>
+<%# the status code, and, above it, the one word this line ever is — tracked out, never stretched, to span
+exactly as wide as the number's own first digit does: #error_label_frame is sized in ch at the number's own
+font, 1ch being the width a digit glyph is defined by in any font whose figures are tabular, as this one's
+are, so it comes out the same whether the first digit actually shown is a wide one or a narrow one %>
+<div id="error_code_frame">
+	<div id="error_label_frame">
+		<div id="error_label">error</div>
+	</div>
+	<span id="error_code"><%= @status %></span>
 </div>
-<!--<span class="marquee">'z avez vu ? C'est moi qu'a fait ça !</span>-->
 
 <%#
-	_navigate.html.erb
+	show.html.erb
 	kvpb.fr
 
 	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`

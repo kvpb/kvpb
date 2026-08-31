@@ -1,8 +1,8 @@
-<%= form_with model: honoree, url: ( honoree.persisted? ? honoree_path( honoree ) : hall_of_fame_path ), scope: :honoree,
+<%= form_with model: honoree, url: ( honoree.persisted? ? backend_honoree_path( honoree ) : backend_halloffame_path ), scope: :honoree,
 	data: {
 		controller: "autosave",
 		action: "input->autosave#scheduleSave",
-		autosave_url_value: ( honoree.persisted? ? honoree_path( honoree, format: :json ) : hall_of_fame_path( format: :json ) ),
+		autosave_url_value: ( honoree.persisted? ? backend_honoree_path( honoree, format: :json ) : backend_halloffame_path( format: :json ) ),
 		autosave_method_value: ( honoree.persisted? ? "patch" : "post" )
 	} do |form| %>
 	<% if honoree.errors.any? %>

@@ -1,17 +1,12 @@
-<div id="nav_wrapper" data-controller="search-overlay">
-<nav><!--<nav id="nav">-->
-	<%= render "wordmark" %>
-	<hr>
-	<%= render "nav_links" %>
-	<button type="button" id="theme_toggle" role="switch" aria-checked="false" aria-label="Toggle light and dark appearance" data-controller="theme-toggle" data-action="click->theme-toggle#toggle"><span id="theme_toggle_knob"></span></button>
-	<%= render "copyright_notice" %>
-</nav>
-<%= render "search_overlay" %>
+<div id="copyright_notice_block">
+	<span id="copyright_notice_0" class="copyright_notice">&copy; <%= Date.current.year %> Karl Vincent Pierre Bertin</span>
+	<span id="copyright_notice_1" class="copyright_notice">Tous droits réservés.</span>
+	<span id="copyright_notice_2" class="copyright_notice">Alles Rechte vorbehalten.</span>
+	<span id="copyright_notice_3" class="copyright_notice">All rights reserved.</span>
 </div>
-<!--<span class="marquee">'z avez vu ? C'est moi qu'a fait ça !</span>-->
 
 <%#
-	_navigate.html.erb
+	_copyright_notice.html.erb
 	kvpb.fr
 
 	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
@@ -22,3 +17,4 @@
 
 	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
 %>
+

@@ -27,6 +27,11 @@ module Kvpb
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # The site's own errors/*, not Rails' own static public/*.html, for every 400/404/406/422/500 the app
+    # itself hits — those stay too, Rails' own last resort if this very app is what's broken enough to be
+    # unable to answer even this
+    config.exceptions_app = self.routes
   end
 end
 

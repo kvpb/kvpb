@@ -44,6 +44,9 @@ gem "image_processing", "~> 1.2"
 # gem "image_processing", "~> 1.2"
 # Read EXIF metadata (capture date, camera, lens, GPS) from uploaded photographs [https://github.com/remvee/exifr]
 gem "exifr", "~> 1.5"
+# Ruby 3.4 unbundled csv from the standard library — HttpStatusRegistry reads the IANA registry's own export
+# with it
+gem "csv"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

@@ -15,6 +15,11 @@ module ApplicationHelper
     simple_format( RubyPants.new( text.to_s ).to_html )
   end
 
+  def format_dwell( seconds )
+    total = seconds.to_i
+    "%dm %02ds" % [ total / 60, total % 60 ]
+  end
+
   # The strip a newspaper runs under its flag. Every figure in it is derived rather than typed:
   # the volume counts the years the journal has been running, the number counts what it has actually
   # published — so the line keeps itself true without anyone maintaining it. No city, unlike the
@@ -68,7 +73,9 @@ module ApplicationHelper
       { label: "code", empty: section_empty?( :code ) }
     elsif controller_name == "pages" && action_name == "map"
       { label: "map", empty: section_empty?( :map ) }
-    elsif %w[messages milestones skills photo_dwells photo_dwell_events].include?( controller_name )
+    elsif controller_name == "messages"
+      { label: "inbox", empty: false }
+    elsif %w[milestones skills photo_dwells photo_dwell_events settings].include?( controller_name )
       { label: "back end", empty: false }
     end
   end

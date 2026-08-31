@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+unread_message:
+  name: A Reader
+  phone_number: "0123456789"
+  email_address: reader@example.com
+  body: An unread message sitting in the back end.
+  read: false
+
+read_message:
+  name: Another Reader
+  phone_number: "0123456789"
+  email_address: another_reader@example.com
+  body: A message Karl has already read.
+  read: true

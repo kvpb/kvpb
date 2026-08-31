@@ -1,14 +1,23 @@
-class ApplicationController < ActionController::Base
-  include Authentication
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  # allow_browser's own default block renders public/406-unsupported-browser.html directly, by file, never
-  # raising anything — so it never reaches config.exceptions_app on its own, unlike every other status this
-  # site answers with. This block is the site's own page instead, rendered the same way ErrorsController
-  # renders it for anyone who does reach it that way
-  allow_browser versions: :modern, block: -> { @status = 406; render "errors/show", layout: "error", status: :not_acceptable }
+class PhotoDwellsController < ApplicationController
+  before_action :require_admin, only: :index
+
+  rate_limit to: 30, within: 1.minute, only: :create, with: -> { head :too_many_requests }
+
+  # Public and anonymous by design — no visitor identity is ever read or stored here, only a single
+  # number folded into the one running total Photo#record_dwell! keeps for this photo
+  def create
+    photo = Photo.find( params[ :id ] )
+    photo.record_dwell!( params[ :seconds ] )
+    head :no_content
+  end
+
+  def index
+    @photos = Photo.includes( :album ).order( dwell_seconds: :desc ).limit( 50 )
+    @max_dwell_seconds = @photos.first&.dwell_seconds.to_f
+  end
 end
 
-#	application_controller.rb
+#	photo_dwells_controller.rb
 #	kvpb.fr
 #
 #	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`

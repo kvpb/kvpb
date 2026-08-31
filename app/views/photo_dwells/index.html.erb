@@ -1,17 +1,27 @@
-<div id="nav_wrapper" data-controller="search-overlay">
-<nav><!--<nav id="nav">-->
-	<%= render "wordmark" %>
-	<hr>
-	<%= render "nav_links" %>
-	<button type="button" id="theme_toggle" role="switch" aria-checked="false" aria-label="Toggle light and dark appearance" data-controller="theme-toggle" data-action="click->theme-toggle#toggle"><span id="theme_toggle_knob"></span></button>
-	<%= render "copyright_notice" %>
-</nav>
-<%= render "search_overlay" %>
-</div>
-<!--<span class="marquee">'z avez vu ? C'est moi qu'a fait ça !</span>-->
+<section id="photo_dwells_page">
+	<p><%= link_to "Recent activity log", photo_dwell_events_path %></p>
+
+	<% if @photos.empty? %>
+		<p>No photos yet.</p>
+	<% end %>
+
+	<% @photos.each do |photo| %>
+		<div class="photo_dwell_entry">
+			<%= photo_tag photo.web_image, class: "photo_dwell_thumb" %>
+			<%#= photo_tag photo.image, class: "photo_dwell_thumb" %>
+			<div class="photo_dwell_bar_wrapper">
+				<p class="photo_dwell_meta">
+					<%= link_to smart_quotes( photo.album.title.presence || photo.album.identifier ), album_path( photo.album ) %>
+					— <%= format_dwell( photo.dwell_seconds ) %>
+				</p>
+				<div class="photo_dwell_bar" style="width: <%= @max_dwell_seconds.zero? ? 0 : ( photo.dwell_seconds.to_f / @max_dwell_seconds * 100 ) %>%;"></div>
+			</div>
+		</div>
+	<% end %>
+</section>
 
 <%#
-	_navigate.html.erb
+	index.html.erb
 	kvpb.fr
 
 	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`

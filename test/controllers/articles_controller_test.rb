@@ -82,7 +82,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
 
   test "create requires a signed-in admin" do
     assert_no_difference( "Article.count" ) do
-      post read_path, params: { article: { headline: "Hello", body: "Body" } }
+      post backend_journal_path, params: { article: { headline: "Hello", body: "Body" } }
     end
   end
 
@@ -90,7 +90,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as( users( :one ) )
 
     assert_difference( "Article.count", 1 ) do
-      post read_path, params: { article: { headline: "Hello World", body: "Body" } }
+      post backend_journal_path, params: { article: { headline: "Hello World", body: "Body" } }
     end
 
     assert_not Article.find_by!( identifier: "hello-world" ).published?
@@ -100,7 +100,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as( users( :one ) )
     article = articles( :draft )
 
-    patch article_path( article ), params: { article: { published_at: Time.current, comments_locked: true } }
+    patch backend_article_path( article ), params: { article: { published_at: Time.current, comments_locked: true } }
 
     article.reload
     assert article.published?
@@ -109,7 +109,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
 
   test "destroy requires a signed-in admin" do
     assert_no_difference( "Article.count" ) do
-      delete article_path( articles( :published ) )
+      delete backend_article_path( articles( :published ) )
     end
   end
 
@@ -117,7 +117,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as( users( :one ) )
 
     assert_difference( "Article.count", 1 ) do
-      post read_path( format: :json ), params: { article: { headline: "Autosaved draft" } }
+      post backend_journal_path( format: :json ), params: { article: { headline: "Autosaved draft" } }
     end
 
     assert_response :success
@@ -132,7 +132,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as( users( :one ) )
 
     assert_no_difference( "Article.count" ) do
-      post read_path( format: :json ), params: { article: { headline: "" } }
+      post backend_journal_path( format: :json ), params: { article: { headline: "" } }
     end
 
     assert_response :unprocessable_entity
@@ -143,7 +143,7 @@ class ArticlesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as( users( :one ) )
     article = articles( :draft )
 
-    patch article_path( article, format: :json ), params: { article: { lede: "Updated via autosave" } }
+    patch backend_article_path( article, format: :json ), params: { article: { lede: "Updated via autosave" } }
 
     assert_response :success
     assert JSON.parse( response.body )[ "ok" ]

@@ -2213,6 +2213,83 @@ a#search:active, a#code:active, a#map:active, a#gettoknowandcontact:active, a#wa
 	max-width: 60em;
 	margin: 0 auto;
 }
+#messages_page{
+	max-width: 60em;
+	margin: 0 auto;
+}
+.message_entry{
+	border-top: 1px solid var( --color-faint );
+	padding: 0.75em 0;
+}
+.message_entry.unread{
+	background-color: var( --color-pending-bg );
+	padding: 0.75em 1em;
+}
+.message_entry.kept{
+	border-left: 3px solid var( --color-fg );
+	padding-left: 1em;
+}
+.message_kept_tag{
+	text-transform: uppercase;
+}
+.message_meta{
+	font-family: /*'Helvetica Now', 'Helvetica Neue LT', */'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 10pt;
+}
+.message_body{
+	white-space: pre-line;
+}
+.message_actions{
+	display: flex;
+	column-gap: 0.5em;
+}
+.message_actions form{
+	margin: 0;
+}
+#settings_page{
+	max-width: 60em;
+	margin: 0 auto;
+}
+.setting_entry{
+	display: flex;
+	align-items: center;
+	column-gap: 0.5em;
+}
+.setting_entry label{
+	margin: 0;
+}
+#photo_dwells_page, #photo_dwell_events_page{
+	max-width: 60em;
+	margin: 0 auto;
+}
+.photo_dwell_entry{
+	display: flex;
+	align-items: center;
+	column-gap: 1em;
+	border-top: 1px solid var( --color-faint );
+	padding: 0.75em 0;
+}
+.photo_dwell_thumb{
+	width: 96px;
+	height: 96px;
+	object-fit: cover;
+	flex-shrink: 0;
+}
+.photo_dwell_meta{
+	font-family: /*'Helvetica Now', 'Helvetica Neue LT', */'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 10pt;
+}
+/* the ranking's own graphical half — each bar's width is that photo's own dwell_seconds relative to the top photo's, so the whole list reads as one chart at a glance rather than requiring the numbers themselves to be compared by eye */
+.photo_dwell_bar_wrapper{
+	flex: 1;
+}
+.photo_dwell_bar{
+	height: 8px;
+	margin-top: 0.5em;
+	background-color: var( --color-fg );
+}
 #honoree{
 	max-width: 60em;
 	margin: 0 auto;
@@ -2229,6 +2306,140 @@ a#search:active, a#code:active, a#map:active, a#gettoknowandcontact:active, a#wa
 	kvpb.fr
 	https://x.com/ktgwkvpb
 	https://github.com/kvpb	*/
+
+/* errors_controller.rb's own pages, the site's for the 400/404/406/422/500 Rails itself raises, replacing
+its default static ones. Gray rather than either of the site's own two appearances — day and night are both
+off, on purpose, an error page being neither — and the number that fills it is the one thing on it in true
+black and white, never themed, so it reads the same regardless */
+html:has( body.error_page ){
+	background-color: rgb( 128, 128, 128 );
+}
+/* the nav here is trimmed to what error_nav asks it to be: no wordmark, no light switch. Every entry's own
+fill is transparent — invisible, not merely faint — so its own halo (nav a, nav a* above) is all that is
+left of it: white for one whose own section is empty, black for one that isn't, the same distinction
+.section_empty already draws elsewhere by dimming instead. Both still beat every #read/#see/… !important
+color below them by carrying a class, not just an id, along with #error_nav's own */
+#error_nav a, #error_nav a *{
+	color: transparent !important;
+	-webkit-text-stroke-color: rgb( 0, 0, 0 ) !important;
+}
+body.error_page #error_nav .section_empty{
+	color: transparent !important;
+	-webkit-text-stroke-color: rgb( 255, 255, 255 ) !important;
+}
+/* the logo (_wordmark.html.erb) belongs to the nav, not to #section_header — the thing this page really
+means by "no header": that title is never rendered on an error page at all, no override needed for it. The
+wordmark's own text stays invisible here exactly as every other nav entry's does, its border split by line
+rather than by whether a section is empty: kvpb.fr and prototyp, the two lines that frame the name, white;
+Karl and カール, the name itself, black */
+body.error_page #wordmark{
+	color: transparent !important;
+}
+/* thinner than every other border on this page, kept to half of nav's own sitewide 1px, since the two lines
+framing the name read lighter than the name itself already does by being white rather than black — a thin
+border reads that same distinction a second way */
+body.error_page #line_1_logotype, body.error_page #line_4_logotype{
+	color: transparent !important;
+	-webkit-text-stroke-color: rgb( 255, 255, 255 ) !important;
+	-webkit-text-stroke-width: 0.5px !important;
+}
+body.error_page #line_2_logotype, body.error_page #line_3_logotype{
+	-webkit-text-stroke-color: rgb( 0, 0, 0 ) !important;
+}
+/* #theme_toggle isn't rendered here at all, so #copyright_notice_block's own left (calc'd sitewide from the
+button's own left, width and gap, since the two are both position:fixed and never actually laid out relative
+to one another) is recomputed to its bare left instead, filling the slot the button leaves rather than
+sitting shifted right of an empty gap; its max-width drops the same button-width-and-gap subtraction, since
+nothing to its left needs the room any more. Colored the opposite way its own nav entries above are — a
+true white fill rather than an invisible one, black the border rather than the color of an empty section —
+since the footer is never itself "empty" the way a section can be */
+body.error_page #copyright_notice_block{
+	left: 19.7734375px;
+	max-width: calc( 200.7421875px - 19.7734375px );
+}
+body.error_page .copyright_notice{
+	color: rgb( 255, 255, 255 ) !important;
+	-webkit-text-stroke-color: rgb( 0, 0, 0 ) !important;
+}
+/* the signature (#signature, sitewide), in the same style as the copyright notice beside it rather than
+its own usual var( --color-fg )/var( --color-bg ) pair, themed like everywhere else: a real white now, not
+an invisible fill wanting a border to read at all, since a mask has no separate stroke of its own to give
+one — the same drop-shadow-as-halo it always reads by, just in fixed black rather than the day/night pair */
+/* a service's own username (checkout_GitHub_1/checkout_TwitterX_1/checkout_YouTube_1) keeps the brand
+color it reads in outside an error page — var( --color-github )/--color-twitter/--color-youtube — as its
+border here instead of the flat black every other non-empty entry's border is, the service's own name below
+it (checkout_GitHub_2 and the like) unaffected, still that flat black */
+body.error_page #checkout_GitHub_1{
+	-webkit-text-stroke-color: var( --color-github ) !important;
+}
+body.error_page #checkout_TwitterX_1{
+	-webkit-text-stroke-color: var( --color-twitter ) !important;
+}
+body.error_page #checkout_YouTube_1{
+	-webkit-text-stroke-color: var( --color-youtube ) !important;
+}
+body.error_page #signature{
+	position: fixed;
+	right: 19.7734375px;
+	bottom: 19.7734375px;
+	margin: 0;
+	background-color: rgb( 255, 255, 255 );
+	filter: drop-shadow( 1px 0 0 rgb( 0, 0, 0 ) ) drop-shadow( -1px 0 0 rgb( 0, 0, 0 ) ) drop-shadow( 0 1px 0 rgb( 0, 0, 0 ) ) drop-shadow( 0 -1px 0 rgb( 0, 0, 0 ) );
+}
+/* the status code, sized off #error_code_frame's own width rather than the viewport's: main{flex:1 1 auto}
+already gives it exactly the width this page's own body{padding:1em} leaves beside nav, the same box every
+other page's own content sits in, so this never has to reach past nav or past that same padding either.
+50cqw is what a three-digit, tabular-figure status code (every one of the five this ever is) measures out to
+at that width, so it comes this close to filling it without a textLength forcing an exact fit onto glyphs
+that were never drawn at that width to begin with. -webkit-text-stroke is a real, fixed 2pt regardless of
+how large the digits render, unlike an SVG stroke-width, which is only ever a fraction of its own viewBox */
+#error_code_frame{
+	container-type: inline-size;
+	width: 100%;
+}
+/* 1ch, at #error_code's own font and font-size, is exactly the width its own first digit is drawn at:
+tabular figures (true of every one of this font's, going by the five digits this page ever actually shows)
+give every glyph 0-9 that same one advance width, ch itself being defined off the '0'. Sized here rather
+than on #error_label directly, which reads at its own, much smaller size — this box is only ever a ruler for
+that one to justify itself against, by text-align-last:justify, below */
+#error_label_frame{
+	font-family: 'Arial Black', Arial, sans-serif;
+	font-size: 50cqw;
+	width: 1ch;
+}
+/* tracked out by text-align-last:justify, which opens gaps between "error"'s own five letters until the
+line reaches the full width of its box — #error_label_frame's own 1ch, above — rather than a hand-picked
+letter-spacing that would only happen to fit one particular word at one particular size. text-justify:
+inter-character is what makes that a letter's own job and not a word's: with only the one word here,
+inter-word justifying (justify's own default) would find no gap to open at all */
+#error_label{
+	width: 100%;
+	text-align: justify;
+	text-align-last: justify;
+	text-justify: inter-character;
+	white-space: nowrap;
+	user-select: none;
+	-webkit-user-select: none;
+	font-family: 'Arial Black', Arial, sans-serif;
+	font-weight: 900;
+	font-size: 24px;
+	color: rgb( 0, 0, 0 );
+	-webkit-text-stroke: 2pt rgb( 255, 255, 255 );
+	paint-order: stroke fill;
+}
+#error_code{
+	display: block;
+	font-family: 'Arial Black', Arial, sans-serif;
+	font-weight: 900;
+	font-size: 50cqw;
+	line-height: 1;
+	white-space: nowrap;
+	user-select: none;
+	-webkit-user-select: none;
+	color: rgb( 0, 0, 0 );
+	-webkit-text-stroke: 2pt rgb( 255, 255, 255 );
+	paint-order: stroke fill;
+}
 
 /* disabled — the green ruler for manually aligning the logotype in Firefox, bordering the menu items' own spans (body's 1em margin plus nav's own .1cm padding), not the outer margin itself. Kept, not deleted, in case a future alignment pass needs it again
 body::before{

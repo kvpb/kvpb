@@ -1,14 +1,12 @@
-class ApplicationController < ActionController::Base
-  include Authentication
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  # allow_browser's own default block renders public/406-unsupported-browser.html directly, by file, never
-  # raising anything — so it never reaches config.exceptions_app on its own, unlike every other status this
-  # site answers with. This block is the site's own page instead, rendered the same way ErrorsController
-  # renders it for anyone who does reach it that way
-  allow_browser versions: :modern, block: -> { @status = 406; render "errors/show", layout: "error", status: :not_acceptable }
+class RefreshHttpStatusRegistryJob < ApplicationJob
+  queue_as :default
+
+  def perform
+    HttpStatusRegistry.refresh!
+  end
 end
 
-#	application_controller.rb
+#	refresh_http_status_registry_job.rb
 #	kvpb.fr
 #
 #	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`

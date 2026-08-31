@@ -34,7 +34,7 @@ module Authentication
     # Someone who isn't signed in is turned away exactly as someone who isn't an admin is: sending them on to the
     # sign-in path would hand the rotating token to anyone who requests a back-end page
     def require_admin
-      redirect_to root_path, alert: "You are not authorized to do that." unless admin?
+      redirect_to root_path unless admin?
     end
 
     def start_new_session_for( user )

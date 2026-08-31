@@ -1,17 +1,12 @@
-<div id="nav_wrapper" data-controller="search-overlay">
-<nav><!--<nav id="nav">-->
-	<%= render "wordmark" %>
-	<hr>
-	<%= render "nav_links" %>
-	<button type="button" id="theme_toggle" role="switch" aria-checked="false" aria-label="Toggle light and dark appearance" data-controller="theme-toggle" data-action="click->theme-toggle#toggle"><span id="theme_toggle_knob"></span></button>
-	<%= render "copyright_notice" %>
-</nav>
-<%= render "search_overlay" %>
-</div>
-<!--<span class="marquee">'z avez vu ? C'est moi qu'a fait ça !</span>-->
+<%= link_to root_path do %><div id='wordmark'>
+	<span id='line_1_logotype'>kvpb.fr</span>
+	<span id='line_2_logotype'>Karl</span>
+	<span id='line_3_logotype'>カール</span>
+	<span id='line_4_logotype'>prototyp</span><!--<span id='line_4_logotype'>typ 1</span>-->
+</div><% end %>
 
 <%#
-	_navigate.html.erb
+	_wordmark.html.erb
 	kvpb.fr
 
 	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`

@@ -1,0 +1,46 @@
+<% if section_empty?( :journal ) %><span id="read" class="section_empty"><!--read-->journal</span><% else %><%= link_to read_path, id: "read" do %><span id="read"><!--read-->journal</span><% end %><% end %>
+<% if section_empty?( :gallery ) %><span id="see" class="section_empty"><!--see-->gallery</span><% else %><%= link_to see_path, id: "see" do %><span id="see"><!--see-->gallery</span><% end %><% end %>
+<% if section_empty?( :music ) %><span id="listen" class="section_empty"><!--listen-->records</span><% else %><%= link_to listen_path, id: "listen" do %><span id="listen"><!--listen-->records</span><% end %><% end %>
+<% if section_empty?( :films ) %><span id="watch" class="section_empty"><!--watch-->videos</span><% else %><%= link_to watch_path, id: "watch" do %><span id="watch"><!--watch-->videos</span><% end %><% end %>
+<% if false %>
+<%= link_to gettoknowandcontact_path, id: "gettoknowandcontact" do %><div><!--<div id="gettoknowandcontact">-->
+	<!--<span id="gettoknowandcontact_0">&nbsp;</span><br>-->
+	<span id="gettoknowandcontact_1">get to know</span><br>
+	<span id="gettoknowandcontact_2">& contact</span>
+</div><% end %>
+<% end %>
+<% if section_empty?( :code ) %><span id="code" class="section_empty">code</span><% else %><%= link_to code_path, id: "code" do %><span id="code">code</span><% end %><% end %>
+<% if section_empty?( :map ) %><span id="map" class="section_empty">map</span><% else %><%= link_to map_path, id: "map" do %><span id="map">map</span><% end %><% end %>
+<%= link_to search_path, id: "search", data: { action: "click->search-overlay#open:prevent" } do %><span id="search"><!--find-->search</span><% end %>
+<hr>
+<% if Setting.current.youtube_visible? %>
+<%= link_to "https://www.youtube.com/@kvpb", id: "checkout_YouTube", target: "_blank", rel: "noopener" do %><div><!--<div id="checkout_YouTube">-->
+	<span id="checkout_YouTube_1">Karl</span><br>
+	<span id="checkout_YouTube_2">YouTube</span>
+</div><% end %>
+<% end %>
+<% if Setting.current.twitter_visible? %>
+<%= link_to "https://x.com/ktgwkvpb", id: "checkout_TwitterX", target: "_blank", rel: "noopener" do %><div><!--<div id="checkout_TwitterX">-->
+	<span id="checkout_TwitterX_1">@ktgwkvpb</span><br>
+	<span id="checkout_TwitterX_2">Twitter\X</span>
+</div><% end %>
+<% end %>
+<% if Setting.current.github_visible? %>
+	<%= link_to "https://github.com/kvpb", id: "checkout_GitHub", target: "_blank", rel: "noopener" do %><div><!--<div id="checkout_GitHub">-->
+	<span id="checkout_GitHub_1">kvpb</span><br>
+	<span id="checkout_GitHub_2">GitHub</span>
+</div><% end %>
+<% end %>
+
+<%#
+	_nav_links.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

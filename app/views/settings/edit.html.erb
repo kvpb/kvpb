@@ -1,17 +1,23 @@
-<div id="nav_wrapper" data-controller="search-overlay">
-<nav><!--<nav id="nav">-->
-	<%= render "wordmark" %>
-	<hr>
-	<%= render "nav_links" %>
-	<button type="button" id="theme_toggle" role="switch" aria-checked="false" aria-label="Toggle light and dark appearance" data-controller="theme-toggle" data-action="click->theme-toggle#toggle"><span id="theme_toggle_knob"></span></button>
-	<%= render "copyright_notice" %>
-</nav>
-<%= render "search_overlay" %>
-</div>
-<!--<span class="marquee">'z avez vu ? C'est moi qu'a fait ça !</span>-->
+<section id="settings_page">
+	<%= form_with model: @setting, url: settings_path, method: :patch do |form| %>
+		<div class="setting_entry">
+			<%= form.check_box :youtube_visible %>
+			<%= form.label :youtube_visible, "Show YouTube in the menu" %>
+		</div>
+		<div class="setting_entry">
+			<%= form.check_box :twitter_visible %>
+			<%= form.label :twitter_visible, "Show Twitter\\X in the menu" %>
+		</div>
+		<div class="setting_entry">
+			<%= form.check_box :github_visible %>
+			<%= form.label :github_visible, "Show GitHub in the menu" %>
+		</div>
+		<%= form.submit "Save" %>
+	<% end %>
+</section>
 
 <%#
-	_navigate.html.erb
+	edit.html.erb
 	kvpb.fr
 
 	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
