@@ -16,7 +16,7 @@ class Article < ApplicationRecord
   # it's worth moving. `front_page_rank IS NULL` sorts false (0) before true (1), putting the ranked
   # ones ahead — spelled that way rather than as NULLS LAST, which only some SQLite builds accept.
   # COALESCE lets a draft, which has no published_at, fall back on when it was written, so the
-  # superuser's own view of the page stays in a sane order instead of collapsing every draft together
+  # admin's own view of the page stays in a sane order instead of collapsing every draft together
   scope :front_page_ordered, -> {
     order( Arel.sql( "front_page_rank IS NULL, front_page_rank ASC, COALESCE( published_at, created_at ) DESC" ) )
   }
