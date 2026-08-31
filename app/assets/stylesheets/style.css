@@ -303,6 +303,110 @@ form input[type="submit"]{
 	letter-spacing: 1pt;
 	padding: 0.4em 1em;
 }
+/* sober and industrial, like the search bar, not the floating liquid-marble button originally imagined — that idea didn't fit the site's typ 1 design language. squircle_fill_controller.js draws the button's own real fill and shape together as one filled SVG <path> — an actual power-5 superellipse computed at this element's own real (non-square) half-width/half-height, not a rectangle with rounded corners standing in for one — so the fill lives on that path, not as a background-color here */
+.submit_squircle{
+	position: relative;
+	isolation: isolate;
+	display: block;
+	width: fit-content;
+	margin: 1em 0 0 auto;
+}
+.squircle_fill_svg{
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+.squircle_fill_path{
+	fill: var( --color-fg );
+}
+.submit_squircle:has( input:hover ) .squircle_fill_path{
+	fill: var( --color-hover );
+}
+.submit_squircle:has( input:disabled ) .squircle_fill_path{
+	fill: var( --color-mid );
+}
+#contact_form_section form input[type="submit"]{
+	position: relative;
+	z-index: 1;
+	display: block;
+	margin: 0;
+	padding: 0.5em 1.5em;
+	border: none;
+	background: none;
+	color: var( --color-bg );
+	cursor: pointer;
+}
+/* the same blink a:hover gives the logo and every other link, sitewide — 1s, speeding up to 0.1s held down */
+#contact_form_section form input[type="submit"]:hover{
+	animation-name: blink;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: running;
+	-moz-animation-name: blink;
+	-moz-animation-duration: 1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-play-state: running;
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
+}
+#contact_form_section form input[type="submit"]:active{
+	animation-name: blink;
+	animation-duration: 0.1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-play-state: running;
+	-moz-animation-name: blink;
+	-moz-animation-duration: 0.1s;
+	-moz-animation-timing-function: linear;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-play-state: running;
+	-webkit-animation-name: blink;
+	-webkit-animation-duration: 0.1s;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-play-state: running;
+}
+#contact_form_section form input[type="submit"]:disabled{
+	color: var( --color-bg );
+	cursor: default;
+}
+/* once the message is sent, every label and field reads as done, not just the button — border, placeholder, and typed-in text alike fade to the same muted gray */
+#contact_form_section form.message_sent label,
+#contact_form_section form.message_sent .text_field_glass input,
+#contact_form_section form.message_sent .text_field_glass textarea{
+	color: var( --color-mid );
+}
+#contact_form_section form.message_sent .text_field_glass{
+	border-color: var( --color-mid );
+}
+#contact_form_section form.message_sent .text_field_glass input::placeholder,
+#contact_form_section form.message_sent .text_field_glass textarea::placeholder{
+	color: var( --color-mid );
+}
+/* the line itself, not the heading, carries the motion — margin-left is set from JS: once after erasing, to throw the empty cursor over to the right in one snap, then again on every keystroke of typing, to keep the growing text pinned to that same right edge */
+#contact_form_section .heading_line{
+	display: inline-block;
+	white-space: nowrap;
+	transition: margin-left 0.15s ease;
+}
+#contact_form_section .heading_line.heading_replacement{
+	color: var( --color-mid );
+}
+/* a real text cursor: a hard on/off blink, not the fade the rest of the site's blink keyframe does */
+#contact_form_section .type_cursor{
+	display: inline-block;
+	width: 2px;
+	height: 0.85em;
+	margin-left: 2px;
+	vertical-align: -0.1em;
+	background-color: currentColor;
+	animation: cursor_blink 1s steps( 1 ) infinite;
+}
 
 /*   a t - r u l e s   */
 
@@ -644,6 +748,243 @@ form input[type="submit"]{
 	font-size: 10pt;
 }
 
+.about_layout{
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	column-gap: 2em;
+	/* matches the gap between the section header's last line and the disc above it, so the timeline sits exactly as close beneath the disc once it wraps underneath */
+	row-gap: 16.164px;
+}
+/* flex-basis is 200px — the medallion's own hard floor, same number as min-width just below — not the viewport-scaled preferred size that lives in max-width instead. That split matters specifically because flex-wrap decides whether a line breaks using each item's flex-basis clamped to its min/max, not its final shrunk size: a basis already sitting above the floor, like the preferred size was here before, gets used as-is for that decision, so two columns were judged to "not fit" by their preferred widths rather than their minimums, giving up on parallel earlier than the floor actually required. With basis pinned to the floor, the wrap decision is always made against the floor, while flex-grow still lets the column expand up to its viewport-scaled max-width whenever there's room for that. container-type turns this column into a query container, so --disc below can read cqw units: a percentage that consistently means "percent of this column," in every property and at every nesting depth, unlike a bare % which means something different in a translateY() than it does in a width */
+.about_sidebar{
+	flex: 1 1 200px;
+	min-width: 200px;
+	max-width: clamp( 200px, calc( 100vw / 3 ), 480px );
+	container-type: inline-size;
+	display: flex;
+	flex-direction: column;
+	row-gap: 1.5em;
+}
+/* timeline and the four skill group names sit at the same visual rank — the timeline only lives under its own h2, in a separate column, because it needs a column of its own, not because it outranks these. Sized to match the nav's own menu entries (16pt small-caps, e.g. #read/#see/#listen/#watch below), since these are section labels in the same sense those are, not body headings */
+.resume_timeline h2, .skills_group h3{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 16pt;
+	font-variant: small-caps;
+	letter-spacing: 0.5pt;
+	margin: 0;
+}
+.resume_timeline h2{
+	text-align: center;
+}
+.skills_group ul{
+	list-style: none;
+	margin: 0.4em 0 0 0;
+	padding: 0;
+	font-size: 10pt;
+}
+.skills_group li{
+	margin: 0.15em 0 0 0;
+}
+/* :has() rather than a class on the <ul> itself: a group is either all badges or all plain text today, so whether it contains a .skill_badge is enough to tell the two apart without touching the view. Plain-text groups (degrees, licenses) keep the one-per-line list they need for full sentences; badge groups wrap side by side like the README they're copied from */
+.skills_group ul:has( .skill_badge ){
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4em;
+}
+.skills_group ul:has( .skill_badge ) li{
+	margin: 0;
+}
+.skill_badge{
+	height: 20px;
+	vertical-align: middle;
+}
+/* --disc is the one true size: the photo, both rings, and their type are all defined as a fraction of it below, so the whole medallion scales as one coherent object instead of drifting apart at different rates. 100cqw — not 100vw/3 directly, and not a bare % — is what makes it track the sidebar's own actual (possibly squeezed) width: cqw always means "percent of the nearest container-type ancestor," the same in a width as in a translateY() ten elements deep, so the rings can read it too without the mismatch a plain % caused before. Bound by clamp() so it can't shrink past legible ring type on a phone or balloon past a sensible badge size on an ultra-wide */
+.name_disc_center{
+	align-self: center;
+}
+/* below the same 432px (200px + 2em column-gap + 200px) that makes .about_sidebar and .resume_timeline wrap off of each other, the sidebar is alone on its row with the full row's width to itself — like .resume_timeline (which has no max-width tight enough to ever hit this ceiling), it should widen to fill that row rather than stay pinned to the vw/3 cap that only exists to keep the two columns from crowding each other side by side. Dropping the cap here doesn't reopen "c'est exagéré": --disc's own clamp above already hard-ceilings the medallion at 480px directly, independent of how wide .about_sidebar itself gets to be, so only the skill-group text around it gains the extra room. The medallion still reads better centered than left-hung once nothing shares the row — name_disc_center's align-self:center already does that within whatever width .about_sidebar ends up with, so no extra centering rule is needed here now that the sidebar's own box is the one growing instead of staying narrow within a centered margin */
+@container about_area ( max-width: 432px ){
+	.about_sidebar{
+		max-width: none;
+	}
+}
+.name_disc{
+	position: relative;
+	--disc: clamp( 200px, 100cqw, 480px );
+	width: var( --disc );
+	height: var( --disc );
+	margin: 0;
+}
+/* box-shadow for the convex curvature. The shake/lag transform itself lives on .name_disc, not here — the rings orbit the photo, so the whole disc has to move as one object, not just the photo underneath it */
+.profile_photo_medallion{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate( -50%, -50% );
+	width: calc( var( --disc ) * 180 / 237 );
+	height: calc( var( --disc ) * 180 / 237 );
+	border-radius: 50%;
+	overflow: hidden;
+	user-select: none;
+	/* no offset on either shadow: the light comes from the viewer straight ahead of the screen, not from any one side */
+	box-shadow: inset 0 0 20px var( --medallion-shadow ), 0 0 14px var( --medallion-shadow );
+}
+.profile_photo_disc{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+.name_ring{
+	position: absolute;
+	inset: 0;
+	user-select: none;
+	animation: spin_counterclockwise 20s linear infinite;
+}
+.name_ring_japanese{
+	animation-direction: reverse;
+}
+.name_ring span{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	letter-spacing: 0.5px;
+}
+.name_ring_latin span{
+	font-size: calc( var( --disc ) * 12 / 237 );
+	text-transform: uppercase;
+}
+.name_ring_japanese span{
+	font-size: calc( var( --disc ) * 11 / 237 );
+}
+.name_ring span .ring_char{
+	display: inline-block;
+	transform: rotate( 180deg );
+}
+.name_ring span .ring_char.ring_code{
+	font-family: 'Courier New', Courier, monospace;
+	text-transform: none;
+}
+#section_header.name_header{
+	display: flex;
+	flex-direction: column;
+}
+.name_header_primary, .name_header_aka{
+	display: block;
+	text-transform: uppercase;
+	font-size: 21pt;
+	letter-spacing: -0.5pt;
+	line-height: 0.85em;
+}
+.name_header_aka{
+	color: var( --color-mid );
+}
+.name_header_primary_ja, .name_header_aka_ja{
+	display: block;
+	font-family: 'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+	font-size: 11pt;
+	letter-spacing: normal;
+	line-height: 1em;
+}
+.name_header_primary_ja{
+	margin-top: 0.2px;
+}
+.name_header_aka_ja{
+	color: var( --color-mid );
+}
+
+/* min-width, not just flex-basis, is what actually forces a clean wrap: without it a flex item happily shrinks below its basis down toward its content's own minimum before ever wrapping, squeezing the timeline instead of moving it below the sidebar the way flex-wrap on .about_layout intends */
+/* 200px, not an em value picked independently — the same floor as --disc's own minimum below, so neither column is ever asked to be narrower than the medallion itself is allowed to get. Long lines (a milestone title, a section name) just wrap inside that width rather than forcing the column wider */
+/* no trailing margin of its own anymore — #signature's own margin-top is what now opens the gap beneath whichever column runs longer, the timeline usually, and a second margin stacked on top of that would only pull the two apart further than the 1.5em rhythm calls for */
+.resume_timeline{
+	flex: 1 1 200px;
+	min-width: 200px;
+	max-width: 40em;
+	margin: 0;
+}
+/* position:relative here, not just on .timeline_entry below, is what makes the one continuous line further down possible: it needs one fixed pair of coordinates (the first entry's cross, the last entry's cross) to run between, not a running total of how tall every entry's own date block happened to wrap to */
+.timeline{
+	position: relative;
+	list-style: none;
+	padding: 0;
+	margin: 1em 0 0 0;
+}
+/* one continuous line for the whole list rather than a segment stitched between every pair of crosses: since every cross sits on the same x, a single straight line between the first entry's cross and the last one passes directly through every cross in between regardless of exactly where each one landed, sidestepping the need to know that at all. top and bottom, not top and height: a fixed height broke the moment Milestone.chronological_with_gaps started splicing filler entries in, since the list's total height is no longer just a function of the real milestones — bottom only depends on the last entry's own layout (64.09px), which doesn't change just because entries were added or removed somewhere in between. top now reaches up past the first cross to the "timeline" heading's own vertical center (h2's center sits 30.33px above .timeline's own top edge, hence -30.33px) rather than stopping exactly at the first cross the way bottom still does, because the line needs to fade out somewhere above that cross, not stop abruptly at it. Two mask layers rather than one: the dash-tile from before still repeats the whole way, and a second, non-repeating linear-gradient — solid for everything below 85.27px from this extended top (the distance back down to where the first cross actually is) and fading to transparent above that — is layered on top of it with mask-composite:intersect so only where BOTH layers are opaque survives, i.e. dashes that fade out approaching the heading and are fully solid at and below the first cross, same as always */
+.timeline::before{
+	content: '';
+	position: absolute;
+	left: -3px;
+	top: -30.33px;
+	bottom: 64.09px;
+	width: 4px;
+	background-color: rgb( 128, 128, 128 );
+	mask-image: url( "data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%204%2012%27%3E%3Cline%20x1=%272%27%20y1=%271%27%20x2=%272%27%20y2=%277%27%20stroke=%27white%27%20stroke-width=%272%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E" ), linear-gradient( to bottom, transparent 0, black 85.27px, black 100% );
+	mask-repeat: repeat-y, no-repeat;
+	mask-size: 4px 12px, auto;
+	mask-composite: intersect, intersect;
+}
+/* margin:0 overrides the sitewide NYT-typography li rule (0.3em top and bottom) — spacing between entries is already this padding's own job, so that generic margin only ever adds redundant, collapsed space between entries, and on the last entry, whose bottom margin nothing follows to collapse with, it doesn't collapse away at all: .resume_timeline is a flex item of .about_layout, and flex items don't let a child's margin escape through their own edge, so it was quietly padding out .resume_timeline's own height by exactly that 0.3em past the timeline's actual last pixel */
+.timeline_entry{
+	position: relative;
+	padding: 0 0 1.5em 1.5em;
+	margin: 0;
+}
+/* a diagonal cross (×) rather than the literal '+' character before, drawn as an SVG mask rather than text — border-style:dashed and text glyphs can't get round caps on their own strokes, but an SVG stroke can (stroke-linecap:round), and mask-image lets that shape be filled with var(--color-fg) instead of a color baked into the SVG, so it still answers to the theme. On .timeline_title rather than .timeline_entry, and top is a fixed, small offset (6.35px = half of .timeline_title's own 24.7px line-height, minus half the cross's own 12px) — deliberately NOT tied to how tall .timeline_dates rendered above it: .timeline_title's own top always lands wherever the date above it actually ended, whether that took one line or two, the same way any two stacked block elements do in normal flow, so anchoring the cross to the title directly gets that for free, without needing dates to be forced to some fixed height (which only wasted space under the many one-line dates) or needing to know that height at all. left is -32.5px, not the -7px that centered it correctly back when this sat on .timeline_entry directly: .timeline_title sits 25.5px further right than .timeline_entry's own edge (.timeline_entry's own 1.5em left padding), and .timeline::before below is positioned from that same .timeline_entry/.timeline edge, not from .timeline_title's — so anchoring the cross to .timeline_title without correcting for that 25.5px offset pulls it off the line, which is exactly what happened. -7 - 25.5 = -32.5, landing the cross's center (its own left plus half its 12px width) back on the line's own center at x=-1px, measured from the shared .timeline_entry/.timeline edge */
+.timeline_title::before{
+	content: '';
+	position: absolute;
+	left: -32.5px;
+	top: 6.35px;
+	width: 12px;
+	height: 12px;
+	background-color: var( --color-fg );
+	-webkit-mask-image: url( "data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2012%2012%27%3E%3Cpath%20d=%27M2%202L10%2010M10%202L2%2010%27%20stroke=%27white%27%20stroke-width=%272%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E" );
+	mask-image: url( "data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2012%2012%27%3E%3Cpath%20d=%27M2%202L10%2010M10%202L2%2010%27%20stroke=%27white%27%20stroke-width=%272%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E" );
+	mask-size: contain;
+	mask-repeat: no-repeat;
+}
+.timeline_dates{
+	font-size: 9pt;
+	color: var( --color-mid );
+	text-transform: uppercase;
+	letter-spacing: 0.5pt;
+	margin: 0 0 0.15em 0;
+}
+.timeline_title{
+	position: relative;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	margin: 0 0 0.15em 0;
+}
+.timeline_organization, .timeline_location{
+	margin: 0 0 0.25em 0;
+}
+.timeline_organization{
+	font-size: 10pt;
+	font-variant: small-caps;
+}
+.timeline_location{
+	font-size: 9pt;
+	color: var( --color-mid );
+	text-transform: uppercase;
+}
+/* no explicit font-size — .timeline_title doesn't set one either, so both inherit the same size from body rather than each pinning its own number that could drift apart later */
+.timeline_description{
+	margin: 0.25em 0 0 0;
+}
+/* the computed "It's a secret to everybody." entries Milestone.chronological_with_gaps splices in for unaccounted-for stretches of time — never real records, so they get no cross (the continuous line still runs behind them same as any other stretch) and a visibly different, secondary treatment on the title itself */
+.timeline_entry_filler .timeline_title::before{
+	display: none;
+}
+.timeline_entry_filler .timeline_title{
+	font-style: italic;
+	color: rgb( 128, 128, 128 );
+}
+
 /*   I D s   */
 
 /* the emblem paints as a mask, not a plain background-image, so its ink is var(--color-faint) — the exact same token #line_1_logotype/#line_4_logotype already use for "kvpb.fr"/"prototyp" — rather than a color baked into the SVG file itself. mask-mode:luminance is why the file carries its own internal invert filter (id=mask-invert, wrapping the whole Artboard group): the artwork is authored as dark ink on white paper, but a luminance mask reads white as "fully shown" and black as "fully hidden" — backwards from that convention — so the file pre-inverts itself before the mask ever samples it, making dark ink (now high-luminance) the part that shows and white paper (now low-luminance) the part that doesn't. That, in turn, is what lets --color-faint's own light/dark/gallery redefinitions carry the emblem automatically, the same way #signature/#theme_toggle already ride var(--color-fg)/--color-mid — no separate invert()/contrast() filter needed here at all */
@@ -974,6 +1315,21 @@ a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, 
 	user-select: text;
 	/* the overlay's own background is opaque, so the site-wide halo against #backdrop is pointless here and only dulls the glyph edges */
 	-webkit-text-stroke-width: 0;
+}
+/* no max-width/auto-centering here anymore — that used to leave an auto margin wider than .about_layout's own 2em column-gap between the sidebar and the timeline, so the sidebar never quite reached flush against main's edge the way every other section does. The contact form keeps its own cap below instead. Named as a container so .name_disc_center's @container rule below can query this element's own width specifically, rather than whichever container-type ancestor happens to be nearest (.about_sidebar is one too, for --disc's cqw, but its width is the wrong number for this question) */
+#gettoknowandcontact_page{
+	display: block;
+	container-type: inline-size;
+	container-name: about_area;
+}
+/* container-type on gettoknowandcontact_page above contains layout, which stops margins from collapsing through it — so this section's own top margin no longer merges with #section_header's fixed 16px margin-bottom above; the two just stack. calc() tops that unavoidable 16px up to the full 1.5em .about_sidebar uses as its own row-gap below, so the gap above this section and the gap below it (plain 1.5em, nothing else contributes there) read as the same rhythm instead of the 44.8px/0px split the h2's own generic top margin and no margin at all happened to leave */
+#contact_form_section{
+	max-width: 60em;
+	margin-top: calc( 1.5em - 16px );
+	margin-bottom: 1.5em;
+}
+#contact_form_section h2{
+	margin-top: 0;
 }
 
 /*	style.css
