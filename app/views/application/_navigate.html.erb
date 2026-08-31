@@ -18,8 +18,16 @@
 		<span id="gettoknowandcontact_2">& contact</span>
 	</div><% end %>
 	<% end %>
-	<%= link_to search_path, id: "search", data: { action: "click->search-overlay#open:prevent" } do %><span id="search">find</span><% end %>
+	<% if section_empty?( :code ) %><span id="code" class="section_empty">code</span><% else %><%= link_to code_path, id: "code" do %><span id="code">code</span><% end %><% end %>
+	<% if section_empty?( :map ) %><span id="map" class="section_empty">map</span><% else %><%= link_to map_path, id: "map" do %><span id="map">map</span><% end %><% end %>
+	<%= link_to search_path, id: "search", data: { action: "click->search-overlay#open:prevent" } do %><span id="search"><!--find-->search</span><% end %>
 	<hr>
+	<% if Setting.current.youtube_visible? %>
+	<%= link_to "https://www.youtube.com/@", id: "checkout_YouTube", target: "_blank", rel: "noopener" do %><div><!--<div id="checkout_YouTube">-->
+		<span id="checkout_YouTube_1">Karl</span><br>
+		<span id="checkout_YouTube_2">YouTube</span>
+	</div><% end %>
+	<% end %>
 	<% if Setting.current.twitter_visible? %>
 	<%= link_to "https://x.com/ktgwkvpb", id: "checkout_TwitterX", target: "_blank", rel: "noopener" do %><div><!--<div id="checkout_TwitterX">-->
 		<span id="checkout_TwitterX_1">@ktgwkvpb</span><br>
@@ -32,10 +40,6 @@
 		<span id="checkout_GitHub_2">GitHub</span>
 	</div><% end %>
 	<% end %>
-	<%= link_to "https://www.youtube.com/@", id: "checkout_YouTube", target: "_blank", rel: "noopener" do %><div><!--<div id="checkout_YouTube">-->
-		<span id="checkout_YouTube_1">Karl</span><br>
-		<span id="checkout_YouTube_2">Youtube</span>
-	</div><% end %>
 	<button type="button" id="theme_toggle" role="switch" aria-checked="false" aria-label="Toggle light and dark appearance" data-controller="theme-toggle" data-action="click->theme-toggle#toggle"><span id="theme_toggle_knob"></span></button>
 	<div id="copyright_notice_block">
 		<span id="copyright_notice_0" class="copyright_notice">&copy; <%= Date.current.year %> Karl Vincent Pierre Bertin</span>

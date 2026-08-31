@@ -107,6 +107,7 @@ Rails.application.routes.draw do
   patch  "/gallery/:album_identifier/passages/:id",      to: "passages#update"
   delete "/gallery/:album_identifier/passages/:id",      to: "passages#destroy", as: "passage"
 
+  post   "/photos/:id/dwell",                      to: "photo_dwells#create", as: "photo_dwell"
 
   # get "/listen",                    to: "pages#listen",               as: "listen"
   get "/listen",                    to: "pages#listen",               as: "old_listen"
@@ -147,7 +148,21 @@ Rails.application.routes.draw do
   patch  "/gettoknowandcontact/skills/:id",      to: "skills#update"
   delete "/gettoknowandcontact/skills/:id",      to: "skills#destroy", as: "skill"
 
+  # the old primary — messages_path and friends keep their own name below, only the literal URL changes
+  # get    "/messages",                 to: "messages#index",       as: "messages"
+  # patch  "/messages/:id/mark_read",   to: "messages#mark_read",   as: "mark_read_message"
+  # patch  "/messages/:id/mark_unread", to: "messages#mark_unread", as: "mark_unread_message"
+  # post   "/messages/:id/forward",     to: "messages#forward",     as: "forward_message"
+  get    "/messages",                       to: "messages#index",       as: "old_messages"
+  get    "/backend/inbox",                  to: "messages#index",       as: "messages"
+  patch  "/backend/inbox/:id/mark_read",    to: "messages#mark_read",   as: "mark_read_message"
+  patch  "/backend/inbox/:id/mark_unread",  to: "messages#mark_unread", as: "mark_unread_message"
+  patch  "/backend/inbox/:id/keep",         to: "messages#keep",        as: "keep_message"
+  patch  "/backend/inbox/:id/unkeep",       to: "messages#unkeep",      as: "unkeep_message"
+  post   "/backend/inbox/:id/forward",      to: "messages#forward",     as: "forward_message"
 
+  get    "/settings",                 to: "settings#edit",        as: "settings"
+  patch  "/settings",                 to: "settings#update"
 
   # The sign-in path is not a fixed word ("session"/"login") but today's rotating token, checked
   # against the database on every request by LoginTokenConstraint — so it is neither a guessable

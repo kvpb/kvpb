@@ -1,0 +1,30 @@
+<section id="settings_page">
+	<%= form_with model: @setting, url: settings_path, method: :patch do |form| %>
+		<div class="setting_entry">
+			<%= form.check_box :youtube_visible %>
+			<%= form.label :youtube_visible, "Show YouTube in the menu" %>
+		</div>
+		<div class="setting_entry">
+			<%= form.check_box :twitter_visible %>
+			<%= form.label :twitter_visible, "Show Twitter\\X in the menu" %>
+		</div>
+		<div class="setting_entry">
+			<%= form.check_box :github_visible %>
+			<%= form.label :github_visible, "Show GitHub in the menu" %>
+		</div>
+		<%= form.submit "Save" %>
+	<% end %>
+</section>
+
+<%#
+	edit.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
