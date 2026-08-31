@@ -1,0 +1,60 @@
+<section id="edit_photo">
+	<h1>Edit photo</h1>
+
+	<% if @photo.image.attached? %>
+		<%= image_tag @photo.image, class: "print_image", draggable: false %>
+	<% end %>
+
+	<%= form_with model: @photo, url: photo_path( @album, @photo ), scope: :photo do |form| %>
+		<% if @photo.errors.any? %>
+			<ul class="errors">
+				<% @photo.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+			</ul>
+		<% end %>
+
+		<%= form.label :taken_at, "Taken at" %>
+		<%= form.datetime_field :taken_at, value: @photo.taken_at&.strftime( "%Y-%m-%dT%H:%M" ) %>
+		<p class="field_hint"><%= @photo.taken_at_overridden? ? "Manually set." : "Read automatically from the photo's own EXIF." %> Blank goes back to automatic.</p>
+
+		<%= form.label :author, "Author" %>
+		<div class="text_field_glass" data-controller="squircle-dash-border">
+			<%= form.text_field :author %>
+		</div>
+		<p class="field_hint"><%= @photo.author_overridden? ? "Manually set." : "Read automatically from the photo's own EXIF." %> Blank goes back to automatic.</p>
+
+		<%= form.label :place, "Place" %>
+		<div class="text_field_glass" data-controller="squircle-dash-border">
+			<%= form.text_field :place %>
+		</div>
+		<p class="field_hint"><%= @photo.place_overridden? ? "Manually set." : "Read automatically from the photo's own EXIF (GPS, reverse-geocoded)." %> Blank goes back to automatic.</p>
+
+		<%= form.label :camera, "Camera" %>
+		<div class="text_field_glass" data-controller="squircle-dash-border">
+			<%= form.text_field :camera %>
+		</div>
+		<p class="field_hint"><%= @photo.camera_overridden? ? "Manually set." : "Read automatically from the photo's own EXIF." %> Blank goes back to automatic.</p>
+
+		<%= form.label :lens, "Lens" %>
+		<div class="text_field_glass" data-controller="squircle-dash-border">
+			<%= form.text_field :lens %>
+		</div>
+		<p class="field_hint"><%= @photo.lens_overridden? ? "Manually set." : "Read automatically from the photo's own EXIF." %> Blank goes back to automatic.</p>
+
+		<%= form.submit "Save changes" %>
+	<% end %>
+
+	<%= button_to "Delete photo", photo_path( @album, @photo ), method: :delete, data: { turbo_confirm: "Delete this photo?" } %>
+</section>
+
+<%#
+	edit.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

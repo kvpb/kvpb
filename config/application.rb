@@ -11,6 +11,10 @@ module Kvpb
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
 
+    # Variants are made by ImageMagick, not libvips (the 8.1 default): it is what reads a HEIC — an iPhone's own format, which no browser can show — and, later, a camera's RAW, and it is already on the machine this is written on. Dockerfile installs it for production
+    config.active_storage.variant_processor = :mini_magick
+    # config.active_storage.variant_processor = :vips
+
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
