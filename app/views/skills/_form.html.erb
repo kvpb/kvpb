@@ -1,0 +1,34 @@
+<%= form_with model: skill, url: ( skill.persisted? ? skill_path( skill ) : skills_path ), scope: :skill do |form| %>
+	<% if skill.errors.any? %>
+		<ul class="errors">
+			<% skill.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+		</ul>
+	<% end %>
+
+	<%= form.label :category, "Category" %>
+	<%= form.select :category, Skill.categories.keys.map { |key| [ Skill::CATEGORY_LABELS.fetch( key ), key ] } %>
+
+	<%= form.label :name, "Name" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_field :name, required: true %>
+	</div>
+
+	<%= form.label :position, "Position" %>
+	<%= form.number_field :position %>
+	<p class="field_hint">Lower numbers list first within the category.</p>
+
+	<%= form.submit skill.persisted? ? "Save changes" : "Create skill" %>
+<% end %>
+
+<%#
+	_form.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
