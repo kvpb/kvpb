@@ -1,29 +1,24 @@
+<div id="nav_wrapper" data-controller="search-overlay">
 <nav><!--<nav id="nav">-->
-	<%= link_to root_path do %><div id='wordmark'>
-		<span id='line_1_logotype'>kvpb.fr</span>
-		<span id='line_2_logotype'>Karl</span>
-		<span id='line_3_logotype'>カール</span>
-		<span id='line_4_logotype'>version 1.00</span>
-	</div><% end %>
+	<%= render "wordmark" %>
 	<hr>
-	<%= link_to read_path, id: "read" do %><span id="read">read</span><% end %>
-	<%= link_to see_path, id: "see" do %><span id="see">see</span><% end %>
-	<%= link_to listen_path, id: "listen" do %><span id="listen">listen</span><% end %>
-	<%= link_to watch_path, id: "watch" do %><span id="watch">watch</span><% end %>
-	<%= link_to gettoknowandcontact_path, id: "gettoknowandcontact" do %><div><!--<div id="gettoknowandcontact">-->
-		<!--<span id="gettoknowandcontact_0">&nbsp;</span><br>-->
-		<span id="gettoknowandcontact_1">get to know</span><br>
-		<span id="gettoknowandcontact_2">& contact</span>
-	</div><% end %>
-	<%= link_to search_path, id: "search" do %><span id="search">find</span><% end %>
-	<hr>
-	<%= link_to "https://x.com/ktgwkvpb", id: "checkout_TwitterX", target: "_blank", rel: "noopener" do %><div><!--<div id="checkout_TwitterX">-->
-		<span id="checkout_TwitterX_1">@ktgwkvpb</span><br>
-		<span id="checkout_TwitterX_2">Twitter\X</span>
-	</div><% end %>
-		<%= link_to "https://github.com/kvpb", id: "checkout_GitHub", target: "_blank", rel: "noopener" do %><div><!--<div id="checkout_GitHub">-->
-		<span id="checkout_GitHub_1">kvpb</span><br>
-		<span id="checkout_GitHub_2">GitHub</span>
-	</div><% end %>
+	<%= render "nav_links" %>
+	<button type="button" id="theme_toggle" role="switch" aria-checked="false" aria-label="Toggle light and dark appearance" data-controller="theme-toggle" data-action="click->theme-toggle#toggle"><span id="theme_toggle_knob"></span></button>
+	<%= render "copyright_notice" %>
 </nav>
+<%= render "search_overlay" %>
+</div>
 <!--<span class="marquee">'z avez vu ? C'est moi qu'a fait ça !</span>-->
+
+<%#
+	_navigate.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

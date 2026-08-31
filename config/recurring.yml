@@ -1,3 +1,13 @@
+production:
+  rotate_login_token:
+    class: RotateLoginTokenJob
+    queue: default
+    schedule: every day at 4am
+  refresh_http_status_registry:
+    class: RefreshHttpStatusRegistryJob
+    queue: default
+    schedule: every day at 4:30am
+
 # production:
 #   periodic_cleanup:
 #     class: CleanSoftDeletedRecordsJob

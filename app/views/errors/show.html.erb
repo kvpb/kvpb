@@ -1,0 +1,23 @@
+<%# the status code, and, above it, the one word this line ever is — tracked out, never stretched, to span
+exactly as wide as the number's own first digit does: #error_label_frame is sized in ch at the number's own
+font, 1ch being the width a digit glyph is defined by in any font whose figures are tabular, as this one's
+are, so it comes out the same whether the first digit actually shown is a wide one or a narrow one %>
+<div id="error_code_frame">
+	<div id="error_label_frame">
+		<div id="error_label">error</div>
+	</div>
+	<span id="error_code"><%= @status %></span>
+</div>
+
+<%#
+	show.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
