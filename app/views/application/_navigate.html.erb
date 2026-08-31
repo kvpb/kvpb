@@ -1,21 +1,22 @@
+<div id="nav_wrapper" data-controller="search-overlay">
 <nav><!--<nav id="nav">-->
 	<%= link_to root_path do %><div id='wordmark'>
 		<span id='line_1_logotype'>kvpb.fr</span>
 		<span id='line_2_logotype'>Karl</span>
 		<span id='line_3_logotype'>カール</span>
-		<span id='line_4_logotype'>version 1.00</span>
+		<span id='line_4_logotype'>prototyp</span><!--<span id='line_4_logotype'>typ 1</span>-->
 	</div><% end %>
 	<hr>
-	<%= link_to read_path, id: "read" do %><span id="read">read</span><% end %>
-	<%= link_to see_path, id: "see" do %><span id="see">see</span><% end %>
-	<%= link_to listen_path, id: "listen" do %><span id="listen">listen</span><% end %>
-	<%= link_to watch_path, id: "watch" do %><span id="watch">watch</span><% end %>
+	<% if section_empty?( :journal ) %><span id="read" class="section_empty">read</span><% else %><%= link_to read_path, id: "read" do %><span id="read">read</span><% end %><% end %>
+	<% if section_empty?( :gallery ) %><span id="see" class="section_empty">see</span><% else %><%= link_to see_path, id: "see" do %><span id="see">see</span><% end %><% end %>
+	<% if section_empty?( :music ) %><span id="listen" class="section_empty">listen</span><% else %><%= link_to listen_path, id: "listen" do %><span id="listen">listen</span><% end %><% end %>
+	<% if section_empty?( :films ) %><span id="watch" class="section_empty">watch</span><% else %><%= link_to watch_path, id: "watch" do %><span id="watch">watch</span><% end %><% end %>
 	<%= link_to gettoknowandcontact_path, id: "gettoknowandcontact" do %><div><!--<div id="gettoknowandcontact">-->
 		<!--<span id="gettoknowandcontact_0">&nbsp;</span><br>-->
 		<span id="gettoknowandcontact_1">get to know</span><br>
 		<span id="gettoknowandcontact_2">& contact</span>
 	</div><% end %>
-	<%= link_to search_path, id: "search" do %><span id="search">find</span><% end %>
+	<%= link_to search_path, id: "search", data: { action: "click->search-overlay#open:prevent" } do %><span id="search">find</span><% end %>
 	<hr>
 	<%= link_to "https://x.com/ktgwkvpb", id: "checkout_TwitterX", target: "_blank", rel: "noopener" do %><div><!--<div id="checkout_TwitterX">-->
 		<span id="checkout_TwitterX_1">@ktgwkvpb</span><br>
@@ -25,5 +26,31 @@
 		<span id="checkout_GitHub_1">kvpb</span><br>
 		<span id="checkout_GitHub_2">GitHub</span>
 	</div><% end %>
+	<button type="button" id="theme_toggle" role="switch" aria-checked="false" aria-label="Toggle light and dark appearance" data-controller="theme-toggle" data-action="click->theme-toggle#toggle"><span id="theme_toggle_knob"></span></button>
+	<div id="copyright_notice_block">
+		<span id="copyright_notice_0" class="copyright_notice">&copy; <%= Date.current.year %> Karl Vincent Pierre Bertin</span>
+		<span id="copyright_notice_1" class="copyright_notice">Tous droits réservés.</span>
+		<span id="copyright_notice_2" class="copyright_notice">Alles Rechte vorbehalten.</span>
+		<span id="copyright_notice_3" class="copyright_notice">All rights reserved.</span>
+	</div>
 </nav>
+<div id="search_overlay" data-search-overlay-target="overlay">
+	<%= form_with url: search_path, method: :get do |form| %>
+		<%= form.text_field :q, placeholder: "find", autocomplete: "off", data: { search_overlay_target: "input" } %>
+	<% end %>
+</div>
+</div>
 <!--<span class="marquee">'z avez vu ? C'est moi qu'a fait ça !</span>-->
+
+<%#
+	_navigate.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

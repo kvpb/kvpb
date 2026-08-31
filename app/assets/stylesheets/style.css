@@ -1,9 +1,44 @@
 /*   t y p e s   */
 
+:root{
+	color-scheme: light dark;
+
+	--color-fg: rgb( 0, 0, 0 );
+	--color-title: rgb( 0, 0, 0 );
+	--color-bg: rgb( 255, 255, 255 );
+	--color-muted: rgb( 85, 85, 85 );
+	--color-hover: rgba( 0, 0, 0, 0.9 );
+	--color-faint: rgb( 230, 230, 230 );
+	--color-mid: rgb( 150, 150, 150 );
+	--color-border: rgb( 200, 200, 200 );
+
+	--color-twitter: rgb( 29, 155, 240 );
+	--color-github: rgb( 37, 41, 46 );
+	--color-danger: rgb( 178, 34, 34 );
+	--color-success: rgb( 0, 100, 0 );
+	--color-pending-bg: rgb( 255, 255, 224 );
+
+	/* Karl's Hall of Fame — limestone by day */
+	--stone-bg: rgb( 214, 210, 201 );
+	--stone-grain-dark: rgba( 0, 0, 0, 0.035 );
+	--stone-grain-light: rgba( 255, 255, 255, 0.05 );
+	--engrave-shadow: rgba( 0, 0, 0, 0.4 );
+	--engrave-highlight: rgba( 255, 255, 255, 0.65 );
+	--medallion-highlight: rgba( 255, 255, 255, 0.6 );
+	--medallion-shadow: rgba( 0, 0, 0, 0.08 );
+	--stone-text-blend: multiply; /* dark text absorbed into pale stone */
+}
+
+/* every element eases between its light and dark colors instead of snapping, so flipping the theme reads as one smooth cut rather than a harsh jump; elements with their own transition (the toggle, the wordmark) override this outright rather than merging with it, which is fine since those already resolve to the same 1/4s */
+*{
+	transition: background-color .25s ease, color .25s ease, border-color .25s ease, fill .25s ease, stroke .25s ease, filter .25s ease;
+}
+
 html{
-	color: rgb( 0, 0, 0 );
-	background-color: rgb( 255, 255, 255 );
-	background: url(karlsemblem.svg) no-repeat fixed center; /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
+	height: 100%;
+	margin: 0;
+	color: var( --color-fg );
+	background-color: var( --color-bg );
 }
 
 body{
@@ -11,16 +46,25 @@ body{
 	/*background-color: rgb( 255, 255, 255 );*/
 	/*background: url(https://camo.githubusercontent.com/c30ec0405c5e8bb19e19cf20836b2d036130f6b55598843f66c50365d50e0d09/68747470733a2f2f6769737463646e2e6769746861636b2e636f6d2f6b7670622f63383035393465393037396538353763353563333664656334396131613264372f7261772f656563353464353832316463303932616439313036333531343163346534666565626630373536352f6b7670627373796d626f6c2e737667) no-repeat fixed center;*/
 	width: 100%;
-	height: 100%;
-	float: left;
-	font-family: 'Times New Roman', serif;
+	min-height: 100vh;
+	min-height: 100dvh;
+	margin: 0;
+	font-family: 'Arial', sans-serif;
 	font-size: 12pt;
-	margin: 0 auto 0 auto;
-	padding: 0;
-	width: 100%;
+	padding: 1em;
+	box-sizing: border-box;
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
+	flex-direction: row;
+	-webkit-text-stroke: 1px var( --color-bg );
+	paint-order: stroke fill;
+}
+
+/* body's own flex row already stretches main to the full window height (align-items' default, "normal", behaves as stretch here) — the missing piece was main's own children still stacking in plain block flow, using only as much of that height as their content needed and leaving the rest empty below #signature instead of pushing it down. grid-template-rows does that: #main_content's row is sized at least to its own content (min-content) but grows to fill whatever height main isn't otherwise using (1fr) when that content falls short of a full window, while #signature's row stays auto — sized to itself, sitting wherever #main_content's row actually ends. On a page tall enough that #main_content's natural content already exceeds the available height, 1fr has nothing left to distribute and this behaves exactly as plain block flow did, #signature's own margin-top the only thing separating it from what came before */
+main{
+	display: grid;
+	grid-template-rows: minmax( min-content, 1fr ) auto;
+	flex: 1 1 auto;
+	min-width: 0;
 }
 
 article{
@@ -29,6 +73,9 @@ article{
 	flex-direction: row;
 	flex-wrap: wrap;
 	align-items: flex-start;
+}
+article.draft{
+	opacity: 0.6;
 }
 
 header{
@@ -47,13 +94,13 @@ a{
 	text-decoration: none;
 }
 a:link{
-	color: rgb( 85, 85, 85 ); /* default values: `color: rgb( 0, 0, 93 );`; */
+	color: var( --color-muted ); /* default values: `color: rgb( 0, 0, 93 );`; */
 }
 a:visited{
-	color: rgb( 85, 85, 85 ); /* default values: `color: rgb( 85, 26, 139 );`; */
+	color: var( --color-muted ); /* default values: `color: rgb( 85, 26, 139 );`; */
 }
 a:hover{
-	color: rgba( 0, 0, 0, 0.9 );
+	color: var( --color-hover );
 	animation-name: blink;
 	animation-duration: 1s;
 	animation-timing-function: linear;
@@ -71,7 +118,7 @@ a:hover{
 	-webkit-animation-play-state: running;
 }
 a:active{
-	color: rgba( 0, 0, 0, 0.9 );
+	color: var( --color-hover );
 	animation-name: blink;
 	animation-duration: 0.1s;
 	animation-timing-function: linear;
@@ -96,16 +143,165 @@ hr{
 	border: none;
 }
 
+/* font sizes borrowed from The New York Times' own body copy scale — the family stays Arial, not their Cheltenham/Georgia, and colors/weights stay the site's own monochrome, only the size relationships are theirs. #article and #comments are excluded: the journal is getting its own front-page, multi-column "une" treatment later and is left alone until then. That exclusion is wrapped in :where() specifically so it costs nothing specificity-wise — :not() otherwise inherits the specificity of its most specific argument, and an ID in there would make every rule below outrank .headline, .pantheon_title, .album_title_large and the rest of this site's own titles instead of yielding to them. A bare element selector, :where()'s zero cost included, never outweighs a class one, so this only ever fills in what nothing more specific already claims */
+:is( h1, h2, h3, p, ul, ol, li, blockquote ):not( :where( #article, #article *, #comments, #comments * ) ){
+	font-family: 'Arial', sans-serif;
+}
+h1:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-weight: 900;
+	font-size: 34px;
+	line-height: 1.15;
+	margin: 0.3em 0 0.4em 0;
+}
+h2:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-weight: 900;
+	font-size: 24px;
+	line-height: 1.25;
+	margin: 1.2em 0 0.4em 0;
+}
+h3:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-weight: 900;
+	font-size: 19px;
+	line-height: 1.3;
+	margin: 1em 0 0.3em 0;
+}
+p:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-size: 17px;
+	line-height: 1.7;
+	margin: 0 0 1em 0;
+}
+ul:not( :where( #article, #article *, #comments, #comments * ) ), ol:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-size: 17px;
+	line-height: 1.7;
+	margin: 0 0 1em 0;
+	padding-left: 1.5em;
+}
+li:not( :where( #article, #article *, #comments, #comments * ) ){
+	margin: 0.3em 0;
+}
+blockquote:not( :where( #article, #article *, #comments, #comments * ) ){
+	font-size: 22px;
+	font-style: italic;
+	line-height: 1.5;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid var( --color-fg );
+}
+
 span.highlight{
-	background-color: rgb( 255, 255, 0 );
+	background-color: rgb( 255, 255, 0 ); /* pure yellow is already mid-lightness, so it doesn't need inverting; the text on top of it is forced black in both themes instead, below */
+	color: rgb( 0, 0, 0 );
 }
 span.black{
-	color: rgb( 0, 0, 0 );
+	color: rgb( 0, 0, 0 ); /* named for literal black, so it does not follow the theme */
 }
 
 ::selection{
-	background-color: black;
-	color: white;
+	background-color: var( --color-fg );
+	color: var( --color-bg );
+}
+
+form label{
+	display: block;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 9pt;
+	text-transform: uppercase;
+	letter-spacing: 1pt;
+	margin: 0.75em 0 0.15em 0;
+}
+form input[type="text"], form input[type="email"], form input[type="password"], form textarea{
+	display: block;
+	width: 100%;
+	max-width: 32em;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 12pt;
+	padding: 0.5em 0.6em;
+	box-sizing: border-box;
+	border: 2px solid var( --color-fg );
+	border-radius: 0;
+	color: var( --color-fg );
+	background-color: var( --color-bg );
+}
+form input[type="text"]:focus, form input[type="email"]:focus, form input[type="password"]:focus, form textarea:focus{
+	outline: 2px solid var( --color-fg );
+	outline-offset: 2px;
+}
+
+/* every real text field site-wide gets this squircle frosted-glass treatment; only the honeypot field keeps the plain square style above untouched, since it has to look unremarkable to a bot */
+.text_field_glass{
+	position: relative;
+	width: 100%;
+	border-radius: 14px;
+	corner-shape: superellipse( 5 );
+	isolation: isolate;
+}
+/* no overflow:hidden here, and no native border either, not even a static one made transparent on focus — browsers that don't understand corner-shape:superellipse(5) (Firefox, at least for now) fall back to a plain circular-arc border-radius for anything clipped to this element's own shape, and a squircle corner draws noticeably closer to the true rectangular corner than a circle of the same radius does, so an overflow:hidden here would clip away exactly the corners (and the short straight run beside them) of the SVG-drawn border in any such browser, while Chrome, which resolves the clip as the same superellipse it's drawn against, shows the whole thing intact. The border is always that SVG path below, solid and dashed alike: squircle_dash_border_path_solid and _dashed share one d/transform computed once in squircle_dash_border_controller.js, traced to this exact element's own current width and height along the same power-5 superellipse corner-shape:superellipse(5) draws, so the two states are pixel-identical and only differ in dasharray/animation — crossfading via opacity is then a true like-for-like swap. Dashes flowing continuously along the border, through the squircle corners, is also the only reason SVG is here at all: a first attempt at just the motion (a rotating conic-gradient ring) spun like a clock hand, not the marching-ants look actually wanted, and only an SVG path's stroke-dashoffset can animate that around a curve */
+.squircle_dash_border_svg{
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+.squircle_dash_border_path{
+	fill: none;
+	stroke: var( --color-fg );
+	stroke-width: 1px;
+	transition: opacity 0.3s ease;
+}
+.squircle_dash_border_path_solid{
+	opacity: 1;
+}
+.text_field_glass:focus-within .squircle_dash_border_path_solid{
+	opacity: 0;
+}
+/* no stroke override here — a fixed black, right for it to read as black in daylight, went invisible on dark appearance's own black page background. var(--color-fg) inherited from squircle_dash_border_path above is the same color the solid state already uses, so the dashes stay legible (black by day, white by night) without needing a color of their own */
+.squircle_dash_border_path_dashed{
+	opacity: 0;
+	stroke-dasharray: 8 8;
+}
+.text_field_glass:focus-within .squircle_dash_border_path_dashed{
+	opacity: 1;
+}
+/* no @keyframes here — squircle_dash_border_controller.js steps stroke-dashoffset by hand on every animation frame instead, since animating it through CSS hits a genuine Chromium rendering bug on a long enough path (a wide field on a wide enough page): most of the dashes silently stop painting past some point along it. positive, not negative, is still the direction that increment goes for the same reason it always was: squirclePath() draws clockwise (top edge left-to-right, then down the right side, etc.), and a decreasing stroke-dashoffset marches dashes forward along however the path was drawn — clockwise, here — while counting up marches them backward against that drawing direction, i.e. counterclockwise, "le sens trigonométrique" */
+/* the gaussian blur — frosted-glass center, strongest at the middle, masked down to nothing by the time it reaches the border */
+.text_field_glass::before{
+	content: '';
+	position: absolute;
+	inset: 0;
+	backdrop-filter: blur( 12px );
+	-webkit-backdrop-filter: blur( 12px );
+	mask-image: radial-gradient( ellipse at center, black 0%, black 30%, transparent 75% );
+	-webkit-mask-image: radial-gradient( ellipse at center, black 0%, black 30%, transparent 75% );
+	pointer-events: none;
+}
+/* :not([type="hidden"]) rather than a bare `input` — the extra attribute selector, not the honeypot's own hidden state, is the point: form input[type="…"] above matches on a real type value too, so a bare `input` here loses to it on specificity and the field keeps its square 2px border instead of ever going borderless. That plain rule's own 32em max-width is meant for it, not for a glass field: this one spans edge to edge between the page's own margins, so max-width:none overrides it here specifically */
+.text_field_glass input:not( [type="hidden"] ), .text_field_glass textarea{
+	position: relative;
+	z-index: 1;
+	display: block;
+	width: 100%;
+	max-width: none;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 12pt;
+	padding: 0.5em 0.6em;
+	box-sizing: border-box;
+	border: none;
+	color: var( --color-fg );
+	background: color-mix( in srgb, var( --color-bg ) 45%, transparent );
+}
+/* no focus outline here — the marching-ants squircle border is already the focus indicator, and this rule's own rectangular outline drawn on top of that rounded border reads as a second, unrelated selection box around the field */
+.text_field_glass input:not( [type="hidden"] ):focus, .text_field_glass textarea:focus{
+	outline: none;
+}
+form input[type="submit"]{
+	margin-top: 1em;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 1pt;
+	padding: 0.4em 1em;
 }
 
 /*   a t - r u l e s   */
@@ -121,6 +317,15 @@ span.black{
 	}
 	100%{
 		opacity: 1.0;
+	}
+}
+
+@keyframes cursor_blink{
+	0%, 49%{
+		opacity: 1;
+	}
+	50%, 100%{
+		opacity: 0;
 	}
 }
 
@@ -162,6 +367,15 @@ span.black{
 	}
 	100%{
 		opacity: 1;
+	}
+}
+
+@keyframes spin_counterclockwise{
+	from{
+		transform: rotate( 0deg );
+	}
+	to{
+		transform: rotate( -360deg );
 	}
 }
 
@@ -210,30 +424,280 @@ span.black{
 	}
 }
 
-/*   c l a s s e s   */
+/* Dark tokens live twice: once for the OS preference (media query, can be overridden by
+   an explicit data-theme), once for data-theme="dark" forced by the sunset controller
+   regardless of OS preference. Plain CSS has no shared mixin, so the values are repeated. */
+:root[data-theme="dark"]{
+	/* exact inverse (v -> 255-v) of the day theme's grays */
+	--color-fg: rgb( 255, 255, 255 );
+	--color-title: rgb( 255, 255, 255 );
+	--color-bg: rgb( 0, 0, 0 );
+	--color-muted: rgb( 170, 170, 170 );
+	--color-hover: rgba( 255, 255, 255, 0.9 );
+	--color-faint: rgb( 64, 64, 64 ); /* 25% of the way from the background to the text — a straight numeric mirror of the day theme's 10% reads as near-invisible against black, since dark grays compress perceptually */
+	--color-mid: rgb( 105, 105, 105 );
+	--color-border: rgb( 55, 55, 55 );
 
+	/* --color-twitter and --color-github are deliberately absent here: brand colors, never touched by theme */
+	--color-danger: rgb( 248, 113, 113 );
+	--color-success: rgb( 110, 220, 110 );
+	--color-pending-bg: rgb( 45, 40, 10 );
 
+	/* Karl's Hall of Fame — black marble by night */
+	--stone-bg: rgb( 24, 24, 26 );
+	--stone-grain-dark: rgba( 0, 0, 0, 0.3 );
+	--stone-grain-light: rgba( 255, 255, 255, 0.035 );
+	--engrave-shadow: rgba( 0, 0, 0, 0.65 );
+	--engrave-highlight: rgba( 255, 255, 255, 0.4 );
+	--medallion-highlight: rgba( 255, 255, 255, 0.22 );
+	--medallion-shadow: rgba( 0, 0, 0, 0.09 );
+	--stone-text-blend: screen; /* pale text absorbed into black marble */
+}
+
+/* --color-github is the fixed brand gray, day and night alike; by night that near-black text nearly vanishes against the black page, so a real outline — not a recolor — is what keeps it legible */
+:root[data-theme="dark"] #checkout_GitHub_1{
+	-webkit-text-stroke: 1.5px var( --color-fg );
+	paint-order: stroke fill;
+}
+
+@media ( prefers-color-scheme: dark ){
+	/* :not([data-theme="light"]) lets the sunset controller force day colors even when the OS is set to dark */
+	:root:not([data-theme="light"]){
+		--color-fg: rgb( 255, 255, 255 );
+		--color-bg: rgb( 0, 0, 0 );
+		--color-muted: rgb( 170, 170, 170 );
+		--color-hover: rgba( 255, 255, 255, 0.9 );
+		--color-faint: rgb( 64, 64, 64 );
+		--color-mid: rgb( 105, 105, 105 );
+		--color-border: rgb( 55, 55, 55 );
+
+		--color-danger: rgb( 248, 113, 113 );
+		--color-success: rgb( 110, 220, 110 );
+		--color-pending-bg: rgb( 45, 40, 10 );
+
+		--stone-bg: rgb( 24, 24, 26 );
+		--stone-grain-dark: rgba( 0, 0, 0, 0.3 );
+		--stone-grain-light: rgba( 255, 255, 255, 0.035 );
+		--engrave-shadow: rgba( 0, 0, 0, 0.65 );
+		--engrave-highlight: rgba( 255, 255, 255, 0.4 );
+		--medallion-highlight: rgba( 255, 255, 255, 0.22 );
+		--medallion-shadow: rgba( 0, 0, 0, 0.09 );
+		--stone-text-blend: screen;
+	}
+
+	:root:not([data-theme="light"]) #checkout_GitHub_1{
+		-webkit-text-stroke: 1.5px var( --color-fg );
+		paint-order: stroke fill;
+	}
+
+	:root:not([data-theme="light"]) #theme_toggle_knob{
+		transform: translateY( 20px );
+	}
+}
+.website_field{
+	display: none;
+}
+.errors{
+	color: var( --color-danger );
+}
+.autosave_status{
+	display: block;
+	color: var( --color-mid );
+	font-size: 9pt;
+	font-style: italic;
+	min-height: 1.5em;
+}
+.field_hint{
+	color: var( --color-mid );
+	font-size: 9pt;
+	font-style: italic;
+	margin: 0.15em 0 0.75em 0;
+}
+.flash_notice{
+	color: var( --color-success );
+}
+.flash_alert{
+	color: var( --color-danger );
+}
+.stone_surface{
+	background-color: var( --stone-bg );
+	background-image:
+		repeating-linear-gradient( 115deg, var( --stone-grain-dark ) 0px, var( --stone-grain-dark ) 1px, transparent 1px, transparent 3px ),
+		repeating-linear-gradient( 25deg, var( --stone-grain-light ) 0px, var( --stone-grain-light ) 2px, transparent 2px, transparent 5px ),
+		radial-gradient( ellipse at 25% 15%, var( --stone-grain-dark ), transparent 60% ),
+		radial-gradient( ellipse at 80% 70%, var( --stone-grain-dark ), transparent 55% );
+	padding: 2em;
+}
+.engraved{
+	font-family: 'Didot', 'Times New Roman', serif;
+	color: var( --engrave-shadow );
+	text-shadow: 0 1px 0 var( --engrave-highlight ), 0 -1px 1px var( --engrave-shadow );
+}
+.painted{
+	font-family: 'Didot', 'Times New Roman', serif;
+	mix-blend-mode: var( --stone-text-blend, multiply );
+}
+.honoree_tile{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: .75em;
+	width: 180px;
+	text-align: center;
+}
+.medallion{
+	position: relative;
+	width: 160px;
+	height: 160px;
+	border-radius: 50%;
+	overflow: hidden;
+	background-color: var( --color-border );
+	/* no offset on either shadow: the light comes from the viewer straight ahead of the screen, not from any one side */
+	box-shadow: inset 0 0 16px var( --medallion-shadow ), 0 0 14px var( --medallion-shadow );
+}
+.medallion.draft{
+	opacity: 0.5;
+}
+.medallion img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+/* a bright, tight band standing in for the rim-light on a flat water droplet — most of the ellipse falls outside the circle, so only a crescent near the edge actually shows through */
+.medallion::before{
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	background: radial-gradient( ellipse 95% 30% at 50% 25%, rgba( 255, 255, 255, 0.9 ), transparent 65% );
+	mix-blend-mode: screen;
+	pointer-events: none;
+	transition: background .2s ease-in-out;
+}
+.medallion::after{
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: 50%;
+	box-shadow: inset 0 0 24px var( --medallion-shadow );
+	pointer-events: none;
+}
+.honoree_tile:hover .medallion::before{
+	background: radial-gradient( ellipse 95% 30% at 50% 75%, rgba( 255, 255, 255, 0.9 ), transparent 65% );
+}
+.honoree_name{
+	font-size: 12pt;
+}
+.honoree_hero{
+	width: 100%;
+	max-height: 70vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0 0 1em 0;
+}
+.honoree_hero_image{
+	max-width: 100%;
+	max-height: 70vh;
+	object-fit: contain;
+}
+.honoree_name_large{
+	font-size: 36pt;
+	text-align: center;
+	margin: 0;
+}
+.honoree_dates{
+	text-align: center;
+	font-size: 11pt;
+	display: flex;
+	justify-content: center;
+	gap: 1em;
+	flex-wrap: wrap;
+	margin: .5em 0;
+}
+.honoree_inscription{
+	text-align: center;
+	font-size: 18pt;
+	font-style: italic;
+	margin: 1em auto;
+	max-width: 30em;
+}
+.honoree_body{
+	max-width: 40em;
+	margin: 2em auto 0;
+	font-size: 13pt;
+}
+.photo_edit_link{
+	display: block;
+	margin: 0.75em 0 0 0;
+}
+
+.pagination{
+	display: flex;
+	justify-content: space-between;
+	margin: 2em 0;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	letter-spacing: 1pt;
+	font-size: 10pt;
+}
 
 /*   I D s   */
 
+/* the emblem paints as a mask, not a plain background-image, so its ink is var(--color-faint) — the exact same token #line_1_logotype/#line_4_logotype already use for "kvpb.fr"/"prototyp" — rather than a color baked into the SVG file itself. mask-mode:luminance is why the file carries its own internal invert filter (id=mask-invert, wrapping the whole Artboard group): the artwork is authored as dark ink on white paper, but a luminance mask reads white as "fully shown" and black as "fully hidden" — backwards from that convention — so the file pre-inverts itself before the mask ever samples it, making dark ink (now high-luminance) the part that shows and white paper (now low-luminance) the part that doesn't. That, in turn, is what lets --color-faint's own light/dark/gallery redefinitions carry the emblem automatically, the same way #signature/#theme_toggle already ride var(--color-fg)/--color-mid — no separate invert()/contrast() filter needed here at all */
+#backdrop{
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	background-color: var( --color-faint );
+	-webkit-mask-image: url(karlsemblem.svg); /* If Rails stops displaying my SVG for no reason, just command this piece of trash to do `rails assets:clobber; rails assets:precompile; rails server;`. Also thank ChatGPT for that. */
+	mask-image: url(karlsemblem.svg);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-mode: luminance;
+	mask-mode: luminance;
+	/* the seal's circle, not the svg canvas, is what must sit equidistant from the top/left/right edges; reusing the same vw-seeded offset for both axes is what achieves that regardless of the canvas' own shape — the new artwork's own circle (cx/cy both 125.25, unlike the old one's merely-close pair) makes the two calc() terms come out identical here, deliberately leaving the leftover slack at the bottom */
+	-webkit-mask-position: calc( 50vw - 125.25px ) calc( 50vw - 125.25px );
+	mask-position: calc( 50vw - 125.25px ) calc( 50vw - 125.25px );
+	pointer-events: none;
+}
+/* appended once at the end of main's own content, in normal flow like every other element on the page — not position:fixed, so it never floats above the rest and scrolls away with the page exactly the way the header and the body's own text do, rather than staying pinned to the viewport like #theme_toggle/#copyright_notice_block do. margin-left:auto (its containing block, main, lays its children out in normal block flow, not flex, so this — not align-self — is what pushes a fixed-width box flush to the right) with the same 19.7734375px used on every other side, the one edge margin already established site-wide, is what keeps it spaced from main's own right edge the same way the header and nav are spaced from theirs. Top and bottom margins mirror #section_header's own 22px/16px instead of that constant: the header opens 22px above itself (page edge to header) and closes 16px below (header to whatever main renders next), so the footer, symmetric to it at the opposite end of the page, closes 16px above itself (whatever main rendered last to footer) and opens 22px below (footer to page edge) — top:16px, bottom:22px, the header's own pair read in reverse. mask-image + background-color, not the artwork's own #D8D8D8 fill, is what lets it read as true black by day and white by night off var(--color-fg) directly, exactly like every other glyph on the site rather than a lightened/darkened gray. Height is the constraint — #theme_toggle's own 40px, so the signature never outgrows the light switch — and width follows the artwork's own 798:424 canvas ratio rather than being set independently. -webkit-text-stroke only ever applies to real glyphs, so the four 1px drop-shadows here are what stand in for body's own background-colored liseré against a masked shape instead of actual text */
+#signature{
+	margin: 16px 19.7734375px 22px auto;
+	width: calc( 40px * 798 / 424 );
+	height: 40px;
+	background-color: var( --color-fg );
+	-webkit-mask-image: url(karlssignature.svg);
+	mask-image: url(karlssignature.svg);
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	filter: drop-shadow( 1px 0 0 var( --color-bg ) ) drop-shadow( -1px 0 0 var( --color-bg ) ) drop-shadow( 0 1px 0 var( --color-bg ) ) drop-shadow( 0 -1px 0 var( --color-bg ) );
+	user-select: none;
+	pointer-events: none;
+}
 #wordmark{
-	color: rgb( 0, 0, 0 );
+	color: var( --color-fg );
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
 	text-align: left !important;
 	padding: 0;
 	display: flex;
 	flex-direction: column;
-	transition: color .1s ease-in-out;
+	transition: color .25s ease-in-out;
 	/*-webkit-animation: fadein .5s 1;*/
 }
 #line_1_logotype{
-	color: rgb( 230, 230, 230 );
+	color: var( --color-faint );
 	text-transform: uppercase;
 	font-size: 12pt;
 	/*font-variant: small-caps;*/
 	letter-spacing: 10pt/*3.67pt*/;
 	padding-left: 3.33pt;
+	margin-left: -3.33pt;
 }
 #line_2_logotype{
 	text-transform: uppercase;
@@ -241,26 +705,71 @@ span.black{
 	/*font-variant: small-caps;*/
 	letter-spacing: -5.5pt;
 	line-height: 0.75em;
+	margin-left: -2.75pt;
 }
 #line_3_logotype{
 	font-family: /*'ヒラギノ角ゴ Pro W3', */'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', 'ＭＳ ゴシック' , 'MS Gothic', 'Noto Sans CJK JP', 'TakaoPGothic', sans-serif !important;
 	font-size: 24pt;
 	/*font-variant: small-caps;*/
-	letter-spacing: 21.34pt;
+	letter-spacing: 22.22pt;
 	line-height: 0.9em;
+	margin-left: -2.22pt;
 }
 #line_4_logotype{
-	color: rgb( 230, 230, 230 );
+	color: var( --color-faint );
 	text-transform: uppercase;
 	font-size: 6pt;
 	/*font-variant: small-caps;*/
-	letter-spacing: 6.50pt;
+	letter-spacing: 11.33pt/*24pt*/;
 	padding-left: 3.33pt;
+	margin-left: -2.75pt;
 }
 
+/* the .1cm negative margin cancels nav's own right padding exactly, so the section name picks up right where "Karl" in the nav wordmark leaves off — bypassing the gap between the nav bar and the main column instead of sitting flush against it */
+#section_header{
+	display: block;
+	color: var( --color-fg );
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	font-size: 48pt;
+	letter-spacing: -5.5pt;
+	line-height: 0.75em;
+	text-align: left;
+	padding: 0;
+	margin: 22px 0 16px -.1cm;
+	user-select: none;
+}
+#section_possessive{
+	text-transform: none;
+	font-variant: small-caps;
+	letter-spacing: normal;
+}
+/* continues the logo's own カール (#line_3_logotype) the same way its English line already sits at the exact size #section_header's own English line does — half the size, same font stack, の prepended the way an actual Japanese possessive reads */
+#section_label_ja{
+	display: block;
+	font-family: 'Hiragino Kaku Gothic Pro', 'Osaka', 'メイリオ', 'Meiryo', 'ＭＳ Ｐゴシック', 'MS PGothic', 'ＭＳ ゴシック', 'MS Gothic', 'Noto Sans CJK JP', 'TakaoPGothic', sans-serif;
+	font-size: 24pt;
+	text-transform: none;
+	letter-spacing: normal;
+	line-height: 1em;
+}
+.section_empty{
+	opacity: 0.5;
+}
+
+#nav_wrapper{
+	position: sticky;
+	top: 1em;
+	align-self: flex-start;
+	z-index: 40;
+	flex: 0 0 auto;
+	user-select: none;
+}
 /*#*/nav{
-	color: rgb( 0, 0, 0 );
-	text-shadow: .3px 0 rgb( 255, 255, 255 ), -.3px 0 rgb( 255, 255, 255 ), 0 .3px rgb( 255, 255, 255 ), 0 -.3px rgb( 255, 255, 255 ), .3px .3px rgb( 255, 255, 255 ), -.3px -.3px rgb( 255, 255, 255 ), .3px -.3px rgb( 255, 255, 255 ), -3px .3px rgb( 255, 255, 255 ); /*-webkit-text-stroke: .1pt rgb( 255, 255, 255 );*/
+	color: var( --color-fg );
+	-webkit-text-stroke: 1px var( --color-bg );
+	paint-order: stroke fill;
 	font-size: 16px !important;
 	font-family: 'Arial', sans-serif;
 	font-weight: 900;
@@ -270,34 +779,34 @@ span.black{
 	align-items: right;
 	padding: .1cm;
 	border: .1cm;
-	margin: .1cm auto auto .1cm;
+	margin: 0;
 }
 #watch{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #see{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #read{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #listen{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #gettoknowandcontact{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 }
 /*#gettoknowandcontact_0{
 	text-align: right;
@@ -314,16 +823,16 @@ span.black{
 	text-align: left;
 }
 #search{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 	text-align: left;
 	font-size: 16pt !important;
 	font-variant: small-caps;
 }
 #checkout_TwitterX{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 }
 #checkout_TwitterX_1{
-	color: rgb( 29, 155, 240 ) !important;
+	color: var( --color-twitter ) !important;
 	font-size: 16pt !important;
 	text-align: left;
 }
@@ -333,10 +842,10 @@ span.black{
 	text-align: right;
 }
 #checkout_GitHub{
-	color: rgb( 0, 0, 0 ) !important;
+	color: var( --color-fg ) !important;
 }
 #checkout_GitHub_1{
-	color: rgb( 37, 41, 46 ) !important;
+	color: var( --color-github ) !important;
 	font-size: 16pt !important;
 	text-align: left;
 }
@@ -345,11 +854,126 @@ span.black{
 	font-variant: small-caps;
 	text-align: right;
 }
+/* checkout_TwitterX/checkout_GitHub are menu options too — the hr above them is just an inert divider, the same as the one above read/see/listen/watch, not a boundary between categories */
 #search:hover, #gettoknowandcontact:hover, #watch:hover, #listen:hover, #see:hover, #read:hover, #checkout_TwitterX:hover, #checkout_GitHub:hover{
 	transform-origin: top left;
 	margin: -4pt 0 16pt 0;
 	transform: scale( 1.5 );
 	animation: none !important;
+}
+/* held down, though, they blink again — faster, same as any link's :active state — which needs !important and higher specificity than :hover above to win the cascade while both states are true at once; the `a` qualifier keeps this off the bare, unlinked .section_empty span, since a dead option can't actually be clicked */
+a#search:active, a#gettoknowandcontact:active, a#watch:active, a#listen:active, a#see:active, a#read:active, a#checkout_TwitterX:active, a#checkout_GitHub:active{
+	animation-name: blink !important;
+	animation-duration: 0.1s !important;
+	animation-timing-function: linear !important;
+	animation-iteration-count: infinite !important;
+	animation-play-state: running !important;
+	-moz-animation-name: blink !important;
+	-moz-animation-duration: 0.1s !important;
+	-moz-animation-timing-function: linear !important;
+	-moz-animation-iteration-count: infinite !important;
+	-moz-animation-play-state: running !important;
+	-webkit-animation-name: blink !important;
+	-webkit-animation-duration: 0.1s !important;
+	-webkit-animation-timing-function: linear !important;
+	-webkit-animation-iteration-count: infinite !important;
+	-webkit-animation-play-state: running !important;
+}
+#theme_toggle{
+	/* offset from the window's left and bottom edges exactly mirrors the logo's offset from the window's left and top edges */
+	position: fixed;
+	left: 19.7734375px;
+	bottom: 19.7734375px;
+	box-sizing: border-box;
+	width: 20px;
+	height: 40px;
+	margin: 0;
+	padding: 0;
+	border: none;
+	border-radius: 10px;
+	background: var( --color-mid );
+	cursor: pointer;
+	appearance: none;
+	z-index: 40;
+	transition: background-color .25s ease;
+}
+#theme_toggle_knob{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: var( --color-fg );
+	transition: transform .25s ease, background-color .25s ease;
+}
+/* light theme: the knob sits in the top half (light on) — dark theme slides it to the bottom half (light off) */
+:root[data-theme="dark"] #theme_toggle_knob{
+	transform: translateY( 20px );
+}
+/* the block fills the switch's own 40px height edge to edge (its own bottom offset, 19.7734375px, its own height, 40px) and lets flexbox's space-between distribute the four lines within it: the first line's top and the last line's bottom land exactly on the container's own edges by definition of space-between, with the leftover space — however tall the four lines actually render, in whatever browser renders them — split into three equal gaps automatically. That's the point of doing it this way rather than computing each line's own bottom by hand from an assumed, measured line-height: a line-height of "normal" is a font metric the browser itself resolves, not a fixed number, so hardcoding it here would only ever be correct in whichever browser it was measured in. left/max-width still use a fixed 10px/3 as the horizontal gap to the switch, matching what the vertical gaps come out to when each line is 7.5px tall, as measured in this project's own testing browser */
+#copyright_notice_block{
+	position: fixed;
+	left: calc( 19.7734375px + 20px + 10px / 3 + 1pt );
+	bottom: 19.7734375px;
+	height: 40px;
+	max-width: calc( 200.7421875px - 19.7734375px - 20px - 10px / 3 );
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	z-index: 40;
+}
+.copyright_notice{
+	color: var( --color-faint );
+	text-transform: uppercase;
+	font-size: 5pt;
+	white-space: nowrap;
+}
+#flash{
+	padding: 0.5em 1%;
+}
+#search_overlay{
+	position: fixed;
+	top: var( --search_origin_y, 0px );
+	left: 0;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0.4em 1em;
+	background-color: var( --color-bg );
+	color: var( --color-fg );
+	/* currentColor already is the inverse of this element's own background-color: .search_open swaps color and background-color between --color-fg and --color-bg */
+	border-top: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
+	box-shadow: 0 8px 24px rgba( 0, 0, 0, 0.35 );
+	clip-path: inset( 0 calc( 100% - var( --search_origin_x, 50% ) ) 0 var( --search_origin_x, 50% ) );
+	pointer-events: none;
+	transition: clip-path .3s ease, background-color .3s ease, color .3s ease;
+	z-index: 30;
+}
+.search_open #search{
+	visibility: hidden;
+}
+.search_open #search_overlay{
+	clip-path: inset( 0 0 0 0 );
+	pointer-events: auto;
+	background-color: var( --color-fg );
+	color: var( --color-bg );
+}
+#search_overlay input{
+	box-sizing: border-box;
+	width: 100%;
+	padding: 0.3em 0.5em;
+	background: transparent;
+	border: none;
+	outline: none;
+	font: inherit;
+	color: inherit;
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 18px;
+	user-select: text;
+	/* the overlay's own background is opaque, so the site-wide halo against #backdrop is pointless here and only dulls the glyph edges */
+	-webkit-text-stroke-width: 0;
 }
 
 /*	style.css
@@ -362,3 +986,30 @@ span.black{
 	kvpb.fr
 	https://x.com/ktgwkvpb
 	https://github.com/kvpb	*/
+
+/* disabled — the green ruler for manually aligning the logotype in Firefox, bordering the menu items' own spans (body's 1em margin plus nav's own .1cm padding), not the outer margin itself. Kept, not deleted, in case a future alignment pass needs it again
+body::before{
+	content: "";
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: calc( 1em + .1cm );
+	width: 1pt;
+	background: green;
+	opacity: 0.25;
+	pointer-events: none;
+	z-index: 9999;
+}
+*/
+
+/*//	style.css
+////	kvpb.fr
+////
+////	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+////	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+////	local-part@domain
+////
+////	Copyright 2026 by Karl Vincent Pierre Bertin
+////
+////	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+*/
