@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_29_075629) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_29_141627) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -54,7 +54,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_29_075629) do
     t.index ["taken_until"], name: "index_albums_on_taken_until"
   end
 
+  create_table "articles", force: :cascade do |t|
+    t.text "body"
+    t.boolean "comments_locked", default: false, null: false
+    t.datetime "created_at", null: false
+    t.integer "front_page_rank"
+    t.string "headline", null: false
+    t.string "identifier", null: false
+    t.string "kicker"
+    t.text "lede"
+    t.datetime "published_at"
+    t.string "subheadline"
+    t.datetime "updated_at", null: false
+    t.index ["front_page_rank"], name: "index_articles_on_front_page_rank"
+    t.index ["identifier"], name: "index_articles_on_identifier", unique: true
+    t.index ["published_at"], name: "index_articles_on_published_at"
+  end
 
+  create_table "comments", force: :cascade do |t|
+    t.integer "article_id", null: false
+    t.string "author_email"
+    t.string "author_name"
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["article_id"], name: "index_comments_on_article_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
 
   create_table "honorees", force: :cascade do |t|
     t.date "birth_date"
@@ -183,6 +211,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_29_075629) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "comments", "articles"
+  add_foreign_key "comments", "users"
   add_foreign_key "passages", "albums"
   add_foreign_key "photo_dwell_events", "photos"
   add_foreign_key "photos", "albums"
