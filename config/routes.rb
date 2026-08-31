@@ -16,6 +16,13 @@ Rails.application.routes.draw do
 
 
 
+  get    "/hall-of-fame",                     to: "honorees#index",  as: "hall_of_fame"
+  post   "/hall-of-fame",                     to: "honorees#create"
+  get    "/hall-of-fame/new",                 to: "honorees#new",    as: "new_honoree"
+  get    "/hall-of-fame/:identifier",         to: "honorees#show",   as: "honoree"
+  get    "/hall-of-fame/:identifier/edit",    to: "honorees#edit",   as: "edit_honoree"
+  patch  "/hall-of-fame/:identifier",         to: "honorees#update"
+  delete "/hall-of-fame/:identifier",         to: "honorees#destroy"
 
 
 
