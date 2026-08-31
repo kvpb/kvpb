@@ -7,6 +7,37 @@ module ApplicationHelper
     simple_format( RubyPants.new( text.to_s ).to_html )
   end
 
+  # The strip a newspaper runs under its flag. Every figure in it is derived rather than typed:
+  # the volume counts the years the journal has been running, the number counts what it has actually
+  # published — so the line keeps itself true without anyone maintaining it. No city, unlike the
+  # Times' own "NEW YORK": that's a real fact about a real place, and inventing one here would be
+  # inventing something about Karl
+  def journal_dateline
+    first = Article.published.minimum( :published_at )
+    volume = first ? ( Date.current.year - first.year ) + 1 : 1
+    [
+      "Vol. #{ roman( volume ) }",
+      "No. #{ Article.published.count }",
+      l( Date.current, format: :long ),
+      "Late Edition"
+    ].join( " · " )
+  end
+
+  ROMAN_NUMERALS = { 1000 => "M", 900 => "CM", 500 => "D", 400 => "CD", 100 => "C", 90 => "XC",
+                     50 => "L", 40 => "XL", 10 => "X", 9 => "IX", 5 => "V", 4 => "IV", 1 => "I" }.freeze
+
+  def roman( number )
+    remainder = number.to_i
+    return "" if remainder < 1
+
+    ROMAN_NUMERALS.each_with_object( +"" ) do |( value, numeral ), result|
+      while remainder >= value
+        result << numeral
+        remainder -= value
+      end
+    end
+  end
+
   def section_empty?( section )
     case section
     when :journal then !Article.published.exists?
