@@ -111,6 +111,7 @@ GEM
     erubi (1.13.1)
     et-orbi (1.4.1)
       tzinfo
+    exifr (1.5.1)
     fugit (1.13.0)
       et-orbi (~> 1.4)
       raabro (~> 1.4)
@@ -379,6 +380,7 @@ DEPENDENCIES
   brakeman
   capybara
   debug
+  exifr (~> 1.5)
   importmap-rails
   jbuilder
   kamal

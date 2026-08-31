@@ -38,6 +38,11 @@ end
 # through the (unlinked, superuser-only) milestones controller.
 
 
+print_sample_path = Rails.root.join( "db", "seed_assets", "print_sample.jpg" )
+if print_sample_path.exist? && !Print.exists?( title: "Placeholder title for layout testing" )
+  print = Print.create!( title: "Placeholder title for layout testing", published_at: Time.current )
+  print.image.attach( io: File.open( print_sample_path ), filename: "print_sample.jpg", content_type: "image/jpeg" )
+end
 
 #	seeds.rb
 #	kvpb.fr

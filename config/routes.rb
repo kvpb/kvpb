@@ -24,9 +24,29 @@ Rails.application.routes.draw do
   patch  "/hall-of-fame/:identifier",         to: "honorees#update"
   delete "/hall-of-fame/:identifier",         to: "honorees#destroy"
 
+  get    "/gallery",                          to: "albums#index"
+  get    "/see",                              to: "albums#index",    as: "see"
+  post   "/see",                              to: "albums#create"
+  get    "/see/new",                          to: "albums#new",      as: "new_album"
+  get    "/see/stats",                        to: "photo_dwells#index", as: "photo_dwells"
+  get    "/see/stats/events",                 to: "photo_dwell_events#index",   as: "photo_dwell_events"
+  delete "/see/stats/events/:id",             to: "photo_dwell_events#destroy", as: "photo_dwell_event"
+  get    "/see/:identifier",                  to: "albums#show",     as: "album"
+  get    "/see/:identifier/edit",             to: "albums#edit",     as: "edit_album"
+  patch  "/see/:identifier",                  to: "albums#update"
+  delete "/see/:identifier",                  to: "albums#destroy"
 
+  get    "/see/prints/:identifier",           to: "prints#show",     as: "print"
 
+  get    "/see/:album_identifier/photos/:id/edit", to: "photos#edit",    as: "edit_photo"
+  patch  "/see/:album_identifier/photos/:id",      to: "photos#update"
+  delete "/see/:album_identifier/photos/:id",      to: "photos#destroy", as: "photo"
 
+  get    "/see/:album_identifier/passages/new",      to: "passages#new",     as: "new_passage"
+  post   "/see/:album_identifier/passages",          to: "passages#create",  as: "passages"
+  get    "/see/:album_identifier/passages/:id/edit", to: "passages#edit",    as: "edit_passage"
+  patch  "/see/:album_identifier/passages/:id",      to: "passages#update"
+  delete "/see/:album_identifier/passages/:id",      to: "passages#destroy", as: "passage"
 
 
   get "/listen",                    to: "pages#listen",               as: "listen"
