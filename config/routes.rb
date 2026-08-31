@@ -33,9 +33,53 @@ Rails.application.routes.draw do
   patch  "/halloffame/:identifier",           to: "honorees#update"
   delete "/halloffame/:identifier",           to: "honorees#destroy"
 
+  # the old primary — see_path and friends keep their own name below, only the literal URL changes
+  # get    "/gallery",                          to: "albums#index"
+  # get    "/see",                              to: "albums#index",    as: "see"
+  # post   "/see",                              to: "albums#create"
+  # get    "/see/new",                          to: "albums#new",      as: "new_album"
+  # get    "/see/stats",                        to: "photo_dwells#index", as: "photo_dwells"
+  # get    "/see/stats/events",                 to: "photo_dwell_events#index",   as: "photo_dwell_events"
+  # delete "/see/stats/events/:id",             to: "photo_dwell_events#destroy", as: "photo_dwell_event"
+  # get    "/see/:identifier",                  to: "albums#show",     as: "album"
+  # get    "/see/:identifier/edit",             to: "albums#edit",     as: "edit_album"
+  # patch  "/see/:identifier",                  to: "albums#update"
+  # delete "/see/:identifier",                  to: "albums#destroy"
+  #
+  # get    "/see/prints/:identifier",           to: "prints#show",     as: "print"
+  #
+  # get    "/see/:album_identifier/photos/:id/edit", to: "photos#edit",    as: "edit_photo"
+  # patch  "/see/:album_identifier/photos/:id",      to: "photos#update"
+  # delete "/see/:album_identifier/photos/:id",      to: "photos#destroy", as: "photo"
+  #
+  # get    "/see/:album_identifier/passages/new",      to: "passages#new",     as: "new_passage"
+  # post   "/see/:album_identifier/passages",          to: "passages#create",  as: "passages"
+  # get    "/see/:album_identifier/passages/:id/edit", to: "passages#edit",    as: "edit_passage"
+  # patch  "/see/:album_identifier/passages/:id",      to: "passages#update"
+  # delete "/see/:album_identifier/passages/:id",      to: "passages#destroy", as: "passage"
+  get    "/see",                              to: "albums#index",    as: "old_see"
+  get    "/gallery",                          to: "albums#index",    as: "see"
+  post   "/gallery",                          to: "albums#create"
+  get    "/gallery/new",                      to: "albums#new",      as: "new_album"
+  get    "/gallery/stats",                    to: "photo_dwells#index", as: "photo_dwells"
+  get    "/gallery/stats/events",             to: "photo_dwell_events#index",   as: "photo_dwell_events"
+  delete "/gallery/stats/events/:id",         to: "photo_dwell_events#destroy", as: "photo_dwell_event"
+  get    "/gallery/:identifier",              to: "albums#show",     as: "album"
+  get    "/gallery/:identifier/edit",         to: "albums#edit",     as: "edit_album"
+  patch  "/gallery/:identifier",              to: "albums#update"
+  delete "/gallery/:identifier",              to: "albums#destroy"
 
+  get    "/gallery/prints/:identifier",       to: "prints#show",     as: "print"
 
+  get    "/gallery/:album_identifier/photos/:id/edit", to: "photos#edit",    as: "edit_photo"
+  patch  "/gallery/:album_identifier/photos/:id",      to: "photos#update"
+  delete "/gallery/:album_identifier/photos/:id",      to: "photos#destroy", as: "photo"
 
+  get    "/gallery/:album_identifier/passages/new",      to: "passages#new",     as: "new_passage"
+  post   "/gallery/:album_identifier/passages",          to: "passages#create",  as: "passages"
+  get    "/gallery/:album_identifier/passages/:id/edit", to: "passages#edit",    as: "edit_passage"
+  patch  "/gallery/:album_identifier/passages/:id",      to: "passages#update"
+  delete "/gallery/:album_identifier/passages/:id",      to: "passages#destroy", as: "passage"
 
 
   # get "/listen",                    to: "pages#listen",               as: "listen"
