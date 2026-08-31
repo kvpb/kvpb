@@ -2,7 +2,7 @@
 	<h1>Edit photo</h1>
 
 	<% if @photo.image.attached? %>
-		<%= image_tag @photo.image, class: "print_image", draggable: false %>
+		<%= photo_tag @photo.image, class: "print_image", draggable: false %>
 	<% end %>
 
 	<%= form_with model: @photo, url: photo_path( @album, @photo ), scope: :photo do |form| %>
