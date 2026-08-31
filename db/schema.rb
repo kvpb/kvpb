@@ -103,6 +103,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_29_141627) do
     t.index ["published_at"], name: "index_honorees_on_published_at"
   end
 
+  create_table "messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.string "email_address", null: false
+    t.string "name", null: false
+    t.string "phone_number", null: false
+    t.boolean "read", default: false, null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "milestones", force: :cascade do |t|
     t.datetime "created_at", null: false
