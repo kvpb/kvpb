@@ -1,0 +1,33 @@
+<section id="photo_dwells_page">
+	<p><%= link_to "Recent activity log", photo_dwell_events_path %></p>
+
+	<% if @photos.empty? %>
+		<p>No photos yet.</p>
+	<% end %>
+
+	<% @photos.each do |photo| %>
+		<div class="photo_dwell_entry">
+			<%= image_tag photo.image, class: "photo_dwell_thumb" %>
+			<div class="photo_dwell_bar_wrapper">
+				<p class="photo_dwell_meta">
+					<%= link_to smart_quotes( photo.album.title.presence || photo.album.identifier ), album_path( photo.album ) %>
+					— <%= format_dwell( photo.dwell_seconds ) %>
+				</p>
+				<div class="photo_dwell_bar" style="width: <%= @max_dwell_seconds.zero? ? 0 : ( photo.dwell_seconds.to_f / @max_dwell_seconds * 100 ) %>%;"></div>
+			</div>
+		</div>
+	<% end %>
+</section>
+
+<%#
+	index.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
