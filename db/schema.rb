@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_18_171206) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_19_185609) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -44,6 +44,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_18_171206) do
 
 
 
+  create_table "milestones", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "date_label"
+    t.date "date_label_ends_on"
+    t.text "description"
+    t.date "ends_on"
+    t.integer "kind", default: 0, null: false
+    t.string "location"
+    t.string "organization"
+    t.date "starts_on", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["starts_on"], name: "index_milestones_on_starts_on"
+  end
 
 
 
@@ -67,6 +81,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_18_171206) do
     t.index ["login_token"], name: "index_settings_on_login_token", unique: true
   end
 
+  create_table "skills", force: :cascade do |t|
+    t.string "badge_url"
+    t.integer "category", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["category", "position"], name: "index_skills_on_category_and_position"
+  end
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false

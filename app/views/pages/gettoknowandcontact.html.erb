@@ -1,0 +1,127 @@
+<% content_for :title, "Karl Vincent Pierre Bertin AKA Karl Thomas George West" %>
+
+<section id="gettoknowandcontact_page">
+	<section id="contact_form_section">
+		<% sent = flash[ :message_sent ].present? %>
+		<%# "Gotta contact me?" %>
+		<%# "'You've contacted me.'" %>
+		<h2 data-controller="rewrite-heading" data-rewrite-heading-sent-value="<%= sent %>">
+			<span class="heading_line" data-rewrite-heading-target="line"><span data-rewrite-heading-target="text">Wanna reach out to me?</span><span class="type_cursor"></span></span>
+		</h2>
+
+		<% if @message.errors.any? %>
+			<ul class="errors">
+				<% @message.errors.full_messages.each do |error_message| %><li><%= error_message %></li><% end %>
+			</ul>
+		<% end %>
+
+		<%= form_with model: @message, url: contact_path, scope: :message, html: { class: ( "message_sent" if sent ) } do |form| %>
+			<%= form.label :name, "What’s your name?" %>
+			<div class="text_field_glass" data-controller="squircle-dash-border">
+				<%= form.text_field :name, required: true, placeholder: "name", disabled: sent %>
+			</div>
+
+			<%= form.label :phone_number, "What’s your number?" %>
+			<div class="text_field_glass" data-controller="squircle-dash-border">
+				<%= form.telephone_field :phone_number, required: true, placeholder: "phone number", disabled: sent %>
+			</div>
+
+			<%= form.label :email_address, "What’s your email address?" %>
+			<div class="text_field_glass" data-controller="squircle-dash-border">
+				<%= form.email_field :email_address, required: true, placeholder: "email address", disabled: sent %>
+			</div>
+
+			<%# "What do you have to tell me?" %>
+			<%= form.label :body, "What do you wanna tell me?" %>
+			<div class="text_field_glass" data-controller="squircle-dash-border">
+				<%= form.text_area :body, required: true, placeholder: "message", disabled: sent %>
+			</div>
+
+			<div class="website_field" aria-hidden="true">
+				<%= form.label :website, "Leave blank" %>
+				<%= form.text_field :website, tabindex: -1, autocomplete: "off" %>
+			</div>
+
+			<div class="submit_squircle" data-controller="squircle-fill">
+				<% if sent %>
+					<%= form.submit "Sent", disabled: true %>
+				<% else %>
+					<%= form.submit "Send" %>
+				<% end %>
+			</div>
+		<% end %>
+	</section>
+
+	<div class="about_layout">
+		<div class="about_sidebar">
+			<div class="name_disc_center">
+				<div class="name_disc" data-controller="medallion-physics">
+					<% if @profile_photo.attached? %>
+						<div class="profile_photo_medallion" data-medallion-physics-target="medallion">
+							<%= image_tag @profile_photo, class: "profile_photo_disc", draggable: false %>
+						</div>
+					<% end %>
+					<div class="name_ring name_ring_latin" aria-hidden="true">
+						<% ring_text = "Karl Vincent Pierre Bertin `kvpb`  Karl Thomas George West `ktgw`  " %>
+						<% ring_code = false %>
+						<% ring_chars = ring_text.chars.map do |char| %>
+							<% ring_code = !ring_code if char == "`" %>
+							<% [ char, ring_code || char == "`" ] %>
+						<% end %>
+						<% ring_chars.reverse.each_with_index do |( char, code ), i| %>
+							<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_chars.length * i %>deg ) translateY( calc( var( --disc ) * -105 / 237 ) )"><span class="ring_char<%= " ring_code" if code %>"><%= char %></span></span>
+						<% end %>
+					</div>
+					<div class="name_ring name_ring_japanese" aria-hidden="true">
+						<% ring_text_ja = "カール・ビンセント・ピエール・ベルティン  カール・トーマス・ジョージ・ウェスト  " %>
+						<% ring_text_ja.chars.reverse.each_with_index do |char, i| %>
+							<span style="transform: translate( -50%, -50% ) rotate( <%= 360.0 / ring_text_ja.length * i %>deg ) translateY( calc( var( --disc ) * -118 / 237 ) )"><span class="ring_char"><%= char %></span></span>
+						<% end %>
+					</div>
+				</div>
+			</div>
+
+			<% Skill::DISPLAYED_CATEGORIES.each do |category| %>
+				<% items = @skills_by_category[ category ] || [] %>
+				<div class="skills_group">
+					<h3><%= Skill::CATEGORY_LABELS.fetch( category ) %></h3>
+					<% if items.any? %>
+						<ul>
+							<% items.each do |skill| %><li><% if skill.badge_url.present? %><%= image_tag skill.badge_url, alt: skill.name, class: "skill_badge" %><% else %><%= skill.name %><% end %></li><% end %>
+						</ul>
+					<% end %>
+				</div>
+			<% end %>
+		</div>
+
+		<% if @milestones.any? %>
+			<div class="resume_timeline">
+				<h2>timeline</h2>
+				<ol class="timeline">
+					<% @milestones.each do |milestone| %>
+						<li class="timeline_entry timeline_entry_<%= milestone.kind %><%= " timeline_entry_filler" unless milestone.persisted? %>">
+							<p class="timeline_dates"><%= milestone.date_range_label %></p>
+							<h3 class="timeline_title"><%= smart_quotes( milestone.title ) %></h3>
+							<% if milestone.organization.present? %><p class="timeline_organization"><%= smart_quotes( milestone.organization ) %></p><% end %>
+							<% if milestone.location.present? %><p class="timeline_location"><%= milestone.location %></p><% end %>
+							<% if milestone.description.present? %><p class="timeline_description"><%= smart_quotes( milestone.description ) %></p><% end %>
+						</li>
+					<% end %>
+				</ol>
+			</div>
+		<% end %>
+	</div>
+</section>
+
+<%#
+	gettoknowandcontact.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

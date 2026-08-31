@@ -1,0 +1,58 @@
+<%= form_with model: milestone, url: ( milestone.persisted? ? milestone_path( milestone ) : milestones_path ), scope: :milestone do |form| %>
+	<% if milestone.errors.any? %>
+		<ul class="errors">
+			<% milestone.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+		</ul>
+	<% end %>
+
+	<%= form.label :kind, "Kind" %>
+	<%= form.select :kind, Milestone.kinds.keys.map { |k| [ k.capitalize, k ] } %>
+
+	<%= form.label :title, "Title" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_field :title, required: true %>
+	</div>
+
+	<%= form.label :organization, "Organization" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_field :organization %>
+	</div>
+
+	<%= form.label :location, "Location" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_field :location %>
+	</div>
+
+	<%= form.label :starts_on, "Starts on" %>
+	<%= form.date_field :starts_on, required: true %>
+
+	<%= form.label :ends_on, "Ends on" %>
+	<%= form.date_field :ends_on %>
+	<p class="field_hint">Blank means ongoing.</p>
+
+	<%= form.label :date_label, "Date label (override)" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_field :date_label %>
+	</div>
+	<p class="field_hint">Leave blank to compute from starts on / ends on. Use this for anything less precise than a month, like a decade.</p>
+
+	<%= form.label :description, "Description" %>
+	<div class="text_field_glass" data-controller="squircle-dash-border">
+		<%= form.text_area :description %>
+	</div>
+
+	<%= form.submit milestone.persisted? ? "Save changes" : "Create milestone" %>
+<% end %>
+
+<%#
+	_form.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
