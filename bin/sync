@@ -1,0 +1,8 @@
+#!/bin/bash
+# Aligns this checkout's master branch exactly onto origin/master. Its history is rebuilt and
+# force-pushed from a separate worktree, so a plain `git pull`/`git rebase` here has no recent
+# common ancestor to reconcile against and surfaces a giant, dangerous rebase instead — this
+# discards whatever the local branch was pointing to and mirrors the remote, no merge attempted.
+set -e
+git fetch origin
+git reset --hard origin/master

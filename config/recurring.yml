@@ -1,3 +1,9 @@
+production:
+  rotate_login_token:
+    class: RotateLoginTokenJob
+    queue: default
+    schedule: every day at 4am
+
 # production:
 #   periodic_cleanup:
 #     class: CleanSoftDeletedRecordsJob
