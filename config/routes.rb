@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
+  root "pages#gettoknowandcontact"
 
   resource :registration, only: %i[new create]
 
@@ -31,9 +32,34 @@ Rails.application.routes.draw do
   get "/video",                     to: "pages#watch"
   get "/code",                      to: "pages#code",                 as: "code"
   get "/map",                       to: "pages#map",                  as: "map"
+  get "/gettoknowandcontact",       to: "pages#gettoknowandcontact",  as: "gettoknowandcontact"
+  # no dedicated URL for this page for now — root above still serves it, and gettoknowandcontact_path
+  # above stays live since it's the route helper the nav link, the contact form and the
+  # skills/milestones/contacts controllers' redirects all depend on; only the guessable vanity
+  # aliases below are out
+  # get "/about",                     to: "pages#gettoknowandcontact"
+  # get "/Karl",                      to: "pages#gettoknowandcontact"
+  # get "/karl",                      to: "pages#gettoknowandcontact"
+  # get "/KVPB",                      to: "pages#gettoknowandcontact"
+  # get "/kvpb",                      to: "pages#gettoknowandcontact"
+  # get "/KTGW",                      to: "pages#gettoknowandcontact"
+  # get "/ktgw",                      to: "pages#gettoknowandcontact"
+  # get "/KarlVincentPierreBertin",   to: "pages#gettoknowandcontact"
+  # get "/KarlThomasGeorgeWest",      to: "pages#gettoknowandcontact"
   get "/search",                    to: "pages#search",               as: "search"
 
+  post   "/gettoknowandcontact/contact",             to: "contacts#create",    as: "contact"
+  get    "/gettoknowandcontact/milestones/new",      to: "milestones#new",     as: "new_milestone"
+  post   "/gettoknowandcontact/milestones",          to: "milestones#create", as: "milestones"
+  get    "/gettoknowandcontact/milestones/:id/edit", to: "milestones#edit",    as: "edit_milestone"
+  patch  "/gettoknowandcontact/milestones/:id",      to: "milestones#update"
+  delete "/gettoknowandcontact/milestones/:id",      to: "milestones#destroy", as: "milestone"
 
+  get    "/gettoknowandcontact/skills/new",      to: "skills#new",     as: "new_skill"
+  post   "/gettoknowandcontact/skills",          to: "skills#create", as: "skills"
+  get    "/gettoknowandcontact/skills/:id/edit", to: "skills#edit",    as: "edit_skill"
+  patch  "/gettoknowandcontact/skills/:id",      to: "skills#update"
+  delete "/gettoknowandcontact/skills/:id",      to: "skills#destroy", as: "skill"
 
 
 
