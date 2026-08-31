@@ -1,0 +1,26 @@
+<% if controller_name == "pages" && action_name == "gettoknowandcontact" %>
+	<header id="section_header" class="name_header">
+		<span class="name_header_primary">Vincent Pierre Bertin</span>
+		<span class="name_header_aka">Thomas George West</span>
+		<span class="name_header_primary_ja">ビンセント・ピエール・ベルティン</span>
+		<span class="name_header_aka_ja">トーマス・ジョージ・ウェスト</span>
+	</header>
+<% elsif ( section = current_section_suffix ) %>
+	<header id="section_header" class="<%= "section_empty" if section[ :empty ] %>">
+		<span id="section_possessive">’s</span> <%= section[ :label ] %>
+		<% if section[ :label_ja ].present? %><span id="section_label_ja">の<%= section[ :label_ja ] %></span><% end %>
+	</header>
+<% end %>
+
+<%#
+	_section_header.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

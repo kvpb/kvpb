@@ -1,0 +1,28 @@
+<% content_for :head do %><meta name="robots" content="noindex, nofollow"><% end %>
+
+<section id="session">
+	<%= form_with url: session_path( token: login_token ) do |form| %>
+		<%= form.label :email_address, "Email address" %>
+		<div class="text_field_glass" data-controller="squircle-dash-border">
+			<%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", value: params[ :email_address ] %>
+		</div>
+		<%= form.label :password, "Password" %>
+		<div class="text_field_glass" data-controller="squircle-dash-border">
+			<%= form.password_field :password, required: true, autocomplete: "current-password", maxlength: 72 %>
+		</div>
+		<%= form.submit "Sign in" %>
+	<% end %>
+</section>
+
+<%#
+	new.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

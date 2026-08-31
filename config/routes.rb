@@ -10,14 +10,45 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
 
-  root "application#index"
+  resource :registration, only: %i[new create]
 
-  get "/read",                to: "pages#read",                 as: "read"
-  get "/see",                 to: "pages#see",                  as: "see"
-  get "/listen",              to: "pages#listen",               as: "listen"
-  get "/watch",               to: "pages#watch",                as: "watch"
-  get "/gettoknowandcontact", to: "pages#gettoknowandcontact",  as: "gettoknowandcontact"
-  get "/search",              to: "pages#search",               as: "search"
+
+
+
+
+
+
+
+
+  get "/listen",                    to: "pages#listen",               as: "listen"
+  get "/music",                     to: "pages#listen"
+  get "/watch",                     to: "pages#watch",                as: "watch"
+  get "/video",                     to: "pages#watch"
+  get "/search",                    to: "pages#search",               as: "search"
+
+
+
+
+  # The sign-in path is not a fixed word ("session"/"login") but today's rotating token, checked
+  # against the database on every request by LoginTokenConstraint — so it is neither a guessable
+  # target for credential-stuffing bots nor a static secret baked into the deployed code. Kept last
+  # so every more specific route above gets first refusal at matching.
+  constraints( LoginTokenConstraint ) do
+    get    "/:token/new", to: "sessions#new",     as: "new_session"
+    post   "/:token",     to: "sessions#create",  as: "session"
+    delete "/:token",     to: "sessions#destroy"
+    get    "/:token/end", to: "sessions#destroy", as: "end_session"
+  end
 end
+
+#	routes.rb
+#	kvpb.fr
+#
+#	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+#	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+#	local-part@domain
+#
+#	Copyright 2026 by Karl Vincent Pierre Bertin
+#
+#	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
