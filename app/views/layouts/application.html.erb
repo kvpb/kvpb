@@ -18,6 +18,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
+  <body data-controller="sunset-theme<%= " gallery-theme" if controller_name == "albums" %>">
 		<div id="backdrop" aria-hidden="true"></div>
 		<%= render 'navigate' %>
 		<main>

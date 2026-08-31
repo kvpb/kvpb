@@ -1,0 +1,44 @@
+<% content_for :title, @album.title.presence %>
+
+<article id="album" class="<%= "draft" unless @album.published? %>">
+	<% if @album.title.present? %>
+		<header class="album_header">
+			<h1 class="album_title_large"><%= smart_quotes( @album.title ) %></h1>
+		</header>
+	<% end %>
+
+	<% if @album.description.present? %>
+		<div class="album_description"><%= smart_format( @album.description ) %></div>
+	<% end %>
+
+	<div class="album_photos">
+		<% @album.sequence.each do |item| %>
+			<% if item.is_a?( Passage ) %>
+				<%= render "passages/passage", passage: item %>
+			<% else %>
+				<div class="album_photo_entry">
+					<%= image_tag item.image, class: "album_photo", draggable: false, data: ( superuser? ? {} : { controller: "dwell-tracker", dwell_tracker_photo_id_value: item.id } ) %>
+					<p class="album_meta">
+						<%= render "photos/info", photo: item %>
+					</p>
+					<%= link_to "Edit photo", edit_photo_path( @album, item ), class: "photo_edit_link" if superuser? %>
+				</div>
+			<% end %>
+		<% end %>
+	</div>
+
+	<%= link_to "Add passage", new_passage_path( @album ), class: "photo_edit_link" if superuser? %>
+</article>
+
+<%#
+	show.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>

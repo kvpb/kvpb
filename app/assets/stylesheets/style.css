@@ -29,9 +29,70 @@
 	--stone-text-blend: multiply; /* dark text absorbed into pale stone */
 }
 
+/* the gallery is the one section built around images rather than text, so nothing on it — nav, header, footer, background included, all the way out past #gallery/#album's own boundary — should read at the same full strength the rest of the site's own monochrome does. Redefining the tokens themselves, not a filter over the page, is what lets that reach navigation/header/footer/background at all (a filter on some wrapping element would catch the photos too, and there's no way to carve them back out of a filter afterward) while leaving actual photos untouched by construction: an <img>'s own pixels never consult a CSS custom property to begin with. Two passes bring every value here: first ordinary colors (--color-twitter, --color-github) get desaturated to their own equivalent gray — luminance, not a flat average, per the standard BT.709 weights (0.2126R + 0.7152G + 0.0722B), same as any real grayscale conversion — then every value, including fg/bg/mid which were already gray, moves 20% of its own distance from mid-gray (128) back toward it: true black lightens 10% of the full 0-255 range, true white darkens by that same 10%, exactly mirroring contrast(80%) as a formula but computed by hand here since a filter can't be scoped this way. --color-title is the one exception, mirroring contrast(90%) instead — half that shift — so a photo's or album's own title (like an article's own headline outside the gallery entirely) still reads close to true black against the rest of this section's own de-contrasted chrome, rather than fading to the same reduced strength as everything around it */
+body.gallery_page{
+	--color-fg: rgb( 26, 26, 26 );
+	--color-title: rgb( 13, 13, 13 );
+	--color-bg: rgb( 230, 230, 230 );
+	--color-muted: rgb( 94, 94, 94 );
+	--color-hover: rgba( 26, 26, 26, 0.9 );
+	--color-faint: rgb( 210, 210, 210 );
+	--color-mid: rgb( 146, 146, 146 );
+	--color-border: rgb( 186, 186, 186 );
+
+	--color-twitter: rgb( 133, 133, 133 );
+	--color-github: rgb( 58, 58, 58 );
+	--color-danger: rgb( 78, 78, 78 );
+	--color-success: rgb( 83, 83, 83 );
+}
+:root[data-theme="dark"] body.gallery_page{
+	--color-fg: rgb( 230, 230, 230 );
+	--color-title: rgb( 242, 242, 242 );
+	--color-bg: rgb( 26, 26, 26 );
+	--color-muted: rgb( 162, 162, 162 );
+	--color-hover: rgba( 230, 230, 230, 0.9 );
+	--color-faint: rgb( 77, 77, 77 );
+	--color-mid: rgb( 110, 110, 110 );
+	--color-border: rgb( 70, 70, 70 );
+
+	--color-danger: rgb( 139, 139, 139 );
+	--color-success: rgb( 177, 177, 177 );
+}
+@media ( prefers-color-scheme: dark ){
+	:root:not([data-theme="light"]) body.gallery_page{
+		--color-fg: rgb( 230, 230, 230 );
+		--color-bg: rgb( 26, 26, 26 );
+		--color-muted: rgb( 162, 162, 162 );
+		--color-hover: rgba( 230, 230, 230, 0.9 );
+		--color-faint: rgb( 77, 77, 77 );
+		--color-mid: rgb( 110, 110, 110 );
+		--color-border: rgb( 70, 70, 70 );
+
+		--color-danger: rgb( 139, 139, 139 );
+		--color-success: rgb( 177, 177, 177 );
+	}
+}
+/* html's own background-color (declared below, unconditionally) is what actually shows through as the page's true canvas — the one background not subject to normal stacking order at all, painted beneath even #backdrop's own negative z-index, which is exactly why #backdrop is visible over it in the first place. body itself painting var(--color-bg) directly, tried first, broke that: body is an ordinary in-flow box, so its own background paints in its own, later stacking step, ahead of #backdrop's negative one, blotting the emblem out entirely. :has() lets html read the same gallery_page state one of its own descendants carries without needing to duplicate --color-bg's redefinition down on body only to have it not reach the one element (html) that actually needs it */
+html:has( body.gallery_page ){
+	--color-bg: rgb( 230, 230, 230 );
+}
+/* :root IS html — [data-theme] and :has() both have to land on that same one element, not chained as ancestor/descendant, which would ask for an html nested inside itself */
+html[data-theme="dark"]:has( body.gallery_page ){
+	--color-bg: rgb( 26, 26, 26 );
+}
+@media ( prefers-color-scheme: dark ){
+	html:not([data-theme="light"]):has( body.gallery_page ){
+		--color-bg: rgb( 26, 26, 26 );
+	}
+}
+
 /* every element eases between its light and dark colors instead of snapping, so flipping the theme reads as one smooth cut rather than a harsh jump; elements with their own transition (the toggle, the wordmark) override this outright rather than merging with it, which is fine since those already resolve to the same 1/4s */
 *{
 	transition: background-color .25s ease, color .25s ease, border-color .25s ease, fill .25s ease, stroke .25s ease, filter .25s ease;
+}
+/* a full second here, not the sitewide quarter — gallery_theme_controller.js adds gallery_page one animation frame after this page's own first paint specifically so this duration has a real "before" state to shift the whole page's colors from, all the way out to chrome nothing else in the section otherwise touches. transition-duration alone, not the shorthand, is deliberate: redeclaring transition here would silently reset the property list/easing above back to their initial values instead of just slowing them down */
+body.gallery_page *{
+	transition-duration: 1s;
 }
 
 html{
@@ -781,9 +842,174 @@ form input[type="submit"]{
 	margin: 2em auto 0;
 	font-size: 13pt;
 }
+
+/* one Cover Flow stage per album, stacked down the page — only the stage itself goes full-bleed, the same -1em/+1em pair that cancels body's right padding on the album's own page. The caption below stays put, subject to the ordinary margins like everything else */
+.album_cover_flow{
+	display: block;
+	margin: 0 0 3em 0;
+}
+/* a#read/#see/etc — small text sitting on a plain background — reads as "this is blinking to get your attention" the way a:hover's own site-wide blink intends. The exact same animation on this link instead swallows three full photos and their captions into nothing once a second, since the blink is opacity on the link itself and everything inside an <a> is exactly as opaque as the <a> is: not "clickable," just broken. The color shift a:hover also sets stays, same as any other link — only the animation needs turning off here */
+.album_cover_flow:hover{
+	animation: none;
+}
+.album_cover_flow.draft, .album_solo.draft{
+	opacity: 0.6;
+}
+/* a one-photo album isn't a Cover Flow — there's nothing to flow through, so it's just the photo itself, full-bleed like .album_photo already is on the album's own page, sitting here unlinked. No gap between the photo and .album_meta below it: .album_meta already carries its own top margin, the same one that alone spaces a real album's caption under its Cover Flow stage — adding a flex gap on top of that here doubled the space above this one, reading as room held open for a title once that title wasn't there to fill it */
+.album_solo{
+	display: flex;
+	flex-direction: column;
+	margin: 0 0 3em 0;
+}
+/* unselectable like the nav/header/footer chrome around it — the caption below is a sibling, not a descendant, of this stage, so it keeps the site's normal text selection untouched without needing an override rule of its own */
+/* height is auto now, not a guessed vh/px number retuned by hand every time a cover's own aspect ratio changes — min-height only keeps an unusually wide, short cover from collapsing the whole stage down too far, well below what even the tallest side/tertiary cover (max-height:45vh) could otherwise want to use */
+.cover_flow_stage{
+	position: relative;
+	min-height: 160px;
+	margin-right: -1em;
+	width: calc( 100% + 1em );
+	overflow: hidden;
+	perspective: 1600px;
+	user-select: none;
+}
+/* never cropped — the whole photo always shows, at whatever height its own aspect ratio and the 60% width cap come out to. In normal flow, unlike the side/tertiary covers below, specifically so its own rendered size is what gives the stage a real height in the first place: a stage with only absolutely positioned children collapses to zero height on its own, which is exactly what forced a guessed vh/px number here before. position:relative (not the default static) purely so z-index still applies — z-index is a no-op on a statically positioned box — letting this still paint over the absolutely positioned side/tertiary covers despite sitting in normal flow */
+.cover_flow_cover{
+	position: relative;
+	display: block;
+	margin: 0 auto;
+	width: auto;
+	max-width: 60%;
+	height: auto;
+	max-height: 60vh;
+	object-fit: contain;
+	z-index: 3;
+}
+/* the side covers ride the same shared perspective as the stage itself, so both lean away at a consistent angle rather than each carrying its own vanishing point */
+/* the two outermost things in the stage — a side cover if there are only 2 or 3 photos, or the gray hint behind it if there are more — reach the true left/right edge of the stage, same as the center cover's own full-bleed edge. Never cropped, same as the center cover: width and height are both auto, each capped by its own max- so the box always shrink-wraps its own photo at that photo's real aspect ratio instead of ever slicing one to fit a fixed box or forcing a fixed height that would just as often leave the wrong side of the photo letterboxed */
+/* full opacity, same as the center cover — real Cover Flow never dims a cover for being off to the side, depth reads off the rotation alone */
+/* max-height in vh, not a percentage of the stage — the stage's own height is auto now, and a percentage height only ever resolves against a containing block whose own height is explicitly set, top/left percentages further down being the one exception that still works fine against an auto-height parent */
+.cover_flow_side{
+	position: absolute;
+	top: 50%;
+	height: auto;
+	max-height: 45vh;
+	width: auto;
+	max-width: 38%;
+	object-fit: contain;
+	z-index: 2;
+}
+/* transform-origin left at its own default (center) rather than pinned to either edge — pivoting there is what makes the two halves of the same tilted card lean in opposite directions instead of one edge just sitting still while the whole card leans away from it: the lateral half (the outer edge, toward the stage's own edge) comes forward toward the viewer, the medial half (the inner edge, toward the center cover) recedes toward the background, the same way a real card fanned out from a stack would. translateY(-50%) is what the fixed top:8%/height:84% pairing used to do on its own before height went auto above — top:50% alone would pin the box's own top edge, not its center, to the stage's own vertical middle; translateY and rotateY land in the same transform property, harmlessly, since one only ever moves along Y and the other only ever rotates around Y — a wiggle from medallion-physics still lands cleanly on top of this through the separate translate property, same as before */
+.cover_flow_side_left{
+	left: 0;
+	transform: translateY( -50% ) rotateY( 60deg );
+}
+.cover_flow_side_right{
+	right: 0;
+	transform: translateY( -50% ) rotateY( -60deg );
+}
+/* wiggles the same way the about-me medallion does — spring physics kicked by a sudden change in scroll speed, not steady scrolling — but through element.style.translate rather than transform: the side cover's own rotateY lean above already lives in transform, and translate is its own independent CSS property precisely so this can drift the photo without overwriting that lean. The center cover never gets the controller at all, so it alone stays put while the two side covers around it wiggle */
+/* the actual 4th/5th photo, not a placeholder — a flat gray block standing in for "something's further back" read as a stray drop-shadow rather than part of the same photo stack, since it carried no photographic texture of its own to tie it to its neighbors. A real photo fixes that outright. transform-origin stays pinned to its own outer edge here, unlike the side cover's own center pivot just above: pivoting a box at center would swing its own lateral half far enough into positive z that, combined with the stage's shared perspective, it visibly outgrows and bleeds past the side cover in front of it instead of reading as a smaller, further-back card. Pinning the pivot to the edge keeps its whole box between the stage's own resting plane and the background, the same one-directional lean the side cover used before it got a center pivot of its own, just at a shallower angle — less exaggerated, per the side cover's own steeper lean below. Real Cover Flow — the actual reference this is chasing — never fades, dims, or desaturates a single cover no matter how far back it sits: every one of them stays exactly as sharp and full-color as the one in front, depth read entirely off the rotation angle and nothing else, so no opacity/saturate/mask-fade here either, same crisp hard edge the side cover already gets. Never cropped either, same as the side cover just above and the center cover before it: width and height are both auto, each capped by its own max-, so the box shrink-wraps its own photo instead of forcing a fixed height that leaves a transparent letterboxed gap the side cover's own gap could otherwise line up with and bleed a second photo's pixels through both at once. max-height stays well under the side cover's own 45vh, deliberately, and in vh for the same reason the side cover's own is (the stage's own height is auto, so a percentage wouldn't resolve at all) — a tall-ish photo landing here without that ceiling renders far closer to the side cover's own size than something sitting further back in the stack ever should, and reads as oversized rather than receding. This flat vh figure is only ever the fallback, though: it's a fixed ceiling, not a fraction of whatever the side cover in front of it actually rendered at, so a wide side cover (short) paired with a portrait tertiary (naturally tall) could still let the tertiary come out taller than the side cover despite both ceilings being what they are — cover_flow_depth_controller.js measures the side cover's real height once its image has loaded and overrides this inline with a true fraction of that, which always wins over this since an inline style beats a class selector regardless of source order. It wiggles too — same controller, in the view, with its own max-drag-fraction/scroll-kick values overridden well below the side covers' own defaults — so it drifts noticeably less than they do: real parallax has whatever's further back moving less across the same physical shake, and matching that here is what feigns the stack actually having depth instead of every layer just wiggling in lockstep */
+.cover_flow_hint{
+	position: absolute;
+	top: 50%;
+	height: auto;
+	max-height: 22vh;
+	width: auto;
+	max-width: 28%;
+	object-fit: contain;
+	z-index: 1;
+}
+.cover_flow_hint_left{
+	left: 0;
+	transform-origin: left center;
+	transform: translateY( -50% ) rotateY( 20deg );
+}
+.cover_flow_hint_right{
+	right: 0;
+	transform-origin: right center;
+	transform: translateY( -50% ) rotateY( -20deg );
+}
+/* sized like a nav entry (#see/#read/etc's own 16pt) — the gallery's own titles are meant to read with the same weight as a section of the site, not as a caption line underneath one. color is explicit, not inherited, because its parent .album_meta sets its own color to --color-mid for the author/date/location line beneath — without an override here the title would fade to that same muted gray instead of standing out from it */
+.album_title{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 16pt;
+	color: var( --color-title );
+	display: block;
+}
+/* title, then author, date, location, camera, and lens on their own lines — both here (the caption stacked under a Cover Flow entry) and in .album_header on the album's own page (real <p> tags there, already block on their own). Formatted like the timeline's own secondary metadata (.timeline_dates/.timeline_location) — muted, uppercase, letter-spaced — rather than plain body text, since this is the same kind of "when/where/by what" line the timeline already has a established look for */
+.album_author, .album_location, .album_date, .album_camera, .album_lens{
+	font-size: 9pt;
+	color: var( --color-mid );
+	text-transform: uppercase;
+	letter-spacing: 0.5pt;
+	display: block;
+	margin: 0.2em 0 0 0;
+}
+.album_meta{
+	font-size: 9pt;
+	color: var( --color-mid );
+	margin: 0.75em 0 0 0;
+}
+/* each photo's own entry on the album's own page: image, its own info (read straight off that one Photo, not the album's aggregate), and its edit link, grouped tightly so .album_photos' own gap reads as space between photos rather than between an image and its own caption */
+.album_photo_entry{
+	display: block;
+}
 .photo_edit_link{
 	display: block;
 	margin: 0.75em 0 0 0;
+}
+/* overrides the generic header{display:flex;flex-direction:row} — title, author, and date need to stack, not sit in a row */
+.album_header{
+	display: block;
+	margin: 1em 0;
+}
+.album_title_large{
+	font-size: 36pt;
+	color: var( --color-title );
+	margin: 0;
+}
+.album_description{
+	max-width: 40em;
+	margin: 1em 0;
+}
+.album_photos{
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+}
+/* written passages sit in the same single column the photos run down, so the album reads as one
+continuous piece rather than prose and pictures in separate zones. The extra top margin is what
+separates a new stretch of writing from the photo it follows, .album_photos' own 1em gap being tuned
+for the space between two photographs instead */
+.album_passage{
+	max-width: 40em;
+	margin: 1.5em 0 0.5em 0;
+}
+/* a section opening — the dated chapter heading of a long album. Sized and weighted off .subheadline,
+the journal's own equivalent rank, rather than a size picked independently here */
+.album_passage_heading{
+	font-family: 'Arial', sans-serif;
+	font-weight: 900;
+	text-transform: uppercase;
+	font-size: 20px;
+	line-height: 1.3;
+	margin: 0 0 0.5em 0;
+	color: var( --color-title );
+}
+/* no max-width of its own — .album_passage above already holds the whole block to a reading measure,
+the same 40em .album_description is held to */
+.album_passage_body{
+	margin: 0;
+}
+/* full-bleed: the 1em cancels out body's own padding on the right, the same distance the nav already keeps main clear of on the left, so the photo reaches the true window edge on both sides without needing to know the nav's own width */
+.album_photo{
+	width: calc( 100% + 1em );
+	max-width: calc( 100% + 1em );
+	height: auto;
+	display: block;
+	margin-right: -1em;
+	user-select: none;
 }
 
 .pagination{
@@ -795,6 +1021,37 @@ form input[type="submit"]{
 	text-transform: uppercase;
 	letter-spacing: 1pt;
 	font-size: 10pt;
+}
+#print{
+	max-width: 50em;
+	margin: 0 auto;
+}
+.print_image{
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+.print_caption{
+	margin: 1em 0 0 0;
+}
+.print_title{
+	font-size: 20pt;
+	margin: 0 0 0.5em 0;
+}
+.print_exif{
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 0.25em 0.75em;
+	margin: 0;
+	font-size: 10pt;
+}
+.print_exif dt{
+	color: var( --color-mid );
+	text-transform: uppercase;
+	letter-spacing: 0.5pt;
+}
+.print_exif dd{
+	margin: 0;
 }
 
 .about_layout{

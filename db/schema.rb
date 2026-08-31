@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_19_185609) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_29_075629) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -39,6 +39,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_19_185609) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "albums", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "identifier", null: false
+    t.string "location"
+    t.datetime "published_at"
+    t.date "taken_from"
+    t.date "taken_until"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["identifier"], name: "index_albums_on_identifier", unique: true
+    t.index ["published_at"], name: "index_albums_on_published_at"
+    t.index ["taken_until"], name: "index_albums_on_taken_until"
+  end
 
 
 
@@ -77,9 +91,56 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_19_185609) do
     t.index ["starts_on"], name: "index_milestones_on_starts_on"
   end
 
+  create_table "passages", force: :cascade do |t|
+    t.integer "album_id", null: false
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.string "heading"
+    t.integer "position", null: false
+    t.datetime "updated_at", null: false
+    t.index ["album_id", "position"], name: "index_passages_on_album_id_and_position"
+    t.index ["album_id"], name: "index_passages_on_album_id"
+  end
 
+  create_table "photo_dwell_events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "photo_id", null: false
+    t.decimal "seconds", precision: 10, scale: 2, null: false
+    t.datetime "updated_at", null: false
+    t.index ["photo_id"], name: "index_photo_dwell_events_on_photo_id"
+  end
 
+  create_table "photos", force: :cascade do |t|
+    t.integer "album_id", null: false
+    t.string "author"
+    t.boolean "author_overridden", default: false, null: false
+    t.string "camera"
+    t.boolean "camera_overridden", default: false, null: false
+    t.datetime "created_at", null: false
+    t.decimal "dwell_seconds", precision: 10, scale: 2, default: "0.0", null: false
+    t.decimal "latitude", precision: 9, scale: 6
+    t.string "lens"
+    t.boolean "lens_overridden", default: false, null: false
+    t.decimal "longitude", precision: 9, scale: 6
+    t.string "place"
+    t.boolean "place_overridden", default: false, null: false
+    t.integer "position", null: false
+    t.datetime "taken_at"
+    t.boolean "taken_at_overridden", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.index ["album_id", "position"], name: "index_photos_on_album_id_and_position", unique: true
+    t.index ["album_id"], name: "index_photos_on_album_id"
+  end
 
+  create_table "prints", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "identifier", null: false
+    t.datetime "published_at"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["identifier"], name: "index_prints_on_identifier", unique: true
+    t.index ["published_at"], name: "index_prints_on_published_at"
+  end
 
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -122,5 +183,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_19_185609) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "passages", "albums"
+  add_foreign_key "photo_dwell_events", "photos"
+  add_foreign_key "photos", "albums"
   add_foreign_key "sessions", "users"
 end
