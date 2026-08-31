@@ -1,0 +1,25 @@
+<% if results.empty? %>
+	<h3 class="search_no_results"><%= smart_quotes( "There's nothing about this here now." ) %></h3>
+<% else %>
+	<% results.each do |result| %>
+		<%= link_to result.path, class: "search_result_card", draggable: "false", data: { controller: "squircle-fill medallion-physics", squircle_fill_radius_value: 18 } do %>
+			<% if result.image.present? %><%= photo_tag result.image, class: "search_result_image", alt: "", loading: "lazy", draggable: false, data: { squircle_clip_radius_value: 10 } %><% end %>
+			<span class="search_result_kind"><%= result.kind %></span>
+			<span class="search_result_title"><%= smart_quotes( result.title ) %></span>
+			<% if result.detail.present? %><span class="search_result_detail"><%= smart_quotes( result.detail ) %></span><% end %>
+		<% end %>
+	<% end %>
+<% end %>
+
+<%#
+	_search_results.html.erb
+	kvpb.fr
+
+	Karl V. P. B. `kvpb`	AKA Karl Thomas George West `ktgw`
+	+33 A BB BB BB BB		+1 (DDD) DDD-DDDD
+	local-part@domain
+
+	Copyright 2026 by Karl Vincent Pierre Bertin
+
+	Permission to use, copy, modify, and distribute this software and its documentation for any purpose and without fee is hereby granted, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation, and that the name of Karl Vincent Pierre Bertin not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. Karl Vincent Pierre Bertin makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+%>
