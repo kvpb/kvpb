@@ -19,6 +19,7 @@ module ApplicationHelper
     case section
     when :journal then !Article.published.exists?
     when :gallery then !Album.published.exists?
+    when :hall_of_fame then !Honoree.published.exists?
     when :music, :films, :code, :map then true
     end
   end

@@ -16,6 +16,22 @@ Rails.application.routes.draw do
 
 
 
+  # the old primary — hall_of_fame_path and friends keep their own name below, only the literal URL changes
+  # get    "/hall-of-fame",                     to: "honorees#index",  as: "hall_of_fame"
+  # post   "/hall-of-fame",                     to: "honorees#create"
+  # get    "/hall-of-fame/new",                 to: "honorees#new",    as: "new_honoree"
+  # get    "/hall-of-fame/:identifier",         to: "honorees#show",   as: "honoree"
+  # get    "/hall-of-fame/:identifier/edit",    to: "honorees#edit",   as: "edit_honoree"
+  # patch  "/hall-of-fame/:identifier",         to: "honorees#update"
+  # delete "/hall-of-fame/:identifier",         to: "honorees#destroy"
+  get    "/hall-of-fame",                     to: "honorees#index",  as: "old_hall_of_fame"
+  get    "/halloffame",                       to: "honorees#index",  as: "hall_of_fame"
+  post   "/halloffame",                       to: "honorees#create"
+  get    "/halloffame/new",                   to: "honorees#new",    as: "new_honoree"
+  get    "/halloffame/:identifier",           to: "honorees#show",   as: "honoree"
+  get    "/halloffame/:identifier/edit",      to: "honorees#edit",   as: "edit_honoree"
+  patch  "/halloffame/:identifier",           to: "honorees#update"
+  delete "/halloffame/:identifier",           to: "honorees#destroy"
 
 
 
