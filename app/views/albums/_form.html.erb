@@ -1,4 +1,4 @@
-<%= form_with model: album, url: ( album.persisted? ? album_path( album ) : see_path ), scope: :album do |form| %>
+<%= form_with model: album, url: ( album.persisted? ? backend_album_path( album ) : backend_gallery_path ), scope: :album do |form| %>
 	<% if album.errors.any? %>
 		<ul class="errors">
 			<% album.errors.full_messages.each do |message| %><li><%= message %></li><% end %>

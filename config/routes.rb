@@ -31,16 +31,30 @@ Rails.application.routes.draw do
   # delete "/read/:article_identifier/comments/:id/reject",  to: "comments#reject",  as: "reject_article_comment"
   get    "/read",                             to: "articles#index",  as: "old_read"
   get    "/journal",                          to: "articles#index",  as: "read"
-  post   "/journal",                          to: "articles#create"
-  get    "/journal/new",                      to: "articles#new",    as: "new_article"
   get    "/journal/:identifier",              to: "articles#show",   as: "article"
-  get    "/journal/:identifier/edit",         to: "articles#edit",   as: "edit_article"
-  patch  "/journal/:identifier",              to: "articles#update"
-  delete "/journal/:identifier",              to: "articles#destroy"
 
-  post   "/journal/:article_identifier/comments",             to: "comments#create",  as: "article_comments"
-  patch  "/journal/:article_identifier/comments/:id/approve", to: "comments#approve", as: "approve_article_comment"
-  delete "/journal/:article_identifier/comments/:id/reject",  to: "comments#reject",  as: "reject_article_comment"
+  post   "/journal/:article_identifier/comments", to: "comments#create", as: "article_comments"
+
+  # writing an article, publishing one, moderating a comment — none of it a visitor's to reach —
+  # only the back end creates or changes this content, so it moved under /backend the same way
+  # messages did below. read_path, article_path and article_comments_path (a visitor's own comment)
+  # keep their own URL; every helper name below keeps its name too, only backend_article_path is
+  # new, for the update/destroy a form aims at article_path today
+  # post   "/journal",                          to: "articles#create"
+  # get    "/journal/new",                      to: "articles#new",    as: "new_article"
+  # get    "/journal/:identifier/edit",         to: "articles#edit",   as: "edit_article"
+  # patch  "/journal/:identifier",              to: "articles#update"
+  # delete "/journal/:identifier",              to: "articles#destroy"
+  # patch  "/journal/:article_identifier/comments/:id/approve", to: "comments#approve", as: "approve_article_comment"
+  # delete "/journal/:article_identifier/comments/:id/reject",  to: "comments#reject",  as: "reject_article_comment"
+  post   "/backend/journal",                          to: "articles#create"
+  get    "/backend/journal/new",                      to: "articles#new",     as: "new_article"
+  get    "/backend/journal/:identifier/edit",         to: "articles#edit",    as: "edit_article"
+  patch  "/backend/journal/:identifier",              to: "articles#update"
+  delete "/backend/journal/:identifier",              to: "articles#destroy", as: "backend_article"
+
+  patch  "/backend/journal/:article_identifier/comments/:id/approve", to: "comments#approve", as: "approve_article_comment"
+  delete "/backend/journal/:article_identifier/comments/:id/reject",  to: "comments#reject",  as: "reject_article_comment"
 
   # the old primary — hall_of_fame_path and friends keep their own name below, only the literal URL changes
   # get    "/hall-of-fame",                     to: "honorees#index",  as: "hall_of_fame"
@@ -52,12 +66,23 @@ Rails.application.routes.draw do
   # delete "/hall-of-fame/:identifier",         to: "honorees#destroy"
   get    "/hall-of-fame",                     to: "honorees#index",  as: "old_hall_of_fame"
   get    "/halloffame",                       to: "honorees#index",  as: "hall_of_fame"
-  post   "/halloffame",                       to: "honorees#create"
-  get    "/halloffame/new",                   to: "honorees#new",    as: "new_honoree"
   get    "/halloffame/:identifier",           to: "honorees#show",   as: "honoree"
-  get    "/halloffame/:identifier/edit",      to: "honorees#edit",   as: "edit_honoree"
-  patch  "/halloffame/:identifier",           to: "honorees#update"
-  delete "/halloffame/:identifier",           to: "honorees#destroy"
+
+  # an honoree's own new/create/edit/update/destroy is never a visitor's to reach either — only the
+  # back end creates or changes this content, moved under /backend the same way. hall_of_fame_path
+  # and honoree_path (what a visitor reads) keep their own URL; every helper name below keeps its
+  # name too, only backend_honoree_path is new, for the update/destroy a form aims at honoree_path
+  # today
+  # post   "/halloffame",                       to: "honorees#create"
+  # get    "/halloffame/new",                   to: "honorees#new",    as: "new_honoree"
+  # get    "/halloffame/:identifier/edit",      to: "honorees#edit",   as: "edit_honoree"
+  # patch  "/halloffame/:identifier",           to: "honorees#update"
+  # delete "/halloffame/:identifier",           to: "honorees#destroy"
+  post   "/backend/halloffame",                          to: "honorees#create"
+  get    "/backend/halloffame/new",                      to: "honorees#new",     as: "new_honoree"
+  get    "/backend/halloffame/:identifier/edit",         to: "honorees#edit",    as: "edit_honoree"
+  patch  "/backend/halloffame/:identifier",              to: "honorees#update"
+  delete "/backend/halloffame/:identifier",              to: "honorees#destroy", as: "backend_honoree"
 
   # the old primary — see_path and friends keep their own name below, only the literal URL changes
   # get    "/gallery",                          to: "albums#index"
@@ -85,28 +110,58 @@ Rails.application.routes.draw do
   # delete "/see/:album_identifier/passages/:id",      to: "passages#destroy", as: "passage"
   get    "/see",                              to: "albums#index",    as: "old_see"
   get    "/gallery",                          to: "albums#index",    as: "see"
-  post   "/gallery",                          to: "albums#create"
-  get    "/gallery/new",                      to: "albums#new",      as: "new_album"
   get    "/gallery/stats",                    to: "photo_dwells#index", as: "photo_dwells"
   get    "/gallery/stats/events",             to: "photo_dwell_events#index",   as: "photo_dwell_events"
   delete "/gallery/stats/events/:id",         to: "photo_dwell_events#destroy", as: "photo_dwell_event"
   get    "/gallery/:identifier",              to: "albums#show",     as: "album"
-  get    "/gallery/:identifier/edit",         to: "albums#edit",     as: "edit_album"
-  patch  "/gallery/:identifier",              to: "albums#update"
-  delete "/gallery/:identifier",              to: "albums#destroy"
 
   get    "/gallery/prints/:identifier",       to: "prints#show",     as: "print"
 
-  get    "/gallery/:album_identifier/photos/:id/edit", to: "photos#edit",    as: "edit_photo"
-  patch  "/gallery/:album_identifier/photos/:id",      to: "photos#update"
-  delete "/gallery/:album_identifier/photos/:id",      to: "photos#destroy", as: "photo"
+  # an album's own new/create/edit/update/destroy, and everything about its photos and passages, are
+  # never a visitor's to reach — only the back end creates or changes this content, so all of it
+  # moved under /backend the same way messages did below. see_path, album_path and print_path (what
+  # a visitor reads), and the two dwell reports above, keep their own URL; every helper name below
+  # keeps its name too, only backend_album_path is new, for the update/destroy a form aims at
+  # album_path today
+  # post   "/gallery",                          to: "albums#create"
+  # get    "/gallery/new",                      to: "albums#new",      as: "new_album"
+  # get    "/gallery/:identifier/edit",         to: "albums#edit",     as: "edit_album"
+  # patch  "/gallery/:identifier",              to: "albums#update"
+  # delete "/gallery/:identifier",              to: "albums#destroy"
+  # get    "/gallery/:album_identifier/photos/:id/edit", to: "photos#edit",    as: "edit_photo"
+  # patch  "/gallery/:album_identifier/photos/:id",      to: "photos#update"
+  # delete "/gallery/:album_identifier/photos/:id",      to: "photos#destroy", as: "photo"
+  # get    "/gallery/:album_identifier/passages/new",      to: "passages#new",     as: "new_passage"
+  # post   "/gallery/:album_identifier/passages",          to: "passages#create",  as: "passages"
+  # get    "/gallery/:album_identifier/passages/:id/edit", to: "passages#edit",    as: "edit_passage"
+  # patch  "/gallery/:album_identifier/passages/:id",      to: "passages#update"
+  # delete "/gallery/:album_identifier/passages/:id",      to: "passages#destroy", as: "passage"
+  post   "/backend/gallery",                          to: "albums#create"
+  get    "/backend/gallery/new",                      to: "albums#new",       as: "new_album"
+  get    "/backend/gallery/:identifier/edit",         to: "albums#edit",      as: "edit_album"
+  patch  "/backend/gallery/:identifier",              to: "albums#update"
+  delete "/backend/gallery/:identifier",              to: "albums#destroy",   as: "backend_album"
 
-  get    "/gallery/:album_identifier/passages/new",      to: "passages#new",     as: "new_passage"
-  post   "/gallery/:album_identifier/passages",          to: "passages#create",  as: "passages"
-  get    "/gallery/:album_identifier/passages/:id/edit", to: "passages#edit",    as: "edit_passage"
-  patch  "/gallery/:album_identifier/passages/:id",      to: "passages#update"
-  delete "/gallery/:album_identifier/passages/:id",      to: "passages#destroy", as: "passage"
+  get    "/backend/gallery/:album_identifier/photos/:id/edit", to: "photos#edit",    as: "edit_photo"
+  patch  "/backend/gallery/:album_identifier/photos/:id",      to: "photos#update"
+  delete "/backend/gallery/:album_identifier/photos/:id",      to: "photos#destroy", as: "photo"
 
+  get    "/backend/gallery/:album_identifier/passages/new",      to: "passages#new",     as: "new_passage"
+  post   "/backend/gallery/:album_identifier/passages",          to: "passages#create",  as: "passages"
+  get    "/backend/gallery/:album_identifier/passages/:id/edit", to: "passages#edit",    as: "edit_passage"
+  patch  "/backend/gallery/:album_identifier/passages/:id",      to: "passages#update"
+  delete "/backend/gallery/:album_identifier/passages/:id",      to: "passages#destroy", as: "passage"
+
+  # a Print, the other of the two shapes a gallery post can take — a single photograph on a page of its own,
+  # rather than an album's, for one that carries no story of its own to be told alongside others. Only ever
+  # written by the back end too; print_path (what a visitor reads) is unaffected, unchanged, above
+  get    "/backend/gallery/prints/new",             to: "prints#new",     as: "new_print"
+  post   "/backend/gallery/prints",                 to: "prints#create",  as: "backend_prints"
+  get    "/backend/gallery/prints/:identifier/edit", to: "prints#edit",    as: "edit_print"
+  patch  "/backend/gallery/prints/:identifier",      to: "prints#update"
+  delete "/backend/gallery/prints/:identifier",      to: "prints#destroy", as: "backend_print"
+
+  post   "/photos/:id/dwell",                      to: "photo_dwells#create", as: "photo_dwell"
 
   # get "/listen",                    to: "pages#listen",               as: "listen"
   get "/listen",                    to: "pages#listen",               as: "old_listen"
@@ -135,19 +190,46 @@ Rails.application.routes.draw do
   get "/search",                    to: "pages#search",               as: "search"
 
   post   "/gettoknowandcontact/contact",             to: "contacts#create",    as: "contact"
-  get    "/gettoknowandcontact/milestones/new",      to: "milestones#new",     as: "new_milestone"
-  post   "/gettoknowandcontact/milestones",          to: "milestones#create", as: "milestones"
-  get    "/gettoknowandcontact/milestones/:id/edit", to: "milestones#edit",    as: "edit_milestone"
-  patch  "/gettoknowandcontact/milestones/:id",      to: "milestones#update"
-  delete "/gettoknowandcontact/milestones/:id",      to: "milestones#destroy", as: "milestone"
+  # a milestone or a skill only ever exists to be written by the back end — nothing on this page
+  # for a visitor to reach — so both moved under /backend, the same as everything else here. Every
+  # helper name below keeps its own name; only the URL changes
+  # get    "/gettoknowandcontact/milestones/new",      to: "milestones#new",     as: "new_milestone"
+  # post   "/gettoknowandcontact/milestones",          to: "milestones#create", as: "milestones"
+  # get    "/gettoknowandcontact/milestones/:id/edit", to: "milestones#edit",    as: "edit_milestone"
+  # patch  "/gettoknowandcontact/milestones/:id",      to: "milestones#update"
+  # delete "/gettoknowandcontact/milestones/:id",      to: "milestones#destroy", as: "milestone"
+  get    "/backend/milestones/new",      to: "milestones#new",     as: "new_milestone"
+  post   "/backend/milestones",          to: "milestones#create", as: "milestones"
+  get    "/backend/milestones/:id/edit", to: "milestones#edit",    as: "edit_milestone"
+  patch  "/backend/milestones/:id",      to: "milestones#update"
+  delete "/backend/milestones/:id",      to: "milestones#destroy", as: "milestone"
 
-  get    "/gettoknowandcontact/skills/new",      to: "skills#new",     as: "new_skill"
-  post   "/gettoknowandcontact/skills",          to: "skills#create", as: "skills"
-  get    "/gettoknowandcontact/skills/:id/edit", to: "skills#edit",    as: "edit_skill"
-  patch  "/gettoknowandcontact/skills/:id",      to: "skills#update"
-  delete "/gettoknowandcontact/skills/:id",      to: "skills#destroy", as: "skill"
+  # get    "/gettoknowandcontact/skills/new",      to: "skills#new",     as: "new_skill"
+  # post   "/gettoknowandcontact/skills",          to: "skills#create", as: "skills"
+  # get    "/gettoknowandcontact/skills/:id/edit", to: "skills#edit",    as: "edit_skill"
+  # patch  "/gettoknowandcontact/skills/:id",      to: "skills#update"
+  # delete "/gettoknowandcontact/skills/:id",      to: "skills#destroy", as: "skill"
+  get    "/backend/skills/new",      to: "skills#new",     as: "new_skill"
+  post   "/backend/skills",          to: "skills#create", as: "skills"
+  get    "/backend/skills/:id/edit", to: "skills#edit",    as: "edit_skill"
+  patch  "/backend/skills/:id",      to: "skills#update"
+  delete "/backend/skills/:id",      to: "skills#destroy", as: "skill"
 
+  # the old primary — messages_path and friends keep their own name below, only the literal URL changes
+  # get    "/messages",                 to: "messages#index",       as: "messages"
+  # patch  "/messages/:id/mark_read",   to: "messages#mark_read",   as: "mark_read_message"
+  # patch  "/messages/:id/mark_unread", to: "messages#mark_unread", as: "mark_unread_message"
+  # post   "/messages/:id/forward",     to: "messages#forward",     as: "forward_message"
+  get    "/messages",                       to: "messages#index",       as: "old_messages"
+  get    "/backend/inbox",                  to: "messages#index",       as: "messages"
+  patch  "/backend/inbox/:id/mark_read",    to: "messages#mark_read",   as: "mark_read_message"
+  patch  "/backend/inbox/:id/mark_unread",  to: "messages#mark_unread", as: "mark_unread_message"
+  patch  "/backend/inbox/:id/keep",         to: "messages#keep",        as: "keep_message"
+  patch  "/backend/inbox/:id/unkeep",       to: "messages#unkeep",      as: "unkeep_message"
+  post   "/backend/inbox/:id/forward",      to: "messages#forward",     as: "forward_message"
 
+  get    "/settings",                 to: "settings#edit",        as: "settings"
+  patch  "/settings",                 to: "settings#update"
 
   # The sign-in path is not a fixed word ("session"/"login") but today's rotating token, checked
   # against the database on every request by LoginTokenConstraint — so it is neither a guessable

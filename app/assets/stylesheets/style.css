@@ -2227,6 +2227,83 @@ a#search:active, a#code:active, a#map:active, a#gettoknowandcontact:active, a#wa
 	max-width: 60em;
 	margin: 0 auto;
 }
+#messages_page{
+	max-width: 60em;
+	margin: 0 auto;
+}
+.message_entry{
+	border-top: 1px solid var( --color-faint );
+	padding: 0.75em 0;
+}
+.message_entry.unread{
+	background-color: var( --color-pending-bg );
+	padding: 0.75em 1em;
+}
+.message_entry.kept{
+	border-left: 3px solid var( --color-fg );
+	padding-left: 1em;
+}
+.message_kept_tag{
+	text-transform: uppercase;
+}
+.message_meta{
+	font-family: /*'Helvetica Now', 'Helvetica Neue LT', */'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 10pt;
+}
+.message_body{
+	white-space: pre-line;
+}
+.message_actions{
+	display: flex;
+	column-gap: 0.5em;
+}
+.message_actions form{
+	margin: 0;
+}
+#settings_page{
+	max-width: 60em;
+	margin: 0 auto;
+}
+.setting_entry{
+	display: flex;
+	align-items: center;
+	column-gap: 0.5em;
+}
+.setting_entry label{
+	margin: 0;
+}
+#photo_dwells_page, #photo_dwell_events_page{
+	max-width: 60em;
+	margin: 0 auto;
+}
+.photo_dwell_entry{
+	display: flex;
+	align-items: center;
+	column-gap: 1em;
+	border-top: 1px solid var( --color-faint );
+	padding: 0.75em 0;
+}
+.photo_dwell_thumb{
+	width: 96px;
+	height: 96px;
+	object-fit: cover;
+	flex-shrink: 0;
+}
+.photo_dwell_meta{
+	font-family: /*'Helvetica Now', 'Helvetica Neue LT', */'Arial', sans-serif;
+	font-weight: 900;
+	font-size: 10pt;
+}
+/* the ranking's own graphical half — each bar's width is that photo's own dwell_seconds relative to the top photo's, so the whole list reads as one chart at a glance rather than requiring the numbers themselves to be compared by eye */
+.photo_dwell_bar_wrapper{
+	flex: 1;
+}
+.photo_dwell_bar{
+	height: 8px;
+	margin-top: 0.5em;
+	background-color: var( --color-fg );
+}
 #honoree{
 	max-width: 60em;
 	margin: 0 auto;
@@ -2244,6 +2321,10 @@ a#search:active, a#code:active, a#map:active, a#gettoknowandcontact:active, a#wa
 	https://x.com/ktgwkvpb
 	https://github.com/kvpb	*/
 
+/* errors_controller.rb's own pages, the site's for the 400/404/406/422/500 Rails itself raises, replacing
+its default static ones. Gray rather than either of the site's own two appearances — day and night are both
+off, on purpose, an error page being neither — and the number that fills it is the one thing on it in true
+black and white, never themed, so it reads the same regardless */
 html:has( body.error_page ){
 	background-color: rgb( 128, 128, 128 );
 }
@@ -2459,7 +2540,6 @@ at, scaled here off #error_code's own font-size the same way everything else abo
 	-webkit-text-stroke: 2pt rgba( 0, 0, 0, 0 );
 	paint-order: stroke fill;
 }
-
 
 /* disabled — the green ruler for manually aligning the logotype in Firefox, bordering the menu items' own spans (body's 1em margin plus nav's own .1cm padding), not the outer margin itself. Kept, not deleted, in case a future alignment pass needs it again
 body::before{

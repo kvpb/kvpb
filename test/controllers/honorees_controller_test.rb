@@ -57,7 +57,7 @@ class HonoreesControllerTest < ActionDispatch::IntegrationTest
 
   test "create requires a signed-in admin" do
     assert_no_difference( "Honoree.count" ) do
-      post hall_of_fame_path, params: { honoree: { name: "Someone", body: "Body" } }
+      post backend_halloffame_path, params: { honoree: { name: "Someone", body: "Body" } }
     end
   end
 
@@ -65,7 +65,7 @@ class HonoreesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as( users( :one ) )
 
     assert_difference( "Honoree.count", 1 ) do
-      post hall_of_fame_path, params: { honoree: { name: "New Honoree", body: "Body" } }
+      post backend_halloffame_path, params: { honoree: { name: "New Honoree", body: "Body" } }
     end
 
     assert_not Honoree.find_by!( identifier: "new-honoree" ).published?
@@ -75,14 +75,14 @@ class HonoreesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as( users( :one ) )
     honoree = honorees( :draft_animal )
 
-    patch honoree_path( honoree ), params: { honoree: { published_at: Time.current } }
+    patch backend_honoree_path( honoree ), params: { honoree: { published_at: Time.current } }
 
     assert honoree.reload.published?
   end
 
   test "destroy requires a signed-in admin" do
     assert_no_difference( "Honoree.count" ) do
-      delete honoree_path( honorees( :published_human ) )
+      delete backend_honoree_path( honorees( :published_human ) )
     end
   end
 
@@ -90,7 +90,7 @@ class HonoreesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as( users( :one ) )
 
     assert_difference( "Honoree.count", 1 ) do
-      post hall_of_fame_path( format: :json ), params: { honoree: { name: "Autosaved draft" } }
+      post backend_halloffame_path( format: :json ), params: { honoree: { name: "Autosaved draft" } }
     end
 
     assert_response :success
@@ -105,7 +105,7 @@ class HonoreesControllerTest < ActionDispatch::IntegrationTest
     sign_in_as( users( :one ) )
     honoree = honorees( :draft_animal )
 
-    patch honoree_path( honoree, format: :json ), params: { honoree: { honor_inscription: "Updated via autosave" } }
+    patch backend_honoree_path( honoree, format: :json ), params: { honoree: { honor_inscription: "Updated via autosave" } }
 
     assert_response :success
     assert JSON.parse( response.body )[ "ok" ]

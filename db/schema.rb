@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_21_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_25_193203) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -103,7 +103,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_21_120000) do
     t.index ["published_at"], name: "index_honorees_on_published_at"
   end
 
-
   create_table "milestones", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "date_label"
@@ -188,6 +187,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_21_120000) do
     t.boolean "registration_enabled", default: false, null: false
     t.boolean "twitter_visible", default: false, null: false
     t.datetime "updated_at", null: false
+    t.boolean "youtube_visible", default: false, null: false
     t.index ["login_token"], name: "index_settings_on_login_token", unique: true
   end
 

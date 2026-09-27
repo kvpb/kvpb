@@ -1,8 +1,8 @@
-<%= form_with model: article, url: ( article.persisted? ? article_path( article ) : read_path ), scope: :article,
+<%= form_with model: article, url: ( article.persisted? ? backend_article_path( article ) : backend_journal_path ), scope: :article,
 	data: {
 		controller: "autosave",
 		action: "input->autosave#scheduleSave",
-		autosave_url_value: ( article.persisted? ? article_path( article, format: :json ) : read_path( format: :json ) ),
+		autosave_url_value: ( article.persisted? ? backend_article_path( article, format: :json ) : backend_journal_path( format: :json ) ),
 		autosave_method_value: ( article.persisted? ? "patch" : "post" )
 	} do |form| %>
 	<% if article.errors.any? %>
