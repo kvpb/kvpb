@@ -40,7 +40,7 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images] — here, the JPEG a browser is shown in place of a HEIC (Photo#web_image), made by ImageMagick (config/application.rb)
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 2.1"
 # gem "image_processing", "~> 1.2"
 # Read EXIF metadata (capture date, camera, lens, GPS) from uploaded photographs [https://github.com/remvee/exifr]
 gem "exifr", "~> 1.5"
